@@ -1,4 +1,4 @@
-#' glimpse
+#' `glimpse()`
 #'
 #' A override of dplyr's glimpse() that also prints the label for the dataframe
 #' Just prints information about the dataframe
@@ -12,7 +12,7 @@ glimpse <- function(x) {
   dplyr::glimpse(x)
 }
 
-#' filter
+#' `filter()`
 #'
 #' A wrapper for `dplyr::filter()`.
 #' @seealso [dplyr::filter()]
@@ -20,35 +20,35 @@ filter <- function(...) {
   dplyr::filter(...)
 }
 
-#' str_detect
+#' `str_detect()`
 #' Wrapper for `stringr::str_detect()`
 #' @seealso [stringr::str_detect()]
 str_detect <- function(...) {
   stringr::str_detect(...)
 }
 
-#' rename
+#' `rename()`
 #' Wrapper for `dplyr::rename()`
 #' @seealso [dplyr::rename()]
 rename <- function(...) {
   dplyr::rename(...)
 }
 
-#' str_replace
+#' `str_replace()`
 #' Wrapper for `stringr::str_replace()`
 #' @seealso [stringr::str_replace()]
 str_replace <- function(...) {
   stringr::str_replace(...)
 }
 
-#' str_to_lower
+#' `str_to_lower()`
 #' Wrapper for `stringr::str_to_lower()`
 #' @seealso [str_to_lower()]
 str_to_lower <- function(...) {
   stringr::str_to_lower(...)
 }
 
-#' ecodata_theme()
+#' `ecodata_theme()`
 #' A ggplot theme that is simple and clean and has a large text size
 #' @return Returns a ggplot theme that can be added to a `ggplot()` call
 #' @export
@@ -60,7 +60,7 @@ ecodata_theme <- function() {
   return(rettheme)
 }
 
-#' string_compare
+#' `string_compare()`
 #' Compare two strings, ignoring case and whitespace
 #' @param str1 String to compare
 #' @param str2 Another string to compare
@@ -71,8 +71,11 @@ string_compare <- function(str1, str2) {
   )
 }
 
-#' string_detect
-#'
+#' `string_detect()`
+#' Detect a pattern in a string, ignoring case
+#' @param str String to search
+#' @param pattern Pattern to look for
+#' @return Logical indicating whether or not the pattern was found
 string_detect <- function(str, pattern) {
   return(
     stringr::str_detect(
@@ -81,14 +84,27 @@ string_detect <- function(str, pattern) {
   )
 }
 
+#' `str_extract()`
+#' Wrapper for `stringr::str_extract()`
+#' @seealso [stringr::str_extract()]
 str_extract <- function(...) {
   stringr::str_extract(...)
 }
 
+#' `string_detect_any()`
+#' Discover whether any of the strings in `str` contain `pattern`
+#' @param str Vector of strings to search through
+#' @param pattern Pattern to search for
+#' @return Logical on whether the pattern was found in any of the strings
 string_detect_any <- function(str, pattern) {
   return(any(string_detect(str, pattern)))
 }
 
+#' `string_which()`
+#' Wrapper for `str_which()` while ignoring case, returns what index into the string the pattern is found
+#' @param str String or vector of strings to search through
+#' @param pattern Pattern to look for
+#' @return Integer index into the string that the pattern was found
 string_which <- function(str, pattern) {
   return(
     stringr::str_which(
@@ -97,6 +113,10 @@ string_which <- function(str, pattern) {
   )
 }
 
+#' `is_valid_url()`
+#' Test whether a string is a valid URL to an actual web address
+#' @param url String, that is maybe a URL
+#' @return Logical, whether or not the string was actually a valid URL
 is_valid_url <- function(url) {
   response <- tryCatch({
     httr::HEAD(url)
@@ -110,7 +130,13 @@ is_valid_url <- function(url) {
   return(retval)
 }
 
-get_varcode_url <- function(url) {
+#' `get_varcode_url_fred()`
+#' Extract a variable code from a FRED URL
+#' @param url String that is a URL to a FRED data series
+#' @return String that is the variable code
+#' @export
+get_varcode_url_fred <- function(url) {
+  url <- stringr::str_to_lower(url)
   if(str_detect(url, "fred.stlouisfed.org")) {
     varcode <- str_extract(url, "(?<=series/).*")
   } else {
@@ -120,12 +146,56 @@ get_varcode_url <- function(url) {
   return(varcode)
 }
 
+#' `get_varcode_url_worldbank()`
+#' Extract a variable code from a Workbank URL
+#' @param url String that is a URL to a World Bank data series
+#' @return String that is the variable code
+#' @export
+get_varcode_url_worldbank <- function(url) {
+  url <- stringr::str_to_lower(url)
+  if(stringr::str_detect(url, "data.worldbank.org")) {
+    varcode <- str_extract(url, "(?<=indicator/).*")
+  } else {
+    error_code <- sprintf("Failed to find series: %s", url)
+    stop(error_code)
+  }
+  return(varcode)
+}
+
+#' `get_varcode_url()`
+#' Extract a variable code from a FRED or Workbank URL
+#' @param url String that is a URL to a FRED or World Bank data series
+#' @return String that is the variable code
+#' @export
+get_varcode_url <- function(url) {
+  url <- stringr::str_to_lower(url)
+  if(stringr::str_detect(url, "data.worldbank.org")) {
+    varcode <- get_varcode_url_worldbank(url)
+  } else if(stringr::str_detect(url, "fred.stlouisfed.org")) {
+    varcode <- get_varcode_url_fred(url)
+  } else {
+    error_code <- sprintf("Failed to find series: %s", url)
+    stop(error_code)
+  }
+  return(varcode)
+}
+
+#' `get_state_fips_all()`
+#' Get a data frame with all the U.S. states and their FIPS codes. Wrapper to `usmaps::fips_info()`
+#' @return A data frame with all the U.S. states and their FIPS codes
+#' @seealso [usmaps::fips_info()]
+#' @export
 get_state_fips_all <- function() {
   fips_codes <- usmap::fips_info()
-  fips_codes <- rename(fips_codes, State = full, FIPS = fips, Abbr = abbr)
+  fips_codes <- dplyr::rename(fips_codes, State = full, FIPS = fips, Abbr = abbr)
   return(fips_codes)
 }
 
+#' `get_state_fips(state)`
+#' Get the FIPS code for a given state
+#' @param state String that is either the full name of the state or the two-letter abbreviation
+#' @return String that is the FIPS code for the state
+#' @export
 get_state_fips <- function(state) {
   fips.df <- get_state_fips_all()
   state_fips.df <- dplyr::filter(fips.df, string_compare(Abbr, state))
@@ -139,6 +209,11 @@ get_state_fips <- function(state) {
   return(state_fips.df$FIPS[1])
 }
 
+#' `get_state_name(state)`
+#' Get the state name for the given abbreviation or FIPS code
+#' @param state String that is a FIPS code or two-letter abbreviation
+#' @return String that is the name of the state
+#' @export
 get_state_name <- function(state) {
   fips.df <- get_state_fips_all()
   state_fips.df <- filter(fips.df, string_compare(Abbr, state))
@@ -152,6 +227,11 @@ get_state_name <- function(state) {
   return(state_fips.df$State[1])
 }
 
+#' `get_state_abbr(state)`
+#' Get the two-letter abbreviation for a state, given the name of the state or the FIPS code
+#' @param state String that is a name of a state or the FIPS code
+#' @return String that is the two-letter abbreviation for the state
+#' @export
 get_state_abbr <- function(state) {
   fips.df <- get_state_fips_all()
   state_fips.df <- dplyr::filter(fips.df, string_compare(State, state))
@@ -165,7 +245,13 @@ get_state_abbr <- function(state) {
   return(state_fips.df$Abbr[1])
 }
 
-
+#' `geom_recession()`
+#' Return a geom_rect() that identifies recessions in a time series plot
+#' @param data Data frame
+#' @param alpha Numeric transparency parameter. Default = 0.2.
+#' @param fill String identifying the fill color, default is "dodgerblue3"
+#' @return A geom_rect() that can be added to a ggplot time series plot
+#' @export
 geom_recession <- function(data = NULL, stat = "identity",
                            position = "identity", ...,
                            alpha = 0.2, fill = "dodgerblue3",
@@ -181,6 +267,7 @@ geom_recession <- function(data = NULL, stat = "identity",
   return(layer)
 }
 
+#' Definition of the GeomRecession
 GeomRecession <- ggplot2::ggproto("GeomRecession", ggplot2::Geom,
 
   draw_panel = function(self, data, panel_params, coord, alpha, fill) {
@@ -228,7 +315,8 @@ GeomRecession <- ggplot2::ggproto("GeomRecession", ggplot2::Geom,
   draw_key = ggplot2::draw_key_rect  # Use the default rectangle key in legends
 )
 
-# Define a ggplot_add method to automatically move the recession layer to the back
+#' 'ggplot_add.GeomRecessionLayer()'
+#' Define a ggplot_add method to automatically move the recession layer to the back
 ggplot_add.GeomRecessionLayer <- function(object, plot, object_name) {
   # Add the layer to the plot
   plot <- NextMethod()
@@ -244,6 +332,11 @@ ggplot_add.GeomRecessionLayer <- function(object, plot, object_name) {
   return(plot)
 }
 
+#' `get_recessions(data)`
+#' Get NBER recession dates that line up with data in the data frame
+#' @param data Data frame with a time series
+#' @return A copy of the data frame, `data`, with a new variable `Recession` equal to TRUE or FALSE if there was a recession in the time period
+#' @export
 get_recessions <- function(data) {
   first_date <- min(data$Date)
   last_date <- max(data$Date)
