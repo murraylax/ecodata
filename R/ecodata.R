@@ -352,8 +352,132 @@ get_recessions <- function(data) {
   data <- dplyr::left_join(data, recessions.df, by = "Date")
 }
 
-get_ecodata_variable_wb <- function(varcode, countrycode, varname = NULL) {
-  raw.df <- wbstats::wb_data(country = countrycode, indicator = varcode, date_as_class_date = TRUE)
+#' `get_wb_variable_code()`
+get_wb_variable_code <- function(text) {
+  # Define the correct regex pattern
+  variable_pattern <- ".*/([^/?]*)(?:\\?.*)?$"
+
+  # Extract the desired part from each example string
+  extract_variable <- function(text, pattern) {
+    # If no slash is found, just return up to the first '?', or the whole string
+    result <- stringr::str_match(text, pattern)[, 2]
+    if (is.na(result)) {
+      stringr::str_split(text, "\\?", n = 2)[[1]][1]
+    } else {
+      result
+    }
+  }
+  variable_code <- extract_variable(text, variable_pattern)
+}
+
+
+## CHANGE THIS!! MAKE A FUNCTION THAT GETS ALL COUNTRIES, MAKE A FUNCTION THAT TAKES A URL
+get_ecodata_variable_wb <- function(varcode, varname = NULL) {
+  locations_pattern <- "(?<=\\?locations=)[^&]*"
+  country_code <- str_extract(varcode, locations_pattern)
+  if(is.na(country_code)) country_code <- ""
+
+  variable_code <- get_wb_variable_code(varcode)
+
+  if(variable_code == "") {
+    warnmsg <- sprintf("No data found in World Bank for variable code, \'%s\'.", varcode)
+    warning(warnmsg)
+    return(NA)
+  }
+
+  if(country_code != "") {
+    df <- get_ecodata_variable_country_wb(variable_code, country_code, varname = varname)
+  } else {
+    df <- get_ecodata_variable_allcountries_wb(variable_code, varname = varname)
+  }
+  return(df)
+}
+
+get_ecodata_variable_allcountries_wb <- function(varcode, varname = NULL) {
+  variable_code <- get_wb_variable_code(varcode)
+
+  if(variable_code == "") {
+    warnmsg <- sprintf("No data found in World Bank for variable code, \'%s\'.", varcode)
+    warning(warnmsg)
+    return(NA)
+  }
+
+  raw.df <- tryCatch({
+      wbstats::wb_data(indicator = variable_code, date_as_class_date = TRUE)
+    },
+    error = function(e) {
+      NA
+    })
+  if(all(is.na(raw.df))) {
+    warnmsg <- sprintf("No data found in World Bank for variable code, \'%s\'.", varcode)
+    warning(warnmsg)
+    return(NA)
+  }
+
+  if(is.null(varname)) {
+    varname <- variable_code
+  }
+
+  info <- wbstats::wb_search(variable_code)
+
+  df <- dplyr::tibble(
+    Date = raw.df$date,
+    Country = raw.df$country,
+    Country_ISO2 = raw.df$iso2c,
+    !!dplyr::sym(varname) := raw.df[[variable_code]]
+  )
+  countries.df <- df |>
+    dplyr::select(Country, Country_ISO2) |>
+    dplyr::distinct()
+
+  df <- df |>
+    dplyr::mutate(`Variable Name` = sprintf("%s %s", varname, Country)) |>
+    dplyr::select(Date, `Variable Name`, all_of(varname)) |>
+    tidyr::pivot_wider(names_from = `Variable Name`, values_from = all_of(varname)) |>
+    dplyr::arrange(Date)
+
+  all_variable_names <- get_ecodata_varnames(df)
+  for(variable_name in all_variable_names) {
+    attr(df[[variable_name]], "Variable") <- varname
+    country <- stringr::str_squish(stringr::str_remove_all(variable_name, varname))
+    country_code <- countries.df$Country_ISO2[countries.df$Country == country]
+    attr(df[[variable_name]], "Code") <- sprintf("%s?locations=%s", varcode, country_code)
+    attr(df[[variable_name]], "Description") <- info$indicator_desc[1]
+    attr(df[[variable_name]], "Frequency") <- "Annual"
+    attr(df[[variable_name]], "Seasonal Adjustment") <- "Not Seasonally Adjusted"
+    source_str <- sprintf("World Bank Data")
+    attr(df[[variable_name]], "Source") <- source_str
+    url_str <- sprintf("https://data.worldbank.org/indicator/%s?locations=%s", varcode, country_code)
+    attr(df[[variable_name]], "URL") <- url_str
+    access_date <- format.Date(Sys.Date(), "%B %d, %Y")
+    attr(df[[variable_name]], "Access Date") <- access_date
+    cite_str <- sprintf("SOURCE: %s; %s (Accessed on %s)", source_str, url_str, access_date)
+    attr(df[[variable_name]], "Cite") <- cite_str
+  }
+
+  return(df)
+}
+
+
+#' `get_ecodata_variable_wb()`
+#' Downloads data from World Bank for a given varcode and countrycode, sets the variable equal to varname
+#' @param varcode String that is the variable code
+#' @param countrycode String that is the country code
+#' @param varname Optional, string for the variable name
+#' @return Data frame time series with two variables, Date and the variable requested. The data frame will also include all relevant meta data describing the data and citing its source.
+#' @export
+get_ecodata_variable_country_wb <- function(varcode, countrycode, varname = NULL) {
+  raw.df <- tryCatch({
+        wbstats::wb_data(country = countrycode, indicator = varcode, date_as_class_date = TRUE)
+      },
+      error = function(e) {
+        NA
+      })
+  if(all(is.na(raw.df))) {
+    warnmsg <- sprintf("No data found in World Bank for variable code, \'%s\', and country code, \'%s\'. Returning NA.\n", varcode, countrycode)
+    warning(warnmsg)
+    return(NA)
+  }
   info <- wbstats::wb_search(varcode)
 
   indicator <- sprintf("%s %s", raw.df$country[1], info$indicator[1])
@@ -381,12 +505,41 @@ get_ecodata_variable_wb <- function(varcode, countrycode, varname = NULL) {
   return(df)
 }
 
-get_ecodata_variable <- function(varcode, varname = NULL, recessions = TRUE) {
+#' `get_ecodata_variable_fred()`
+#' Downloads data from FRED for a given variable code or URL
+#' @param varcode String that contains the variable code or URL to the data
+#' @param varname Optional, string for the variable name
+#' @param recessions Optional, logical for whether to include an NBER recession dummy variable. Default = TRUE.
+#' @return Data frame time series with two variables, Date and the variable requested. The data frame will also include all relevant meta data describing the data and citing its source.
+#' @export
+get_ecodata_variable_fred <- function(varcode, varname = NULL, recessions = TRUE) {
+  orig_varcode <- varcode
   if(is_valid_url(varcode)) {
-    varcode <- get_varcode_url(varcode)
+    varcode <- tryCatch({
+      get_varcode_url(varcode)
+    },
+    error = function(e) {
+      NA
+    })
+  }
+  if(is.na(varcode)) {
+    warnmsg <- sprintf("No data found in FRED for \'%s\'. Returning NA.\n", orig_varcode)
+    warning(warnmsg)
+    return(NA)
   }
 
-  raw.df <- fredr::fredr(varcode)
+  raw.df <- tryCatch({
+      fredr::fredr(varcode)
+    },
+    error = function(e) {
+      NA
+    })
+  if(all(is.na(raw.df))) {
+    warnmsg <- sprintf("No data found in FRED for \'%s\'. Returning NA.\n", orig_varcode)
+    warning(warnmsg)
+    return(NA)
+  }
+
   info <- fredr::fredr_series(varcode)
   if(is.null(varname)) {
     varname <- info$title[1]
@@ -421,7 +574,14 @@ get_ecodata_variable <- function(varcode, varname = NULL, recessions = TRUE) {
   return(new.df)
 }
 
-get_ecodata_allstates <- function(varcode, recessions = TRUE) {
+#' `get_ecodata_allstates_fred()`
+#' Downloads data from FRED for all U.S. states, for a given variable code or URL
+#' The variable code or URL needs to be a state-specific variable, and be for just one of any of the U.S. States.
+#' The function will retrieve the data for all U.S. states.
+#' @param varcode String for the variable code or URL to the data, for any one U.S. state
+#' @param recessions Optional, logical for whether to include an NBER recession dummy variable. Default = TRUE.
+#' @export
+get_ecodata_allstates_fred <- function(varcode, recessions = TRUE) {
   if(is_valid_url(varcode)) {
     varcode <- get_varcode_url(varcode)
   }
@@ -478,13 +638,18 @@ get_ecodata_allstates <- function(varcode, recessions = TRUE) {
   return(df)
 }
 
-# Just fetch all the variables except the date and recession
+#' `get_ecodata_varnames()`
+#' Fetch all the variables in a given data frame, except the date and recession
+#' @param data Data frame with fetched with a get_ecodata() function
+#' @return Returns a vector of variable names
+#' @export
 get_ecodata_varnames <- function(data) {
   ecovars_idx <- !string_compare(names(data), "date") & !string_detect(names(data), "recession")
   ecovars <- names(data)[ecovars_idx]
   return(ecovars)
 }
 
+# TODO - THIS FUNCTION JUST GETS FRED DATA
 get_ecodata <- function(varcodes, recessions = TRUE) {
   df <- get_ecodata_variable(varcodes[1], recessions = FALSE)
 
@@ -760,6 +925,24 @@ ggplot_ecodata_facet <- function(data, variables = NULL, title="", ncol = 4, sca
   }
 
   return(plt)
+}
+
+#' `ecodata_set_fredkey(key)`
+#' Set the FRED key as a permanent environmental variable, and make it available immediately
+#' This will append the ~/.Renviron file
+#' @param API_Key String that is the API key for FRED. Go to https://fredaccount.stlouisfed.org/apikeys to request a key.
+ecodata_set_fredkey <- function(API_Key) {
+  newentry <- sprintf("FRED_API_KEY=%s", API_Key)
+  renviron_path <- path.expand("~/.Renviron")
+  write(newentry, file = renviron_path, append = TRUE)
+  Sys.setenv(FRED_API_KEY = API_Key)
+}
+
+#' `ecodata_get_fredkey()`
+#' Get the FRED API key if it exists. Returns empty string if it doesn't exist
+#' @return String that is the FRED API key. Empty string if it doesn't exist
+ecodata_get_fredkey <- function() {
+  return(Sys.getenv("FRED_API_KEY"))
 }
 
 if(FALSE) {
