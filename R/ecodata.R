@@ -353,6 +353,8 @@ get_recessions <- function(data) {
 }
 
 #' `get_wb_variable_code()`
+#' For a given string from a World Bank Data URL or partial URL, extract the code for the variable, but not the location
+#' @param text String that is the URL or partial URL from World Bank Data for a given variable
 get_wb_variable_code <- function(text) {
   # Define the correct regex pattern
   variable_pattern <- ".*/([^/?]*)(?:\\?.*)?$"
@@ -371,7 +373,12 @@ get_wb_variable_code <- function(text) {
 }
 
 
-## CHANGE THIS!! MAKE A FUNCTION THAT GETS ALL COUNTRIES, MAKE A FUNCTION THAT TAKES A URL
+#' `get_ecodata_variable_wb()`
+#' Retrieve data for a single variable from World Bank Data, given the URL for the data location, variable code, or the partial URL including the variable code and possibly the location
+#' @param varcode String that is the URL for the data, variable code, or the partial URL including the variable code and possibly the location.
+#'                If the location is part of the text, it will download the variable for just that country/location. If location is not given, it will download the variable for all countries/locations.
+#' @param varname Optional, string to give the variable name. By default, the variable will be named the variable code given in World Bank Data.
+#' @return Data frame for the single variable from World Bank Data. If country is specified in the varcode, the data frame will include the date and a single column for a single country. If no country is specified, the data frame will include a column for every country. The data frame will also include all relevant meta data describing the data and citing its source.
 get_ecodata_variable_wb <- function(varcode, varname = NULL) {
   locations_pattern <- "(?<=\\?locations=)[^&]*"
   country_code <- str_extract(varcode, locations_pattern)
@@ -386,13 +393,25 @@ get_ecodata_variable_wb <- function(varcode, varname = NULL) {
   }
 
   if(country_code != "") {
-    df <- get_ecodata_variable_country_wb(variable_code, country_code, varname = varname)
+    all_country_codes <- stringr::str_split(country_code, pattern = "-", simplify = TRUE)[1,]
+    df <- get_ecodata_variable_country_wb(variable_code, all_country_codes[1], varname = varname)
+    if(length(all_country_codes) > 1) {
+      for(ci in 2:length(all_country_codes)) {
+        dfc <- get_ecodata_variable_country_wb(variable_code, all_country_codes[ci], varname = varname)
+        df <- dplyr::full_join(df, dfc, by = "Date")
+      }
+    }
   } else {
     df <- get_ecodata_variable_allcountries_wb(variable_code, varname = varname)
   }
   return(df)
 }
 
+#' `get_ecodata_variable_allcountries_wb()`
+#' Retrieve data for a single variable from World Bank Data for all available countries, given the URL for the data location, variable code, or the partial URL including the variable code.
+#' @param varcode String that is the URL for the data, variable code, or the partial URL including the variable code. If a location is included in the `varcode`, it will be ignored.
+#' @param varname Optional, string to give the variable name. By default, the variable will be named the variable code given in World Bank Data.
+#' @return Data frame for the single variable from World Bank Data. The data frame will include a column for every country. The data frame will also include all relevant meta data describing the data and citing its source.
 get_ecodata_variable_allcountries_wb <- function(varcode, varname = NULL) {
   variable_code <- get_wb_variable_code(varcode)
 
@@ -509,10 +528,10 @@ get_ecodata_variable_country_wb <- function(varcode, countrycode, varname = NULL
 #' Downloads data from FRED for a given variable code or URL
 #' @param varcode String that contains the variable code or URL to the data
 #' @param varname Optional, string for the variable name
-#' @param recessions Optional, logical for whether to include an NBER recession dummy variable. Default = TRUE.
+#' @param recessions Optional, logical for whether to include an NBER recession dummy variable. Default = FALSE.
 #' @return Data frame time series with two variables, Date and the variable requested. The data frame will also include all relevant meta data describing the data and citing its source.
 #' @export
-get_ecodata_variable_fred <- function(varcode, varname = NULL, recessions = TRUE) {
+get_ecodata_variable_fred <- function(varcode, varname = NULL, recessions = FALSE) {
   orig_varcode <- varcode
   if(is_valid_url(varcode)) {
     varcode <- tryCatch({
@@ -579,9 +598,10 @@ get_ecodata_variable_fred <- function(varcode, varname = NULL, recessions = TRUE
 #' The variable code or URL needs to be a state-specific variable, and be for just one of any of the U.S. States.
 #' The function will retrieve the data for all U.S. states.
 #' @param varcode String for the variable code or URL to the data, for any one U.S. state
-#' @param recessions Optional, logical for whether to include an NBER recession dummy variable. Default = TRUE.
+#' @param recessions Optional, logical for whether to include an NBER recession dummy variable. Default = FALSE.
+#' @return Data frame the variable requested for all U.S. states. The data frame will include a date variable and a column for every U.S. state. The data frame will also include all relevant meta data describing the data and citing its source.
 #' @export
-get_ecodata_allstates_fred <- function(varcode, recessions = TRUE) {
+get_ecodata_allstates_fred <- function(varcode, recessions = FALSE) {
   if(is_valid_url(varcode)) {
     varcode <- get_varcode_url(varcode)
   }
@@ -649,14 +669,64 @@ get_ecodata_varnames <- function(data) {
   return(ecovars)
 }
 
-# TODO - THIS FUNCTION JUST GETS FRED DATA
-get_ecodata <- function(varcodes, recessions = TRUE) {
-  df <- get_ecodata_variable(varcodes[1], recessions = FALSE)
+#' `get_ecodata_variable()`
+#' Get data for a single variable from either FRED or World Bank Data, for a given URL or variable code. The function will figure out whether the data is available from FRED or World Bank Data.
+#' @param varcode String that identifies the variable code or URL for the data
+#' @param varname Optional, string for the variable name. Default is the code given by the source.
+#' @param recessions Logical for whether or not to include a dummy variable identifying a NBER U.S. Recessions. Default = FALSE.
+#' @return Data frame time series that includes the date and the variable requested. The data frame will also include all relevant meta data describing the data and citing its source.
+get_ecodata_variable <- function(varcode, varname = NULL, recessions = FALSE) {
+  if(string_detect(varcode, "stlouidfed")) {
+    df <- get_ecodata_variable_fred(varcode, varname, recessions)
+  } else if(string_detect(varcode, "worldbank")) {
+    df <- get_ecodata_variable_wb(varcode, varname)
+  } else {
+    df <- tryCatch({
+        get_ecodata_variable_fred(varcode, varname, recessions)
+      },
+      warning = function(w) {NA}
+    )
+    if(all(is.na(df))) {
+      df <- tryCatch({
+          get_ecodata_variable_wb(varcode, varname)
+        },
+        warning = function(W) {NA}
+      )
+    }
+
+    if(all(is.na(df))) {
+      warnmsg <- sprintf("No data found in FRED or World Bank for URL or variable code, \'%s\'. Returning NA.\n", varcode)
+      warning(warnmsg)
+    }
+  }
+  return(df)
+}
+
+#' `get_ecodata_variable()`
+#' Get data for a single variable from either FRED or World Bank Data, for a given URL or variable code. The function will figure out whether the data is available from FRED or World Bank Data.
+#' @param varcodes String for vector of strings that identifies the variable codes or URLs for the data.
+#' @param varnames Optional, string or vector of strings for the variable names. Default is the code given by the source.
+#' @param recessions Logical for whether or not to include a dummy variable identifying a NBER U.S. Recessions. Default = FALSE.
+#' @return Data frame time series that includes the date and the variable requested. The data frame will also include all relevant meta data describing the data and citing its source.
+get_ecodata <- function(varcodes, varnames = NULL, recessions = FALSE) {
+  if(!is.null(varnmes) & (length(varcodes) != length(varnames)) ) {
+    stop("Length of `varcodes` is not equal to the length of `varnames`. There needs to be the name number of variables as variable names.")
+  }
+
+  varname <- NULL
+  if(!is.null(varnames)) {
+    varname <- varnames[1]
+  }
+  df <- get_ecodata_variable(varcodes[1], varname, recessions = FALSE)
 
   if(length(varcodes) > 1) {
     for(v in 2:length(varcodes)) {
       varcode <- varcodes[v]
-      newvar <- get_ecodata_variable(varcodes[v], recessions = FALSE)
+      varname <- NULL
+      if(!is.null(varnames)) {
+        varname <- varnames[v]
+      }
+      newvar <- get_ecodata_variable(varcode, varname, recessions = FALSE)
       df <- dplyr::full_join(df, newvar, by = "Date")
     }
   }
