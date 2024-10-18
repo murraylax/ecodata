@@ -532,6 +532,7 @@ get_ecodata_variable_country_wb <- function(varcode, countrycode, varname = NULL
 #' @return Data frame time series with two variables, Date and the variable requested. The data frame will also include all relevant meta data describing the data and citing its source.
 #' @export
 get_ecodata_variable_fred <- function(varcode, varname = NULL, recessions = FALSE) {
+  ecodata_fred_openapi()
   orig_varcode <- varcode
   if(is_valid_url(varcode)) {
     varcode <- tryCatch({
@@ -602,6 +603,7 @@ get_ecodata_variable_fred <- function(varcode, varname = NULL, recessions = FALS
 #' @return Data frame the variable requested for all U.S. states. The data frame will include a date variable and a column for every U.S. state. The data frame will also include all relevant meta data describing the data and citing its source.
 #' @export
 get_ecodata_allstates_fred <- function(varcode, recessions = FALSE) {
+  ecodata_fred_openapi()
   if(is_valid_url(varcode)) {
     varcode <- get_varcode_url(varcode)
   }
@@ -675,8 +677,9 @@ get_ecodata_varnames <- function(data) {
 #' @param varname Optional, string for the variable name. Default is the code given by the source.
 #' @param recessions Logical for whether or not to include a dummy variable identifying a NBER U.S. Recessions. Default = FALSE.
 #' @return Data frame time series that includes the date and the variable requested. The data frame will also include all relevant meta data describing the data and citing its source.
+#' @export
 get_ecodata_variable <- function(varcode, varname = NULL, recessions = FALSE) {
-  if(string_detect(varcode, "stlouidfed")) {
+  if(string_detect(varcode, "stlouisfed")) {
     df <- get_ecodata_variable_fred(varcode, varname, recessions)
   } else if(string_detect(varcode, "worldbank")) {
     df <- get_ecodata_variable_wb(varcode, varname)
@@ -702,14 +705,15 @@ get_ecodata_variable <- function(varcode, varname = NULL, recessions = FALSE) {
   return(df)
 }
 
-#' `get_ecodata_variable()`
-#' Get data for a single variable from either FRED or World Bank Data, for a given URL or variable code. The function will figure out whether the data is available from FRED or World Bank Data.
+#' `get_ecodata()`
+#' Get data for one or more variables from FRED and/or World Bank Data, for given URLs or variable codes. The function will figure out whether the data is available from FRED or World Bank Data.
 #' @param varcodes String for vector of strings that identifies the variable codes or URLs for the data.
 #' @param varnames Optional, string or vector of strings for the variable names. Default is the code given by the source.
 #' @param recessions Logical for whether or not to include a dummy variable identifying a NBER U.S. Recessions. Default = FALSE.
 #' @return Data frame time series that includes the date and the variable requested. The data frame will also include all relevant meta data describing the data and citing its source.
+#' @export
 get_ecodata <- function(varcodes, varnames = NULL, recessions = FALSE) {
-  if(!is.null(varnmes) & (length(varcodes) != length(varnames)) ) {
+  if(!is.null(varnames) & (length(varcodes) != length(varnames)) ) {
     stop("Length of `varcodes` is not equal to the length of `varnames`. There needs to be the name number of variables as variable names.")
   }
 
@@ -739,7 +743,15 @@ get_ecodata <- function(varcodes, varnames = NULL, recessions = FALSE) {
   return(df)
 }
 
-add_ecodata <- function(data, varcodes, recessions = FALSE) {
+#' `add_ecodata()`
+#' Add data for one or more variables from FRED and/or World Bank Data, for given URLs or variable codes. The function will figure out whether the data is available from FRED or World Bank Data.
+#' @param data Data frame with existing ecodata, data from FRED and/or World Bank Data
+#' @param varcodes String for vector of strings that identifies the variable codes or URLs for the data.
+#' @param varnames Optional, string or vector of strings for the variable names. Default is the code given by the source.
+#' @param recessions Logical for whether or not to include a dummy variable identifying a NBER U.S. Recessions. Default = FALSE.
+#' @return Data frame merged with original data frame that includes the new variables requested. The data frame will also include all relevant meta data describing the data and citing its source.
+#' @export
+add_ecodata <- function(data, varcodes, varnames = NULL, recessions = FALSE) {
   df <- get_ecodata(varcodes, recessions = FALSE)
   df <- dplyr::full_join(data, df, by = "Date")
 
@@ -750,7 +762,11 @@ add_ecodata <- function(data, varcodes, recessions = FALSE) {
   return(df)
 }
 
-# Get unique units from a data frame
+#' `ecodata_get_units(df)`
+#' Get unique units for the variables in the given data frame
+#' @param df Data frame from `get_ecodata()` that includes units information in the meta data
+#' @return A vector of unique unit descriptions from the data frame
+#' @export
 ecodata_get_units <- function(df) {
   all_units <- ""
   vars <- names(df)
@@ -764,6 +780,11 @@ ecodata_get_units <- function(df) {
   return(unique_units)
 }
 
+#' `ecodata_get_sources(df)`
+#' Get unique sources for the variables in the data frame
+#' @param df Data frame from `get_ecodata()` that includes units information in the meta data
+#' @return A vector of unique source descriptions from the data frame
+#' @export
 ecodata_get_sources <- function(df) {
   all_sources <- ""
   vars <- names(df)
@@ -778,6 +799,11 @@ ecodata_get_sources <- function(df) {
   return(unique_sources)
 }
 
+#' `ecodata_description(data)`
+#' Get a description of every variable in the given ecodata data frame
+#' @param data Data frame from `get_ecodata()` that includes units information in the meta data
+#' @return Returns a data frame with a row for each variable in the given data frame, and several columns describing attributes of each variable
+#' @seealso [ecodata_description_table()]
 ecodata_description <- function(data) {
   desc.df <- dplyr::tibble()
   ecovars <- get_ecodata_varnames(data)
@@ -789,6 +815,11 @@ ecodata_description <- function(data) {
   return(desc.df)
 }
 
+#' `ecodata_cite(data)`
+#' Get citation information for every variable in the given ecodata data frame
+#' @param data Data frame from `get_ecodata()` that includes units information in the meta data
+#' @return Returns a data frame with a row for each variable in the given data frame, with a column for how to cite each variable
+#' @seealso [ecodata_cite_table()]
 ecodata_cite <- function(data) {
   cite.df <- dplyr::tibble()
   ecovars <- get_ecodata_varnames(data)
@@ -800,6 +831,11 @@ ecodata_cite <- function(data) {
   return(cite.df)
 }
 
+#' `ecodata_description(data)`
+#' Get a table that describes every variable in the given ecodata data frame
+#' @param data Data frame from `get_ecodata()` that includes units information in the meta data
+#' @return Returns a flextable with a row for each variable in the given data frame, and several columns describing attributes of each variable
+#' @seealso [ecodata_description()]
 ecodata_description_table <- function(data) {
   desc.df <- ecodata_description(data)
   desc.df <- desc.df |>
@@ -816,6 +852,11 @@ ecodata_description_table <- function(data) {
   return(tb)
 }
 
+#' `ecodata_cite_table(data)`
+#' Get a table of citation information for every variable in the given ecodata data frame
+#' @param data Data frame from `get_ecodata()` that includes units information in the meta data
+#' @return Returns a flextable with a row for each variable in the given data frame, with a column for how to cite each variable
+#' @seealso [ecodata_cite()]
 ecodata_cite_table <- function(data) {
   desc.df <- ecodata_description(data)
 
@@ -841,6 +882,11 @@ ecodata_cite_table <- function(data) {
   return(tb)
 }
 
+#' `ecodata_colorscale()`
+#' Return up to 6 colors to use for a categorical color scale in a plot
+#' @param n Number of colors to return, n must be between 1 and 7
+#' @return Returns a vector of color values
+#' @export
 ecodata_colorscale <- function(n) {
   n <- as.integer(n)
   if(is.na(n)) {
@@ -864,7 +910,14 @@ ecodata_colorscale <- function(n) {
   return(mycols)
 }
 
-ggplot_ecodata_ts <- function(data, variables = NULL, title="", show.legend = TRUE, plot.recessions = FALSE) {
+#' `ggplot_ecodata_ts(data)`
+#' Make a time series line plot of the variables in the given data frame, in a single plot area.
+#' The number of variables in the data frame should be between 1 and 7
+#' @param data Data frame from `get_ecodata()` that includes a variable called `Date` and the other variables to plot
+#' @param variables Optional, vector of strings that includes the economic variables to plot. If not specified, the function will plot all the variables given in `data`, if possible.
+#' @param title Optional, string for the title of the plot. Default is ""
+#' @param plot.recessions Optional, logical for whether or not show show NBER recession bars in the plot
+ggplot_ecodata_ts <- function(data, variables = NULL, title="", plot.recessions = FALSE) {
   linewidth <- 1.5
   linecolor <- "dodgerblue4"
   title_strlen <- 60
@@ -896,6 +949,7 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", show.legend = TR
   plotvars <- includevars
 
   # Make sure all plot variables have the same units
+  all_units <- vector()
   for(v in 1:length(plotvars)) {
     all_units[v] <- attr(data[[plotvars[v]]], "Units")
   }
@@ -947,7 +1001,16 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", show.legend = TR
   return(plt)
 }
 
-ggplot_ecodata_facet <- function(data, variables = NULL, title="", ncol = 4, scales = "free", color = "dodgerblue4", strip_width = 40, show.legend = TRUE, plot.recessions = FALSE) {
+#' `ggplot_ecodata_facet(data)`
+#' Make a time series line plot of the variables in the given data frame, with each variable in its own facet.
+#' @param data Data frame from `get_ecodata()` that includes a variable called `Date` and the other variables to plot
+#' @param variables Optional, vector of strings that includes the economic variables to plot. If not specified, the function will plot all the variables given in `data`, if possible.
+#' @param ncol Optional, number of columns for the facet plot. Default is 4.
+#' @param color Optional, color of the lines. Default is "dodgerblue4"
+#' @param strip_width Optional, number of characters before putting in a new line to give to each variable in the title of the individual facet
+#' @param title Optional, string for the title of the plot. Default is ""
+#' @param plot.recessions Optional, logical for whether or not show show NBER recession bars in the plot
+ggplot_ecodata_facet <- function(data, variables = NULL, title="", ncol = 4, scales = "free", color = "dodgerblue4", strip_width = 40, plot.recessions = FALSE) {
   linewidth <- 1.5
   linecolor <- "dodgerblue4"
   title_strlen <- 60
@@ -1006,6 +1069,12 @@ ecodata_set_fredkey <- function(API_Key) {
   renviron_path <- path.expand("~/.Renviron")
   write(newentry, file = renviron_path, append = TRUE)
   Sys.setenv(FRED_API_KEY = API_Key)
+  fredr::fredr_set_key(API_Key)
+  # Test FRED
+  gdp <- tryCatch(fredr::fredr("GDP"),
+                  error = function(e) {
+                    stop("Failed to connect to FRED. Check for internet connection or for valid FRED API key. Obtain a key at \"https://fredaccount.stlouisfed.org/apikeys\" and set the key with the function, `ecodata_set_fredkey()`")
+                  })
 }
 
 #' `ecodata_get_fredkey()`
@@ -1015,17 +1084,57 @@ ecodata_get_fredkey <- function() {
   return(Sys.getenv("FRED_API_KEY"))
 }
 
+#' `string_not_empty(text)`
+#' Just return TRUE or FALSE if string given is not empty (i.e. not NULL, not NA, not whitespace, not "")
+#' @param text Text to test if it is not empty
+#' @return Logical, whether or not the string exists and has characters in it
+string_not_empty <- function(text) {
+  if(is.null(text)) return(FALSE)
+  if(is.na(text)) return(FALSE)
+  if(stringr::str_trim(text)=="") return(FALSE)
+  return(TRUE);
+}
+
+#' `string_empty(text)`
+#' Just return TRUE or FALSE if string given is empty ("empty" can include NULL, NA, whitespace only, "")
+#' @param text Text to test if it is empty
+#' @return Logical, whether or not the string is empty
+string_empty <- function(text) {
+  return(!string_not_empty(text))
+}
+
+ecodata_fred_openapi <- function() {
+  key <- fredr::fredr_get_key()
+  if(string_empty(key)) {
+    key <- ecodata_get_fredkey() # A key exists, but it is not set
+    if(string_not_empty(key)) {
+      fredr::fredr_set_key(API_Key)
+    } else {
+      stop("Must set FRED API key to proceed. Obtain a key at \"https://fredaccount.stlouisfed.org/apikeys\" and set the key with the function, `ecodata_set_fredkey()`")
+    }
+  }
+  # Test FRED
+  gdp <- tryCatch(fredr::fredr("GDP"),
+           error = function(e) {
+             stop("Failed to connect to FRED. Check for internet connection or for valid FRED API key. Obtain a key at \"https://fredaccount.stlouisfed.org/apikeys\" and set the key with the function, `ecodata_set_fredkey()`")
+           })
+}
+
 if(FALSE) {
-# Set up a connection to FRED
 
-# fredr::fredr_set_key(Sys.getenv("FRED_API_KEY"))
+varcodes <- c(
+  "https://fred.stlouisfed.org/series/DTB3",
+  "https://fred.stlouisfed.org/series/DGS10",
+  "https://fred.stlouisfed.org/series/IR3TIB01DEM156N",
+  "https://fred.stlouisfed.org/series/IRLTLT01DEM156N",
+  "https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=US",
+  "https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=DE"
+)
 
-# Let's get some data!
-varcodes <- c("AWHAETP", "SMU55000000500000002", "SMU55291000500000002")
 mydata <- get_ecodata(varcodes)
 
 # Plot a time series of the data
-ggplot_ecodata_ts(mydata, title = "Weekly Average Hours") +
+ggplot_ecodata_ts(mydata, title = "Real GDP and Interest Rates") +
   geom_recession()
 
 # Make a faceted plot
