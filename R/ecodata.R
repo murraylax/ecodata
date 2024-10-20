@@ -60,6 +60,32 @@ ecodata_theme <- function() {
   return(rettheme)
 }
 
+#' `ecodata_linear_interpolate()`
+#' Perform a linear interpolation for any missing values for an ecodata data frame. This is useful for plotting time series with mixed frequencies.
+#' @param df An ecodata data frame
+#' @param variable_names Optional, vector of strings for the names of the variables in `df` to perform the linear interpolation. Default is to perform the operation on all the variables.
+#' @return An ecodata data frame with the same structure as `df`, with NA values replaced with linear interpolations.
+ecodata_linear_interpolate <- function(df, variable_names = NULL) {
+  if(is.null(variable_names)) {
+    variable_names <- get_ecodata_varnames(df)
+  }
+
+  df <- dplyr::arrange(df, Date)
+
+  for(varname in variable_names) {
+    # Save original attributes
+    original_attributes <- attributes(df[[varname]])
+
+    # Interpolate
+    df[[varname]] <- zoo::na.approx(df[[varname]], x = df$Date, na.rm = FALSE)
+
+    # Re-apply attributes
+    attributes(df[[varname]]) <- original_attributes
+  }
+
+  return(df)
+}
+
 #' `string_compare()`
 #' Compare two strings, ignoring case and whitespace
 #' @param str1 String to compare
@@ -181,14 +207,19 @@ get_varcode_url <- function(url) {
 }
 
 #' `get_state_fips_all()`
-#' Get a data frame with all the U.S. states and their FIPS codes. Wrapper to `usmaps::fips_info()`
+#' Get a data frame with all the U.S. states and their FIPS codes. Data comes from `usmaps::fips_info()`
 #' @return A data frame with all the U.S. states and their FIPS codes
 #' @seealso [usmaps::fips_info()]
 #' @export
 get_state_fips_all <- function() {
-  fips_codes <- usmap::fips_info()
-  fips_codes <- dplyr::rename(fips_codes, State = full, FIPS = fips, Abbr = abbr)
-  return(fips_codes)
+  # fips_codes <- usmap::fips_info()
+  # fips_codes <- dplyr::rename(fips_codes, State = full, FIPS = fips, Abbr = abbr)
+  # return(fips_codes)
+
+  # Comment this out
+  load("./data/fips_codes.RData")
+
+  return(fips_codes.df)
 }
 
 #' `get_state_fips(state)`
@@ -276,19 +307,19 @@ GeomRecession <- ggplot2::ggproto("GeomRecession", ggplot2::Geom,
     maxdate <- max(data$x)
     linewidth = 0.0
 
-    load("recessions.RData")
+    # Comment this out later
+    load("./data/recessions.RData")
 
     recession_data <- recession_data |>
       dplyr::filter(Trough >= mindate & Peak <= maxdate)
 
-
     # If a recession started before the start of the dataset, set the beginning to the start of the dataset
     if(min(recession_data$Peak) <= mindate) {
-      recession_data[recession_data$Peak <= mindate] <- mindate
+      recession_data$Peak[recession_data$Peak <= mindate] <- mindate
     }
     # If a recession ended before the end of the dataset, set the end to the end of the dataset
     if(max(recession_data$Trough) >= maxdate) {
-      recession_data[recession_data$Trough >= maxdate] <- maxdate
+      recession_data$Trough[recession_data$Trough >= maxdate] <- maxdate
     }
 
     recession_data <- recession_data |>
@@ -451,8 +482,8 @@ get_ecodata_variable_allcountries_wb <- function(varcode, varname = NULL) {
 
   df <- df |>
     dplyr::mutate(`Variable Name` = sprintf("%s %s", varname, Country)) |>
-    dplyr::select(Date, `Variable Name`, all_of(varname)) |>
-    tidyr::pivot_wider(names_from = `Variable Name`, values_from = all_of(varname)) |>
+    dplyr::select(Date, `Variable Name`, dplyr::all_of(varname)) |>
+    tidyr::pivot_wider(names_from = `Variable Name`, values_from = dplyr::all_of(varname)) |>
     dplyr::arrange(Date)
 
   all_variable_names <- get_ecodata_varnames(df)
@@ -499,6 +530,27 @@ get_ecodata_variable_country_wb <- function(varcode, countrycode, varname = NULL
   }
   info <- wbstats::wb_search(varcode)
 
+  # Infer units from info
+  units <- "None"
+  wb_description <- info$indicator_desc[1]
+  if (string_detect(wb_description, "growth") & (string_detect(wb_description, "percent") | string_detect(wb_description, "%")) ) {
+    units <- "Growth rate (percentage)"
+  } else if(string_detect(wb_description, "index")) {
+    units <- "Index"
+  } else if(string_detect(wb_description, "percent") | string_detect(wb_description, "proportion")) {
+    units <- "Percentage"
+  } else if((string_detect(wb_description, "dollar") | string_detect(wb_description, "\\$")) & string_detect(wb_description, "PPP")  ) {
+    units <- "International dollars (PPP)"
+  } else if((string_detect(wb_description, "dollar") | string_detect(wb_description, "\\$")) & string_detect(wb_description, "constant")  ) {
+    units <- "Real U.S. dollars"
+  } else if((string_detect(wb_description, "dollar") | string_detect(wb_description, "\\$")) & string_detect(wb_description, "current")  ) {
+    units <- "Nominal U.S. dollars"
+  } else if(string_detect(wb_description, "LCU") & string_detect(wb_description, "constant")  ) {
+    units <- "Real local currency"
+  } else if(string_detect(wb_description, "LCU") & string_detect(wb_description, "current")  ) {
+    units <- "Nominal local currency"
+  }
+
   indicator <- sprintf("%s %s", raw.df$country[1], info$indicator[1])
   if(is.null(varname)) {
     varname <- stringr::str_squish(stringr::str_remove(indicator, "\\([^()]*\\)"))
@@ -511,6 +563,7 @@ get_ecodata_variable_country_wb <- function(varcode, countrycode, varname = NULL
   attr(df[[varname]], "Code") <- sprintf("%s?locations=%s", varcode, countrycode)
   attr(df[[varname]], "Description") <- info$indicator_desc[1]
   attr(df[[varname]], "Frequency") <- "Annual"
+  attr(df[[varname]], "Units") <- units
   attr(df[[varname]], "Seasonal Adjustment") <- "Not Seasonally Adjusted"
   source_str <- sprintf("World Bank Data")
   attr(df[[varname]], "Source") <- source_str
@@ -769,10 +822,11 @@ add_ecodata <- function(data, varcodes, varnames = NULL, recessions = FALSE) {
 #' @export
 ecodata_get_units <- function(df) {
   all_units <- ""
-  vars <- names(df)
+  vars <- get_ecodata_varnames(df)
   for(v in 1:length(vars)) {
-    if(!is.null(attr(data[[vars[v]]], "Units"))) {
-      all_units[v] <- attr(data[[vars[v]]], "Units")
+    varname <- vars[v]
+    if(!is.null(attr(df[[varname]], "Units"))) {
+      all_units[v] <- attr(df[[varname]], "Units")
     }
   }
   unique_units <- unique(all_units)
@@ -787,10 +841,10 @@ ecodata_get_units <- function(df) {
 #' @export
 ecodata_get_sources <- function(df) {
   all_sources <- ""
-  vars <- names(df)
+  vars <- get_ecodata_varnames(df)
   for(v in 1:length(vars)) {
-    if(!is.null(attr(data[[vars[v]]], "Source"))) {
-      all_sources[v] <- attr(data[[vars[v]]], "Source")
+    if(!is.null(attr(df[[vars[v]]], "Source"))) {
+      all_sources[v] <- attr(df[[vars[v]]], "Source")
     }
   }
   unique_sources <- unique(all_sources)
@@ -910,17 +964,39 @@ ecodata_colorscale <- function(n) {
   return(mycols)
 }
 
+abbreviated_units <- function(x) {
+  labs <- dplyr::case_when(
+    abs(x) >= 1e9 ~ paste0(scales::comma(x / 1e9), " bn"),  # Billions
+    abs(x) >= 1e6 ~ paste0(scales::comma(x / 1e6), " ml"),  # Millions
+    abs(x) >= 1e3 ~ paste0(scales::comma(x / 1e3), " th"),  # Thousands
+    TRUE ~ as.character(x)  # Leave smaller numbers as-is
+  )
+  return(labs)
+}
+
+abbreviated_units_dollar <- function(x) {
+  labs <- dplyr::case_when(
+    abs(x) >= 1e9 ~ paste0("$", scales::comma(x / 1e9), " bn"),  # Billions
+    abs(x) >= 1e6 ~ paste0("$", scales::comma(x / 1e6), " ml"),  # Millions
+    abs(x) >= 1e3 ~ paste0("$", scales::comma(x / 1e3), " th"),  # Thousands
+    TRUE ~ scales::dollar(x)  # Smaller numbers with dollar formatting
+  )
+  return(labs)
+}
+
 #' `ggplot_ecodata_ts(data)`
 #' Make a time series line plot of the variables in the given data frame, in a single plot area.
 #' The number of variables in the data frame should be between 1 and 7
 #' @param data Data frame from `get_ecodata()` that includes a variable called `Date` and the other variables to plot
-#' @param variables Optional, vector of strings that includes the economic variables to plot. If not specified, the function will plot all the variables given in `data`, if possible.
 #' @param title Optional, string for the title of the plot. Default is ""
+#' @param ylab Optional, string for the y-axis label. Default is the units of the meta data for the variables to be plotted
+#' @param variables Optional, vector of strings that includes the economic variables to plot. If not specified, the function will plot all the variables given in `data`, if possible.
+#' @param title_strlen Optional, word-wrap the length of the title by this many characters. Default = 60.
+#' @param variable_strlen Optional, word-wrap the length of the variable names by this many characters. Default = 85.
 #' @param plot.recessions Optional, logical for whether or not show show NBER recession bars in the plot
-ggplot_ecodata_ts <- function(data, variables = NULL, title="", plot.recessions = FALSE) {
+ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, title_strlen = 60, variable_strlen = 85, plot.recessions = FALSE) {
   linewidth <- 1.5
   linecolor <- "dodgerblue4"
-  title_strlen <- 60
 
   # Wrap title if necessary
   if(stringr::str_length(title) > title_strlen) {
@@ -935,10 +1011,16 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", plot.recessions 
   includevars <- get_ecodata_varnames(data)
   if(!is.null(variables)) {
     morevars_idx <- names(data) %in% variables
-    includevars <- c(includevars, names(data)[morevars_idx])
+    includevars <- names(data)[morevars_idx]
   }
-  nvar <- length(includevars)
 
+  # filter out just the variables to include
+  data <- data |>
+    filter(!dplyr::if_all(dplyr::all_of(includevars), is.na))
+  # Linear interpolation for missing values
+  data <- ecodata_linear_interpolate(data, includevars)
+
+  nvar <- length(includevars)
   if(nvar > 7) {
     stop("Number of variables to plot in a time series plot must be 7 or less.")
   }
@@ -949,21 +1031,25 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", plot.recessions 
   plotvars <- includevars
 
   # Make sure all plot variables have the same units
-  all_units <- vector()
+  all_units <- vector(length = length(plotvars))
   for(v in 1:length(plotvars)) {
     all_units[v] <- attr(data[[plotvars[v]]], "Units")
   }
   unique_units <- unique(all_units)
   if(length(unique_units) > 1) {
-    msg <- sprintf("Not all variables are in the same units. Units inlude, %s", paste(unique_units, sep = ", ", collapse = ", "))
-    stop(msg)
+    msg <- sprintf("Not all variables are in the same units. Units include, %s.", paste(unique_units, sep = ", ", collapse = ", "))
+    warning(msg)
+  }
+  useunits <- unique_units[1]
+  if(is.null(ylab)) {
+    ylab <- useunits
   }
 
   # Setup a units function for the vertical axis scale labels
-  units_function <- function(...) return("")
-  if(str_detect(unique_units, "$") | str_detect(str_to_lower(unique_units), "dollar")) {
-    units_function <- function(...) return(scales::dollar(...))
-  } else if(str_detect(unique_units, "%") | str_detect(str_to_lower(unique_units), "dollar")) {
+  units_function <- function(x) abbreviated_units(x)
+  if(string_detect(useunits, "\\$") | str_detect(str_to_lower(useunits), "dollar")) {
+    units_function <- function(x) return(abbreviated_units_dollar(x))
+  } else if(string_detect(useunits, "%") | string_detect(useunits, "percent") | string_detect(useunits, "proportion")) {
     units_function <- function(...) return(scales::percent(scale=1, ...))
   }
 
@@ -979,7 +1065,11 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", plot.recessions 
   mycols <- rev(ecodata_colorscale(nvar))
 
   plot.df <- data |>
-    tidyr::pivot_longer(cols = all_of(plotvars), names_to = "Variable", values_to = "Value")
+    tidyr::pivot_longer(cols = dplyr::all_of(plotvars), names_to = "Variable", values_to = "Value")
+
+  # Wrap strings for variable names
+  plotvars <- stringr::str_wrap(plotvars, variable_strlen)
+  plot.df <- dplyr::mutate(plot.df, Variable = stringr::str_wrap(Variable, variable_strlen))
 
   # Preserve the order of the variables
   plot.df <- dplyr::mutate(plot.df, Variable = factor(Variable, levels = plotvars, ordered = TRUE))
@@ -989,7 +1079,7 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", plot.recessions 
     ggplot2::scale_x_date(breaks = scales::pretty_breaks(n=8)) +
     ggplot2::scale_y_continuous(labels = units_function) +
     ggplot2::scale_color_manual(values = mycols) +
-    ggplot2::labs(y = unique_units, x = "", color = "", title = title, caption = sources_str) +
+    ggplot2::labs(y = ylab, x = "", color = "", title = title, caption = sources_str) +
     ecodata_theme() +
     ggplot2::theme(legend.position = "bottom", legend.justification = "left") +
     ggplot2::guides(color = ggplot2::guide_legend(nrow = length(plotvars)))  # Each item in a separate row
@@ -1005,15 +1095,16 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", plot.recessions 
 #' Make a time series line plot of the variables in the given data frame, with each variable in its own facet.
 #' @param data Data frame from `get_ecodata()` that includes a variable called `Date` and the other variables to plot
 #' @param variables Optional, vector of strings that includes the economic variables to plot. If not specified, the function will plot all the variables given in `data`, if possible.
+#' @param title Optional, string for the title of the plot. Default is ""
+#' @param ylab Optional, string for the y-axis label. Default is the units of the meta data for the variables to be plotted
 #' @param ncol Optional, number of columns for the facet plot. Default is 4.
 #' @param color Optional, color of the lines. Default is "dodgerblue4"
-#' @param strip_width Optional, number of characters before putting in a new line to give to each variable in the title of the individual facet
-#' @param title Optional, string for the title of the plot. Default is ""
+#' @param title_strlen Optional, word-wrap the length of the title by this many characters. Default = 60.
+#' @param strip_width Optional, word-wrap variable in the title of the individual facet. Default = 40.
 #' @param plot.recessions Optional, logical for whether or not show show NBER recession bars in the plot
-ggplot_ecodata_facet <- function(data, variables = NULL, title="", ncol = 4, scales = "free", color = "dodgerblue4", strip_width = 40, plot.recessions = FALSE) {
+ggplot_ecodata_facet <- function(data, variables = NULL, title="", ylab = NULL, ncol = 4, scales = "free", color = "dodgerblue4", title_strlen = 60, strip_width = 40, plot.recessions = FALSE) {
   linewidth <- 1.5
   linecolor <- "dodgerblue4"
-  title_strlen <- 60
   if(stringr::str_length(title) > title_strlen) {
     # Put a new line first after a colon
     title <- stringr::str_replace(title, ":", ":\n")
@@ -1022,11 +1113,19 @@ ggplot_ecodata_facet <- function(data, variables = NULL, title="", ncol = 4, sca
     title <- paste(alllines, collapse = "\n")
   }
 
+  # Identify the variables to plot
   includevars <- get_ecodata_varnames(data)
   if(!is.null(variables)) {
     morevars_idx <- names(data) %in% variables
-    includevars <- c(includevars, names(data)[morevars_idx])
+    includevars <- names(data)[morevars_idx]
   }
+
+  # filter out just the variables to include
+  data <- data |>
+    filter(!dplyr::if_all(dplyr::all_of(includevars), is.na))
+  # Linear interpolation for missing values
+  data <- ecodata_linear_interpolate(data, includevars)
+
   nvar <- length(includevars)
   if(nvar < 1) {
     stop("There must be at least one variable to plot.")
@@ -1034,8 +1133,31 @@ ggplot_ecodata_facet <- function(data, variables = NULL, title="", ncol = 4, sca
 
   plotvars <- includevars
 
+  # Make sure all plot variables have the same units
+  all_units <- vector()
+  for(v in 1:length(plotvars)) {
+    all_units[v] <- attr(data[[plotvars[v]]], "Units")
+  }
+  unique_units <- unique(all_units)
+  if(length(unique_units) > 1) {
+    msg <- sprintf("Not all variables are in the same units. Units include, %s.", paste(unique_units, sep = ", ", collapse = ", "))
+    warning(msg)
+  }
+  useunits <- unique_units[1]
+  if(is.null(ylab)) {
+    ylab <- useunits
+  }
+
+  # Setup a units function for the vertical axis scale labels
+  units_function <- function(x) abbreviated_units(x)
+  if(string_detect(useunits, "\\$") | str_detect(str_to_lower(useunits), "dollar")) {
+    units_function <- function(x) return(abbreviated_units_dollar(x))
+  } else if(string_detect(useunits, "%") | string_detect(useunits, "percent") | string_detect(useunits, "proportion")) {
+    units_function <- function(...) return(scales::percent(scale=1, ...))
+  }
+
   plot.df <- data |>
-    tidyr::pivot_longer(cols = all_of(plotvars), names_to = "Variable", values_to = "Value")
+    tidyr::pivot_longer(cols = dplyr::all_of(plotvars), names_to = "Variable", values_to = "Value")
 
   # Length of strip text
   plot.df <- dplyr::mutate(plot.df, Variable = stringr::str_wrap(Variable, width = strip_width))
@@ -1047,6 +1169,7 @@ ggplot_ecodata_facet <- function(data, variables = NULL, title="", ncol = 4, sca
   plt <- ggplot2::ggplot(plot.df, ggplot2::aes(x = Date, y = Value)) +
     ggplot2::geom_line(linewidth = linewidth, color = color) +
     ggplot2::scale_x_date(breaks = scales::pretty_breaks(n=8)) +
+    ggplot2::scale_y_continuous(labels = units_function) +
     ggplot2::facet_wrap(ggplot2::vars(Variable), ncol = ncol, scales = scales) +
     ggplot2::labs(y = "", x = "", color = "", title = title) +
     ecodata_theme() +
@@ -1091,7 +1214,7 @@ ecodata_get_fredkey <- function() {
 string_not_empty <- function(text) {
   if(is.null(text)) return(FALSE)
   if(is.na(text)) return(FALSE)
-  if(stringr::str_trim(text)=="") return(FALSE)
+  if(stringr::str_squish(text)=="") return(FALSE)
   return(TRUE);
 }
 
@@ -1133,12 +1256,21 @@ varcodes <- c(
 
 mydata <- get_ecodata(varcodes)
 
-# Plot a time series of the data
-ggplot_ecodata_ts(mydata, title = "Real GDP and Interest Rates") +
+# Plot a time series of the Real GDP data
+ggplot_ecodata_ts(mydata, title = "Real GDP", variables = c("United States GDP, PPP", "Germany GDP, PPP")) +
   geom_recession()
 
-# Make a faceted plot
-ggplot_ecodata_facet(mydata, ncol = 2) +
+# Plot a time series of the U.S. interest rate data
+ggplot_ecodata_ts(mydata, title = "Interest Rates",
+                  variables = c("3-Month Treasury Bill Secondary Market Rate, Discount Basis", "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis")) +
+  geom_recession()
+
+# Plot a faceted time series of the U.S. and German interest rate data
+ggplot_ecodata_facet(mydata, title = "Interest Rates", ncol = 2,
+                  variables = c("3-Month Treasury Bill Secondary Market Rate, Discount Basis",
+                                "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis",
+                                "Interest Rates: 3-Month or 90-Day Rates and Yields: Interbank Rates: Total for Germany",
+                                "Interest Rates: Long-Term Government Bond Yields: 10-Year: Main (Including Benchmark) for Germany")) +
   geom_recession()
 
 # I forgot. Can I add on this variable too? Sure!
