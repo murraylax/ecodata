@@ -9,13 +9,13 @@
 #   Test Package:              'Ctrl + Shift + T'
 
 
-#' `glimpse()`
+#' Get a glimpse of ecodata
 #'
 #' A override of dplyr's glimpse() that also prints the label for the dataframe
 #' Just prints information about the dataframe
 #'
 #' @param x An ecodata data frame, the return value from `get_ecodata()`
-#' @seealso [dplyr::glimpse()]
+#' @seealso \code{\link[dplyr]{glimpse}}
 #' @export
 glimpse <- function(x) {
   cat(attr(x, "label"))
@@ -397,6 +397,7 @@ get_recessions <- function(data) {
 #' `get_wb_variable_code()`
 #' For a given string from a World Bank Data URL or partial URL, extract the code for the variable, but not the location
 #' @param text String that is the URL or partial URL from World Bank Data for a given variable
+#' @export
 get_wb_variable_code <- function(text) {
   # Define the correct regex pattern
   variable_pattern <- ".*/([^/?]*)(?:\\?.*)?$"
@@ -421,6 +422,7 @@ get_wb_variable_code <- function(text) {
 #'                If the location is part of the text, it will download the variable for just that country/location. If location is not given, it will download the variable for all countries/locations.
 #' @param varname Optional, string to give the variable name. By default, the variable will be named the variable code given in World Bank Data.
 #' @return Data frame for the single variable from World Bank Data. If country is specified in the varcode, the data frame will include the date and a single column for a single country. If no country is specified, the data frame will include a column for every country. The data frame will also include all relevant meta data describing the data and citing its source.
+#' @export
 get_ecodata_variable_wb <- function(varcode, varname = NULL) {
   locations_pattern <- "(?<=\\?locations=)[^&]*"
   country_code <- str_extract(varcode, locations_pattern)
@@ -454,6 +456,7 @@ get_ecodata_variable_wb <- function(varcode, varname = NULL) {
 #' @param varcode String that is the URL for the data, variable code, or the partial URL including the variable code. If a location is included in the `varcode`, it will be ignored.
 #' @param varname Optional, string to give the variable name. By default, the variable will be named the variable code given in World Bank Data.
 #' @return Data frame for the single variable from World Bank Data. The data frame will include a column for every country. The data frame will also include all relevant meta data describing the data and citing its source.
+#' @export
 get_ecodata_variable_allcountries_wb <- function(varcode, varname = NULL) {
   variable_code <- get_wb_variable_code(varcode)
 
@@ -869,6 +872,7 @@ ecodata_get_sources <- function(df) {
 #' @param data Data frame from `get_ecodata()` that includes units information in the meta data
 #' @return Returns a data frame with a row for each variable in the given data frame, and several columns describing attributes of each variable
 #' @seealso [ecodata_description_table()]
+#' @export
 ecodata_description <- function(data) {
   desc.df <- dplyr::tibble()
   ecovars <- get_ecodata_varnames(data)
@@ -885,6 +889,7 @@ ecodata_description <- function(data) {
 #' @param data Data frame from `get_ecodata()` that includes units information in the meta data
 #' @return Returns a data frame with a row for each variable in the given data frame, with a column for how to cite each variable
 #' @seealso [ecodata_cite_table()]
+#' @export
 ecodata_cite <- function(data) {
   cite.df <- dplyr::tibble()
   ecovars <- get_ecodata_varnames(data)
@@ -901,6 +906,7 @@ ecodata_cite <- function(data) {
 #' @param data Data frame from `get_ecodata()` that includes units information in the meta data
 #' @return Returns a flextable with a row for each variable in the given data frame, and several columns describing attributes of each variable
 #' @seealso [ecodata_description()]
+#' @export
 ecodata_description_table <- function(data) {
   desc.df <- ecodata_description(data)
   desc.df <- desc.df |>
@@ -922,6 +928,7 @@ ecodata_description_table <- function(data) {
 #' @param data Data frame from `get_ecodata()` that includes units information in the meta data
 #' @return Returns a flextable with a row for each variable in the given data frame, with a column for how to cite each variable
 #' @seealso [ecodata_cite()]
+#' @export
 ecodata_cite_table <- function(data) {
   desc.df <- ecodata_description(data)
 
@@ -947,7 +954,8 @@ ecodata_cite_table <- function(data) {
   return(tb)
 }
 
-#' `ecodata_colorscale()`
+#' ecodata_colorscale
+#'
 #' Return up to 6 colors to use for a categorical color scale in a plot
 #' @param n Number of colors to return, n must be between 1 and 7
 #' @return Returns a vector of color values
@@ -975,6 +983,12 @@ ecodata_colorscale <- function(n) {
   return(mycols)
 }
 
+#' abbreviated_units
+#'
+#' Convert a number to an abbreviated string, using "th", "ml", or "bn" for "thousand", "million", or "billion", as appropriate
+#' @param x Numeric, number to abbreviate
+#' @return String describing the number, with the appropriate abbreviation
+#' @export
 abbreviated_units <- function(x) {
   labs <- dplyr::case_when(
     abs(x) >= 1e9 ~ paste0(scales::comma(x / 1e9), " bn"),  # Billions
@@ -985,6 +999,12 @@ abbreviated_units <- function(x) {
   return(labs)
 }
 
+#' abbreviated_units_dollar
+#'
+#' Convert a dollar amount to an abbreviated string, using "th", "ml", or "bn" for "thousand", "million", or "billion", as appropriate
+#' @param x Numeric, number to abbreviate
+#' @return String describing the number as a dollar amount, with a dollar sign, commas, and with the appropriate abbreviation
+#' @export
 abbreviated_units_dollar <- function(x) {
   labs <- dplyr::case_when(
     abs(x) >= 1e9 ~ paste0("$", scales::comma(x / 1e9), " bn"),  # Billions
@@ -1005,6 +1025,7 @@ abbreviated_units_dollar <- function(x) {
 #' @param title_strlen Optional, word-wrap the length of the title by this many characters. Default = 60.
 #' @param variable_strlen Optional, word-wrap the length of the variable names by this many characters. Default = 85.
 #' @param plot.recessions Optional, logical for whether or not show show NBER recession bars in the plot
+#' @export
 ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, title_strlen = 60, variable_strlen = 85, plot.recessions = FALSE) {
   linewidth <- 1.5
   linecolor <- "dodgerblue4"
@@ -1102,7 +1123,8 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, tit
   return(plt)
 }
 
-#' `ggplot_ecodata_facet(data)`
+#' ggplot_ecodata_facet
+#'
 #' Make a time series line plot of the variables in the given data frame, with each variable in its own facet.
 #' @param data Data frame from `get_ecodata()` that includes a variable called `Date` and the other variables to plot
 #' @param variables Optional, vector of strings that includes the economic variables to plot. If not specified, the function will plot all the variables given in `data`, if possible.
@@ -1115,6 +1137,7 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, tit
 #' @param strip_width Optional, word-wrap variable in the title of the individual facet. Default = 40.
 #' @param plot.recessions Optional, logical for whether or not show show NBER recession bars in the plot
 #' @return Returns a ggplot, faceted by each economic variable
+#' @export
 ggplot_ecodata_facet <- function(data, variables = NULL, title="", ylab = NULL, ncol = 4, scales = "free", color = "dodgerblue4", title_strlen = 60, strip_width = 40, plot.recessions = FALSE) {
   linewidth <- 1.5
   linecolor <- "dodgerblue4"
@@ -1200,6 +1223,7 @@ ggplot_ecodata_facet <- function(data, variables = NULL, title="", ylab = NULL, 
 #' Set the FRED key as a permanent environmental variable, and make it available immediately
 #' This will append the ~/.Renviron file
 #' @param API_Key String that is the API key for FRED. Go to https://fredaccount.stlouisfed.org/apikeys to request a key.
+#' @export
 ecodata_set_fredkey <- function(API_Key) {
   newentry <- sprintf("FRED_API_KEY=%s", API_Key)
   renviron_path <- path.expand("~/.Renviron")
@@ -1216,6 +1240,7 @@ ecodata_set_fredkey <- function(API_Key) {
 #' `ecodata_get_fredkey()`
 #' Get the FRED API key if it exists. Returns empty string if it doesn't exist
 #' @return String that is the FRED API key. Empty string if it doesn't exist
+#' @export
 ecodata_get_fredkey <- function() {
   return(Sys.getenv("FRED_API_KEY"))
 }
@@ -1239,6 +1264,10 @@ string_empty <- function(text) {
   return(!string_not_empty(text))
 }
 
+#' ecodata_fred_openapi()
+#'
+#' Check to see if the FRED API key already exists and is loaded. If it exists as an environmental variable, but is not loaded, it will attempt to load it. Halts execution if the API key is not found, or if downloading from FRED is not successful
+#' @export
 ecodata_fred_openapi <- function() {
   key <- fredr::fredr_get_key()
   if(string_empty(key)) {
@@ -1256,46 +1285,46 @@ ecodata_fred_openapi <- function() {
            })
 }
 
-if(FALSE) {
-
-varcodes <- c(
-  "https://fred.stlouisfed.org/series/DTB3",
-  "https://fred.stlouisfed.org/series/DGS10",
-  "https://fred.stlouisfed.org/series/IR3TIB01DEM156N",
-  "https://fred.stlouisfed.org/series/IRLTLT01DEM156N",
-  "https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=US",
-  "https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=DE"
-)
-
-mydata <- get_ecodata(varcodes)
-
-# Plot a time series of the Real GDP data
-ggplot_ecodata_ts(mydata, title = "Real GDP", variables = c("United States GDP, PPP", "Germany GDP, PPP")) +
-  geom_recession()
-
-# Plot a time series of the U.S. interest rate data
-ggplot_ecodata_ts(mydata, title = "Interest Rates",
-                  variables = c("3-Month Treasury Bill Secondary Market Rate, Discount Basis", "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis")) +
-  geom_recession()
-
-# Plot a faceted time series of the U.S. and German interest rate data
-ggplot_ecodata_facet(mydata, title = "Interest Rates", ncol = 2,
-                  variables = c("3-Month Treasury Bill Secondary Market Rate, Discount Basis",
-                                "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis",
-                                "Interest Rates: 3-Month or 90-Day Rates and Yields: Interbank Rates: Total for Germany",
-                                "Interest Rates: Long-Term Government Bond Yields: 10-Year: Main (Including Benchmark) for Germany")) +
-  geom_recession()
-
-# I forgot. Can I add on this variable too? Sure!
-mydata <- add_ecodata(mydata, "GDPC1")
-mydata <- add_ecodata(mydata, "MEPAINUSA646N")
-
-# Get information about the data
-mydata_description <- ecodata_description(mydata)
-
-# Get a pretty table of information about the data
-ecodata_description_table(mydata)
-
-# I need to cite my sources
-ecodata_cite_table(mydata)
-}
+# if(FALSE) {
+#
+# varcodes <- c(
+#   "https://fred.stlouisfed.org/series/DTB3",
+#   "https://fred.stlouisfed.org/series/DGS10",
+#   "https://fred.stlouisfed.org/series/IR3TIB01DEM156N",
+#   "https://fred.stlouisfed.org/series/IRLTLT01DEM156N",
+#   "https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=US",
+#   "https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=DE"
+# )
+#
+# mydata <- get_ecodata(varcodes)
+#
+# # Plot a time series of the Real GDP data
+# ggplot_ecodata_ts(mydata, title = "Real GDP", variables = c("United States GDP, PPP", "Germany GDP, PPP")) +
+#   geom_recession()
+#
+# # Plot a time series of the U.S. interest rate data
+# ggplot_ecodata_ts(mydata, title = "Interest Rates",
+#                   variables = c("3-Month Treasury Bill Secondary Market Rate, Discount Basis", "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis")) +
+#   geom_recession()
+#
+# # Plot a faceted time series of the U.S. and German interest rate data
+# ggplot_ecodata_facet(mydata, title = "Interest Rates", ncol = 2,
+#                   variables = c("3-Month Treasury Bill Secondary Market Rate, Discount Basis",
+#                                 "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis",
+#                                 "Interest Rates: 3-Month or 90-Day Rates and Yields: Interbank Rates: Total for Germany",
+#                                 "Interest Rates: Long-Term Government Bond Yields: 10-Year: Main (Including Benchmark) for Germany")) +
+#   geom_recession()
+#
+# # I forgot. Can I add on this variable too? Sure!
+# mydata <- add_ecodata(mydata, "GDPC1")
+# mydata <- add_ecodata(mydata, "MEPAINUSA646N")
+#
+# # Get information about the data
+# mydata_description <- ecodata_description(mydata)
+#
+# # Get a pretty table of information about the data
+# ecodata_description_table(mydata)
+#
+# # I need to cite my sources
+# ecodata_cite_table(mydata)
+# }
