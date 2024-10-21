@@ -1,9 +1,20 @@
+# You can learn more about package authoring with RStudio at:
+#
+#   https://r-pkgs.org
+#
+# Some useful keyboard shortcuts for package authoring:
+#
+#   Install Package:           'Ctrl + Shift + B'
+#   Check Package:             'Ctrl + Shift + E'
+#   Test Package:              'Ctrl + Shift + T'
+
+
 #' `glimpse()`
 #'
 #' A override of dplyr's glimpse() that also prints the label for the dataframe
 #' Just prints information about the dataframe
 #'
-#' @param x An ecodata dataframe, the return value from `get_ecodata()`
+#' @param x An ecodata data frame, the return value from `get_ecodata()`
 #' @seealso [dplyr::glimpse()]
 #' @export
 glimpse <- function(x) {
@@ -217,7 +228,7 @@ get_state_fips_all <- function() {
   # return(fips_codes)
 
   # Comment this out
-  load("./data/fips_codes.RData")
+  # load("./data/fips_codes.RData")
 
   return(fips_codes.df)
 }
@@ -308,7 +319,7 @@ GeomRecession <- ggplot2::ggproto("GeomRecession", ggplot2::Geom,
     linewidth = 0.0
 
     # Comment this out later
-    load("./data/recessions.RData")
+    # load("./data/recessions.RData")
 
     recession_data <- recession_data |>
       dplyr::filter(Trough >= mindate & Peak <= maxdate)
@@ -1098,10 +1109,12 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, tit
 #' @param title Optional, string for the title of the plot. Default is ""
 #' @param ylab Optional, string for the y-axis label. Default is the units of the meta data for the variables to be plotted
 #' @param ncol Optional, number of columns for the facet plot. Default is 4.
+#' @param scales Optional, string passed to `facet_wrap()` on whether to fix or free the scales on the x and y axes
 #' @param color Optional, color of the lines. Default is "dodgerblue4"
 #' @param title_strlen Optional, word-wrap the length of the title by this many characters. Default = 60.
 #' @param strip_width Optional, word-wrap variable in the title of the individual facet. Default = 40.
 #' @param plot.recessions Optional, logical for whether or not show show NBER recession bars in the plot
+#' @return Returns a ggplot, faceted by each economic variable
 ggplot_ecodata_facet <- function(data, variables = NULL, title="", ylab = NULL, ncol = 4, scales = "free", color = "dodgerblue4", title_strlen = 60, strip_width = 40, plot.recessions = FALSE) {
   linewidth <- 1.5
   linecolor <- "dodgerblue4"

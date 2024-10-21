@@ -1,11 +1,26 @@
-Package: ecodata
 Type: Package
-Title: What the Package Does (Title Case)
+Package: ecodata
+Title: Download and visualize economic data from FRED or World Bank Data
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: James M. Murray
+Maintainer: James M. Murray <jmurray@uwlax.edu>
+Description: Download and visualize economic data from FRED or World Bank
+    Data
+License: GPL (>= 3)
+Imports: 
+    dplyr,
+    flextable,
+    fredr,
+    ggplot2,
+    Hmisc,
+    httr,
+    officer,
+    RColorBrewer,
+    scales,
+    stringr,
+    tidyr,
+    wbstats,
+    zoo
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 7.3.2
