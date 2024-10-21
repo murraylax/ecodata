@@ -2,10 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{get_ecodata_allstates_fred}
 \alias{get_ecodata_allstates_fred}
-\title{`get_ecodata_allstates_fred()`
-Downloads data from FRED for all U.S. states, for a given variable code or URL
-The variable code or URL needs to be a state-specific variable, and be for just one of any of the U.S. States.
-The function will retrieve the data for all U.S. states.}
+\title{Get state-level FRED data for all U.S. states}
 \usage{
 get_ecodata_allstates_fred(varcode, recessions = FALSE)
 }
@@ -18,8 +15,7 @@ get_ecodata_allstates_fred(varcode, recessions = FALSE)
 Data frame the variable requested for all U.S. states. The data frame will include a date variable and a column for every U.S. state. The data frame will also include all relevant meta data describing the data and citing its source.
 }
 \description{
-`get_ecodata_allstates_fred()`
-Downloads data from FRED for all U.S. states, for a given variable code or URL
+Downloads data from FRED for all U.S. states, for a given variable code or URL.
 The variable code or URL needs to be a state-specific variable, and be for just one of any of the U.S. States.
 The function will retrieve the data for all U.S. states.
 }

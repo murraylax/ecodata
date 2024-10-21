@@ -615,6 +615,8 @@ get_ecodata_variable_fred <- function(varcode, varname = NULL, recessions = FALS
     return(NA)
   }
 
+  varcode <- str_to_upper(varcode)
+
   raw.df <- tryCatch({
       fredr::fredr(varcode)
     },
@@ -661,8 +663,9 @@ get_ecodata_variable_fred <- function(varcode, varname = NULL, recessions = FALS
   return(new.df)
 }
 
-#' `get_ecodata_allstates_fred()`
-#' Downloads data from FRED for all U.S. states, for a given variable code or URL
+#' Get state-level FRED data for all U.S. states
+#'
+#' Downloads data from FRED for all U.S. states, for a given variable code or URL.
 #' The variable code or URL needs to be a state-specific variable, and be for just one of any of the U.S. States.
 #' The function will retrieve the data for all U.S. states.
 #' @param varcode String for the variable code or URL to the data, for any one U.S. state
@@ -674,6 +677,7 @@ get_ecodata_allstates_fred <- function(varcode, recessions = FALSE) {
   if(is_valid_url(varcode)) {
     varcode <- get_varcode_url(varcode)
   }
+  varcode <- str_to_upper(varcode)
 
   raw.df <- fredr::fredr(varcode)
   info <- fredr::fredr_series(varcode)
