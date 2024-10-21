@@ -599,7 +599,7 @@ get_ecodata_variable_country_wb <- function(varcode, countrycode, varname = NULL
 #' @return Data frame time series with two variables, Date and the variable requested. The data frame will also include all relevant meta data describing the data and citing its source.
 #' @export
 get_ecodata_variable_fred <- function(varcode, varname = NULL, recessions = FALSE) {
-  ecodata_fred_openapi()
+  # ecodata_fred_openapi()
   orig_varcode <- varcode
   if(is_valid_url(varcode)) {
     varcode <- tryCatch({
@@ -615,7 +615,7 @@ get_ecodata_variable_fred <- function(varcode, varname = NULL, recessions = FALS
     return(NA)
   }
 
-  varcode <- str_to_upper(varcode)
+  varcode <- stringr::str_to_upper(varcode)
 
   raw.df <- tryCatch({
       fredr::fredr(varcode)
@@ -651,7 +651,7 @@ get_ecodata_variable_fred <- function(varcode, varname = NULL, recessions = FALS
   attr(new.df[[varname]], "Frequency") <- info$frequency[1]
   attr(new.df[[varname]], "Units") <- info$units_short[1]
   attr(new.df[[varname]], "Seasonal Adjustment") <- info$seasonal_adjustment[1]
-  source_str <- sprintf("FRED Ⓡ, Federal Reserve Bank of St. Louis")
+  source_str <- sprintf("FRED (R) Federal Reserve Bank of St. Louis")
   attr(new.df[[varname]], "Source") <- source_str
   url_str <- sprintf("https://fred.stlouisfed.org/series/%s", varcode)
   attr(new.df[[varname]], "URL") <- url_str
@@ -673,11 +673,11 @@ get_ecodata_variable_fred <- function(varcode, varname = NULL, recessions = FALS
 #' @return Data frame the variable requested for all U.S. states. The data frame will include a date variable and a column for every U.S. state. The data frame will also include all relevant meta data describing the data and citing its source.
 #' @export
 get_ecodata_allstates_fred <- function(varcode, recessions = FALSE) {
-  ecodata_fred_openapi()
+  # ecodata_fred_openapi()
   if(is_valid_url(varcode)) {
     varcode <- get_varcode_url(varcode)
   }
-  varcode <- str_to_upper(varcode)
+  varcode <- stringr::str_to_upper(varcode)
 
   raw.df <- fredr::fredr(varcode)
   info <- fredr::fredr_series(varcode)
@@ -1078,7 +1078,11 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, tit
   }
   useunits <- unique_units[1]
   if(is.null(ylab)) {
-    ylab <- useunits
+    if(useunits == "%" | string_compare(useunits, "percent") | string_compare(useunits, "percentage")) {
+      ylab <- ""
+    } else {
+      ylab <- useunits
+    }
   }
 
   # Setup a units function for the vertical axis scale labels
@@ -1113,7 +1117,7 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, tit
   plt <- ggplot2::ggplot(plot.df, ggplot2::aes(x = Date, y = Value, color = Variable)) +
     ggplot2::geom_line(linewidth = linewidth) +
     ggplot2::scale_x_date(breaks = scales::pretty_breaks(n=8)) +
-    ggplot2::scale_y_continuous(labels = units_function) +
+    ggplot2::scale_y_continuous(labels = units_function, breaks = scales::pretty_breaks(n=5)) +
     ggplot2::scale_color_manual(values = mycols) +
     ggplot2::labs(y = ylab, x = "", color = "", title = title, caption = sources_str) +
     ecodata_theme() +
@@ -1184,8 +1188,13 @@ ggplot_ecodata_facet <- function(data, variables = NULL, title="", ylab = NULL, 
     warning(msg)
   }
   useunits <- unique_units[1]
+
   if(is.null(ylab)) {
-    ylab <- useunits
+    if(useunits == "%" | string_compare(useunits, "percent") | string_compare(useunits, "percentage")) {
+      ylab <- ""
+    } else {
+      ylab <- useunits
+    }
   }
 
   # Setup a units function for the vertical axis scale labels
@@ -1209,9 +1218,9 @@ ggplot_ecodata_facet <- function(data, variables = NULL, title="", ylab = NULL, 
   plt <- ggplot2::ggplot(plot.df, ggplot2::aes(x = Date, y = Value)) +
     ggplot2::geom_line(linewidth = linewidth, color = color) +
     ggplot2::scale_x_date(breaks = scales::pretty_breaks(n=8)) +
-    ggplot2::scale_y_continuous(labels = units_function) +
+    ggplot2::scale_y_continuous(labels = units_function, breaks = scales::pretty_breaks(n=5)) +
     ggplot2::facet_wrap(ggplot2::vars(Variable), ncol = ncol, scales = scales) +
-    ggplot2::labs(y = "", x = "", color = "", title = title) +
+    ggplot2::labs(y = ylab, x = "", color = "", title = title) +
     ecodata_theme() +
     ggplot2::theme(legend.position = "bottom", legend) +
     ggplot2::guides(color = ggplot2::guide_legend(nrow = length(plotvars)))  # Each item in a separate row
