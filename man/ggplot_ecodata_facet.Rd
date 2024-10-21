@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{ggplot_ecodata_facet}
 \alias{ggplot_ecodata_facet}
-\title{`ggplot_ecodata_facet(data)`
-Make a time series line plot of the variables in the given data frame, with each variable in its own facet.}
+\title{ggplot_ecodata_facet}
 \usage{
 ggplot_ecodata_facet(
   data,
@@ -43,6 +42,5 @@ ggplot_ecodata_facet(
 Returns a ggplot, faceted by each economic variable
 }
 \description{
-`ggplot_ecodata_facet(data)`
 Make a time series line plot of the variables in the given data frame, with each variable in its own facet.
 }

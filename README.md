@@ -34,6 +34,8 @@ Set up the API key to use in the `ecodata` package (and/or the `fredr` package) 
 
 `ecodata_set_fredkey("abcd1234efgh5678ijkl9012mnop3456")`
 
+You should only need to do the above once per machine, then the FRED API should be available every time you load R.
+
 ## Get started
 
 You can find real GDP data for the United States on FRED here: https://fred.stlouisfed.org/series/GDPC1

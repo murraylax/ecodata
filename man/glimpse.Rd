@@ -2,7 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{glimpse}
 \alias{glimpse}
-\title{`glimpse()`}
+\title{Get a glimpse of ecodata}
 \usage{
 glimpse(x)
 }
@@ -14,5 +14,5 @@ A override of dplyr's glimpse() that also prints the label for the dataframe
 Just prints information about the dataframe
 }
 \seealso{
-[dplyr::glimpse()]
+\code{\link[dplyr]{glimpse}}
 }

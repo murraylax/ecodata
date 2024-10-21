@@ -229,7 +229,7 @@ get_state_fips_all <- function() {
 
   # Comment this out
   # load("./data/fips_codes.RData")
-
+  data(fips_codes)
   return(fips_codes.df)
 }
 
@@ -313,7 +313,6 @@ geom_recession <- function(data = NULL, stat = "identity",
 GeomRecession <- ggplot2::ggproto("GeomRecession", ggplot2::Geom,
 
   draw_panel = function(self, data, panel_params, coord, alpha, fill) {
-    dd <<- data
     mindate <- min(data$x)
     maxdate <- max(data$x)
     linewidth = 0.0
@@ -321,6 +320,7 @@ GeomRecession <- ggplot2::ggproto("GeomRecession", ggplot2::Geom,
     # Comment this out later
     # load("./data/recessions.RData")
 
+    data(recessions)
     recession_data <- recession_data |>
       dplyr::filter(Trough >= mindate & Peak <= maxdate)
 

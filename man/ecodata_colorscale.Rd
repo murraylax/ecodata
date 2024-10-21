@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{ecodata_colorscale}
 \alias{ecodata_colorscale}
-\title{`ecodata_colorscale()`
-Return up to 6 colors to use for a categorical color scale in a plot}
+\title{ecodata_colorscale}
 \usage{
 ecodata_colorscale(n)
 }
@@ -14,6 +13,5 @@ ecodata_colorscale(n)
 Returns a vector of color values
 }
 \description{
-`ecodata_colorscale()`
 Return up to 6 colors to use for a categorical color scale in a plot
 }
