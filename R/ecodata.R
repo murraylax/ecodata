@@ -547,11 +547,11 @@ get_ecodata_variable_country_wb <- function(varcode, countrycode, varname = NULL
   # Infer units from info
   units <- "None"
   wb_description <- info$indicator_desc[1]
-  if (string_detect(wb_description, "growth") & (string_detect(wb_description, "percent") | string_detect(wb_description, "%")) ) {
+  if (string_detect(wb_description, "growth") & (string_detect(wb_description, "percent") | string_detect(useunits, "rate of change") | string_detect(wb_description, "%")) ) {
     units <- "Growth rate (percentage)"
   } else if(string_detect(wb_description, "index")) {
     units <- "Index"
-  } else if(string_detect(wb_description, "percent") | string_detect(wb_description, "proportion")) {
+  } else if(string_detect(wb_description, "percent") | string_detect(wb_description, "proportion") | string_detect(useunits, "rate of change")) {
     units <- "Percentage"
   } else if((string_detect(wb_description, "dollar") | string_detect(wb_description, "\\$")) & string_detect(wb_description, "PPP")  ) {
     units <- "International dollars (PPP)"
@@ -595,10 +595,37 @@ get_ecodata_variable_country_wb <- function(varcode, countrycode, varname = NULL
 #' Downloads data from FRED for a given variable code or URL
 #' @param varcode String that contains the variable code or URL to the data
 #' @param varname Optional, string for the variable name
+#' @param frequency Optional, string for what frequency to aggregate to. This parameter is passed to `fredr::fredr()`. The default is no aggregation. Possible values include the following:
+#'   - "d" - Daily
+#'   - "w" - Weekly
+#'   - "bw" - Biweekly
+#'   - "m" - Monthly
+#'   - "q" - Quarterly
+#'   - "sa" - Semiannual
+#'   - "a" - Annual
+#'   - "wem" - Weekly, ending Monday
+#'   - "wetu" - Weekly, ending Tuesday
+#'   - "wew" - Weekly, ending Wednesday
+#'   - "weth" - Weekly, ending Thursday
+#'   - "wef" - Weekly, ending Friday
+#'   - "wesa" - Weekly, ending Saturday
+#'   - "wesu" - Weekly, ending Sunday
+#'   - "bwew" - Biweekly, ending Wednesday
+#'   - "bwem" - Biweekly, ending Monday
+#' @param units Optional, string indicating the data transformation to make when retrieving the data. This parameter is passed to `fredr::fredr()`. The default is no transformation. Possible values include the following:
+#'   - "lin" - Levels (No transformation)
+#'   - "chg" - Change
+#'   - "ch1" - Change from 1 year ago
+#'   - "pch" - Percent change
+#'   - "pc1" - Percent change from 1 year ago
+#'   - "pca" - Compounded annual rate of change
+#'   - "cch" - Continuously compounded rate of change
+#'   - "cca" - Continuously compounded annual rate of change
+#'   - "log" - Natural log
 #' @param recessions Optional, logical for whether to include an NBER recession dummy variable. Default = FALSE.
 #' @return Data frame time series with two variables, Date and the variable requested. The data frame will also include all relevant meta data describing the data and citing its source.
 #' @export
-get_ecodata_variable_fred <- function(varcode, varname = NULL, recessions = FALSE) {
+get_ecodata_variable_fred <- function(varcode, varname = NULL, frequency = NULL, units = NULL, recessions = FALSE) {
   # ecodata_fred_openapi()
   orig_varcode <- varcode
   if(is_valid_url(varcode)) {
@@ -618,7 +645,7 @@ get_ecodata_variable_fred <- function(varcode, varname = NULL, recessions = FALS
   varcode <- stringr::str_to_upper(varcode)
 
   raw.df <- tryCatch({
-      fredr::fredr(varcode)
+      fredr::fredr(varcode, frequency = frequency, units = units)
     },
     error = function(e) {
       NA
@@ -644,12 +671,25 @@ get_ecodata_variable_fred <- function(varcode, varname = NULL, recessions = FALS
     new.df <- dplyr::right_join(recessions.df, new.df, by = "Date")
   }
 
+  # Figure out units
+  useunits <- info$units_short[1]
+  if(!is.null(units)) {
+    units <- stringr::str_to_lower(stringr::str_squish(units))
+    if(units %in% c("pch", "pc1", "pca", "cch", "cca")) {
+      useunits <- "Percentage Change"
+    } else if (units %in% c("chg", "ch1")) {
+      useunits <- sprintf("Change in %s", info$units_short[1])
+    } else if (units == "log") {
+      useunits <- sprintf("Log %s", info$units_short[1])
+    }
+  }
+
   # Attributes
   attr(new.df[[varname]], "Variable") <- varname
   attr(new.df[[varname]], "Code") <- varcode
   attr(new.df[[varname]], "Description") <- info$title[1]
   attr(new.df[[varname]], "Frequency") <- info$frequency[1]
-  attr(new.df[[varname]], "Units") <- info$units_short[1]
+  attr(new.df[[varname]], "Units") <- useunits
   attr(new.df[[varname]], "Seasonal Adjustment") <- info$seasonal_adjustment[1]
   source_str <- sprintf("FRED (R) Federal Reserve Bank of St. Louis")
   attr(new.df[[varname]], "Source") <- source_str
@@ -669,17 +709,44 @@ get_ecodata_variable_fred <- function(varcode, varname = NULL, recessions = FALS
 #' The variable code or URL needs to be a state-specific variable, and be for just one of any of the U.S. States.
 #' The function will retrieve the data for all U.S. states.
 #' @param varcode String for the variable code or URL to the data, for any one U.S. state
+#' @param frequency Optional, string for what frequency to aggregate to. Valid only for FRED data. This parameter is passed to `fredr::fredr()`. The default is no aggregation.
+#'  - "d" - Daily
+#'  - "w" - Weekly
+#'  - "bw" - Biweekly
+#'  - "m" - Monthly
+#'   - "q" - Quarterly
+#'   - "sa" - Semiannual
+#'   - "a" - Annual
+#'   - "wem" - Weekly, ending Monday
+#'   - "wetu" - Weekly, ending Tuesday
+#'   - "wew" - Weekly, ending Wednesday
+#'   - "weth" - Weekly, ending Thursday
+#'   - "wef" - Weekly, ending Friday
+#'   - "wesa" - Weekly, ending Saturday
+#'   - "wesu" - Weekly, ending Sunday
+#'   - "bwew" - Biweekly, ending Wednesday
+#'   - "bwem" - Biweekly, ending Monday
+#' @param units Optional, string indicating the data transformation to make when retrieving the data. This parameter is passed to `fredr::fredr()`. The default is no transformation.
+#'   - "lin" - Levels (No transformation)
+#'   - "chg" - Change
+#'   - "ch1" - Change from 1 year ago
+#'   - "pch" - Percent change
+#'   - "pc1" - Percent change from 1 year ago
+#'   - "pca" - Compounded annual rate of change
+#'   - "cch" - Continuously compounded rate of change
+#'   - "cca" - Continuously compounded annual rate of change
+#'   - "log" - Natural log
 #' @param recessions Optional, logical for whether to include an NBER recession dummy variable. Default = FALSE.
 #' @return Data frame the variable requested for all U.S. states. The data frame will include a date variable and a column for every U.S. state. The data frame will also include all relevant meta data describing the data and citing its source.
 #' @export
-get_ecodata_allstates_fred <- function(varcode, recessions = FALSE) {
+get_ecodata_allstates_fred <- function(varcode, frequency = NULL, units = NULL, recessions = FALSE) {
   # ecodata_fred_openapi()
   if(is_valid_url(varcode)) {
     varcode <- get_varcode_url(varcode)
   }
   varcode <- stringr::str_to_upper(varcode)
 
-  raw.df <- fredr::fredr(varcode)
+  raw.df <- fredr::fredr(varcode, frequency =  frequency, units = units)
   info <- fredr::fredr_series(varcode)
   varname <- info$title[1]
 
@@ -707,7 +774,7 @@ get_ecodata_allstates_fred <- function(varcode, recessions = FALSE) {
   }
   df <- NA
   if(success) {
-    df <- get_ecodata(all_var_codes, recessions = recessions)
+    df <- get_ecodata(all_var_codes, frequency =  frequency, units = units, recessions = recessions)
   } else {
     error_msg <- sprintf("Could not find data on other states based on variable code, %s", varcode)
     stop(error_msg)
@@ -746,17 +813,44 @@ get_ecodata_varnames <- function(data) {
 #' Get data for a single variable from either FRED or World Bank Data, for a given URL or variable code. The function will figure out whether the data is available from FRED or World Bank Data.
 #' @param varcode String that identifies the variable code or URL for the data
 #' @param varname Optional, string for the variable name. Default is the code given by the source.
+#' @param frequency Optional, string for what frequency to aggregate to. Valid only for FRED data. This parameter is passed to `fredr::fredr()`. The default is no aggregation.
+#'  - "d" - Daily
+#'  - "w" - Weekly
+#'  - "bw" - Biweekly
+#'  - "m" - Monthly
+#'   - "q" - Quarterly
+#'   - "sa" - Semiannual
+#'   - "a" - Annual
+#'   - "wem" - Weekly, ending Monday
+#'   - "wetu" - Weekly, ending Tuesday
+#'   - "wew" - Weekly, ending Wednesday
+#'   - "weth" - Weekly, ending Thursday
+#'   - "wef" - Weekly, ending Friday
+#'   - "wesa" - Weekly, ending Saturday
+#'   - "wesu" - Weekly, ending Sunday
+#'   - "bwew" - Biweekly, ending Wednesday
+#'   - "bwem" - Biweekly, ending Monday
+#' @param units Optional, string indicating the data transformation to make when retrieving the data. This parameter is passed to `fredr::fredr()` and is valid only for FRED data. The default is no transformation.
+#'   - "lin" - Levels (No transformation)
+#'   - "chg" - Change
+#'   - "ch1" - Change from 1 year ago
+#'   - "pch" - Percent change
+#'   - "pc1" - Percent change from 1 year ago
+#'   - "pca" - Compounded annual rate of change
+#'   - "cch" - Continuously compounded rate of change
+#'   - "cca" - Continuously compounded annual rate of change
+#'   - "log" - Natural log
 #' @param recessions Logical for whether or not to include a dummy variable identifying a NBER U.S. Recessions. Default = FALSE.
 #' @return Data frame time series that includes the date and the variable requested. The data frame will also include all relevant meta data describing the data and citing its source.
 #' @export
-get_ecodata_variable <- function(varcode, varname = NULL, recessions = FALSE) {
+get_ecodata_variable <- function(varcode, varname = NULL, frequency = NULL, units = NULL, recessions = FALSE) {
   if(string_detect(varcode, "stlouisfed")) {
-    df <- get_ecodata_variable_fred(varcode, varname, recessions)
+    df <- get_ecodata_variable_fred(varcode = varcode, varname = varname, frequency = frequency, units = units, recessions)
   } else if(string_detect(varcode, "worldbank")) {
     df <- get_ecodata_variable_wb(varcode, varname)
   } else {
     df <- tryCatch({
-        get_ecodata_variable_fred(varcode, varname, recessions)
+        get_ecodata_variable_fred(varcode = varcode, varname = varname, frequency = frequency, units = units, recessions)
       },
       warning = function(w) {NA}
     )
@@ -780,10 +874,37 @@ get_ecodata_variable <- function(varcode, varname = NULL, recessions = FALSE) {
 #' Get data for one or more variables from FRED and/or World Bank Data, for given URLs or variable codes. The function will figure out whether the data is available from FRED or World Bank Data.
 #' @param varcodes String for vector of strings that identifies the variable codes or URLs for the data.
 #' @param varnames Optional, string or vector of strings for the variable names. Default is the code given by the source.
+#' @param frequency Optional, string for what frequency to aggregate to. Valid only for FRED data. This parameter is passed to `fredr::fredr()`. The default is no aggregation.
+#'  - "d" - Daily
+#'  - "w" - Weekly
+#'  - "bw" - Biweekly
+#'  - "m" - Monthly
+#'   - "q" - Quarterly
+#'   - "sa" - Semiannual
+#'   - "a" - Annual
+#'   - "wem" - Weekly, ending Monday
+#'   - "wetu" - Weekly, ending Tuesday
+#'   - "wew" - Weekly, ending Wednesday
+#'   - "weth" - Weekly, ending Thursday
+#'   - "wef" - Weekly, ending Friday
+#'   - "wesa" - Weekly, ending Saturday
+#'   - "wesu" - Weekly, ending Sunday
+#'   - "bwew" - Biweekly, ending Wednesday
+#'   - "bwem" - Biweekly, ending Monday
+#' @param units Optional, string indicating the data transformation to make when retrieving the data. This parameter is passed to `fredr::fredr()` and is valid only for FRED data. The default is no transformation.
+#'   - "lin" - Levels (No transformation)
+#'   - "chg" - Change
+#'   - "ch1" - Change from 1 year ago
+#'   - "pch" - Percent change
+#'   - "pc1" - Percent change from 1 year ago
+#'   - "pca" - Compounded annual rate of change
+#'   - "cch" - Continuously compounded rate of change
+#'   - "cca" - Continuously compounded annual rate of change
+#'   - "log" - Natural log
 #' @param recessions Logical for whether or not to include a dummy variable identifying a NBER U.S. Recessions. Default = FALSE.
 #' @return Data frame time series that includes the date and the variable requested. The data frame will also include all relevant meta data describing the data and citing its source.
 #' @export
-get_ecodata <- function(varcodes, varnames = NULL, recessions = FALSE) {
+get_ecodata <- function(varcodes, varnames = NULL, frequency = NULL, units = NULL, recessions = FALSE) {
   if(!is.null(varnames) & (length(varcodes) != length(varnames)) ) {
     stop("Length of `varcodes` is not equal to the length of `varnames`. There needs to be the name number of variables as variable names.")
   }
@@ -792,7 +913,7 @@ get_ecodata <- function(varcodes, varnames = NULL, recessions = FALSE) {
   if(!is.null(varnames)) {
     varname <- varnames[1]
   }
-  df <- get_ecodata_variable(varcodes[1], varname, recessions = FALSE)
+  df <- get_ecodata_variable(varcodes[1], varname, varcode = varcode, varname = varname, frequency = frequency, units = units, recessions = FALSE)
 
   if(length(varcodes) > 1) {
     for(v in 2:length(varcodes)) {
@@ -801,7 +922,7 @@ get_ecodata <- function(varcodes, varnames = NULL, recessions = FALSE) {
       if(!is.null(varnames)) {
         varname <- varnames[v]
       }
-      newvar <- get_ecodata_variable(varcode, varname, recessions = FALSE)
+      newvar <- get_ecodata_variable(varcode, varname, varcode = varcode, varname = varname, frequency = frequency, units = units, recessions = FALSE)
       df <- dplyr::full_join(df, newvar, by = "Date")
     }
   }
@@ -819,11 +940,38 @@ get_ecodata <- function(varcodes, varnames = NULL, recessions = FALSE) {
 #' @param data Data frame with existing ecodata, data from FRED and/or World Bank Data
 #' @param varcodes String for vector of strings that identifies the variable codes or URLs for the data.
 #' @param varnames Optional, string or vector of strings for the variable names. Default is the code given by the source.
+#' @param frequency Optional, string for what frequency to aggregate to. Valid only for FRED data. This parameter is passed to `fredr::fredr()`. The default is no aggregation.
+#'  - "d" - Daily
+#'  - "w" - Weekly
+#'  - "bw" - Biweekly
+#'  - "m" - Monthly
+#'   - "q" - Quarterly
+#'   - "sa" - Semiannual
+#'   - "a" - Annual
+#'   - "wem" - Weekly, ending Monday
+#'   - "wetu" - Weekly, ending Tuesday
+#'   - "wew" - Weekly, ending Wednesday
+#'   - "weth" - Weekly, ending Thursday
+#'   - "wef" - Weekly, ending Friday
+#'   - "wesa" - Weekly, ending Saturday
+#'   - "wesu" - Weekly, ending Sunday
+#'   - "bwew" - Biweekly, ending Wednesday
+#'   - "bwem" - Biweekly, ending Monday
+#' @param units Optional, string indicating the data transformation to make when retrieving the data. This parameter is passed to `fredr::fredr()` and is valid only for FRED data. The default is no transformation.
+#'   - "lin" - Levels (No transformation)
+#'   - "chg" - Change
+#'   - "ch1" - Change from 1 year ago
+#'   - "pch" - Percent change
+#'   - "pc1" - Percent change from 1 year ago
+#'   - "pca" - Compounded annual rate of change
+#'   - "cch" - Continuously compounded rate of change
+#'   - "cca" - Continuously compounded annual rate of change
+#'   - "log" - Natural log
 #' @param recessions Logical for whether or not to include a dummy variable identifying a NBER U.S. Recessions. Default = FALSE.
 #' @return Data frame merged with original data frame that includes the new variables requested. The data frame will also include all relevant meta data describing the data and citing its source.
 #' @export
-add_ecodata <- function(data, varcodes, varnames = NULL, recessions = FALSE) {
-  df <- get_ecodata(varcodes, recessions = FALSE)
+add_ecodata <- function(data, varcodes, varnames = NULL, frequency = NULL, units = NULL, recessions = FALSE) {
+  df <- get_ecodata(varcodes = varcodes, varnames = varnames, frequency = frequency, units = units, recessions = FALSE)
   df <- dplyr::full_join(data, df, by = "Date")
 
   if(recessions | string_detect_any(names(df), "Recession")) {
@@ -1089,7 +1237,7 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, tit
   units_function <- function(x) abbreviated_units(x)
   if(string_detect(useunits, "\\$") | str_detect(str_to_lower(useunits), "dollar")) {
     units_function <- function(x) return(abbreviated_units_dollar(x))
-  } else if(string_detect(useunits, "%") | string_detect(useunits, "percent") | string_detect(useunits, "proportion")) {
+  } else if(string_detect(useunits, "%") | string_detect(useunits, "percent") | string_detect(useunits, "proportion") | string_detect(useunits, "rate of change")) {
     units_function <- function(...) return(scales::percent(scale=1, ...))
   }
 
@@ -1190,7 +1338,7 @@ ggplot_ecodata_facet <- function(data, variables = NULL, title="", ylab = NULL, 
   useunits <- unique_units[1]
 
   if(is.null(ylab)) {
-    if(useunits == "%" | string_compare(useunits, "percent") | string_compare(useunits, "percentage")) {
+    if(useunits == "%" | string_compare(useunits, "percent") | string_compare(useunits, "percentage") | string_detect(useunits, "rate of change")) {
       ylab <- ""
     } else {
       ylab <- useunits
