@@ -227,8 +227,6 @@ get_state_fips_all <- function() {
   # fips_codes <- dplyr::rename(fips_codes, State = full, FIPS = fips, Abbr = abbr)
   # return(fips_codes)
 
-  # Comment this out
-  # load("./data/fips_codes.RData")
   data(fips_codes)
   return(fips_codes.df)
 }
@@ -316,9 +314,6 @@ GeomRecession <- ggplot2::ggproto("GeomRecession", ggplot2::Geom,
     mindate <- min(data$x)
     maxdate <- max(data$x)
     linewidth = 0.0
-
-    # Comment this out later
-    # load("./data/recessions.RData")
 
     data(recessions)
     recession_data <- recession_data |>
@@ -424,7 +419,7 @@ get_wb_variable_code <- function(text) {
 #' @return Data frame for the single variable from World Bank Data. If country is specified in the varcode, the data frame will include the date and a single column for a single country. If no country is specified, the data frame will include a column for every country. The data frame will also include all relevant meta data describing the data and citing its source.
 #' @export
 get_ecodata_variable_wb <- function(varcode, varname = NULL) {
-  locations_pattern <- "(?<=\\?locations=)[^&]*"
+  locations_pattern <- "(?<=locations=)[^&]*"
   country_code <- str_extract(varcode, locations_pattern)
   if(is.na(country_code)) country_code <- ""
 
@@ -515,7 +510,7 @@ get_ecodata_variable_allcountries_wb <- function(varcode, varname = NULL) {
     attr(df[[variable_name]], "URL") <- url_str
     access_date <- format.Date(Sys.Date(), "%B %d, %Y")
     attr(df[[variable_name]], "Access Date") <- access_date
-    cite_str <- sprintf("SOURCE: %s; %s (Accessed on %s)", source_str, url_str, access_date)
+    cite_str <- sprintf("%s; %s (Accessed on %s)", source_str, url_str, access_date)
     attr(df[[variable_name]], "Cite") <- cite_str
   }
 
@@ -547,11 +542,11 @@ get_ecodata_variable_country_wb <- function(varcode, countrycode, varname = NULL
   # Infer units from info
   units <- "None"
   wb_description <- info$indicator_desc[1]
-  if (string_detect(wb_description, "growth") & (string_detect(wb_description, "percent") | string_detect(useunits, "rate of change") | string_detect(wb_description, "%")) ) {
+  if (string_detect(wb_description, "growth") & (string_detect(wb_description, "percent") | string_detect(wb_description, "rate of change") | string_detect(wb_description, "%")) ) {
     units <- "Growth rate (percentage)"
   } else if(string_detect(wb_description, "index")) {
     units <- "Index"
-  } else if(string_detect(wb_description, "percent") | string_detect(wb_description, "proportion") | string_detect(useunits, "rate of change")) {
+  } else if(string_detect(wb_description, "percent") | string_detect(wb_description, "proportion") | string_detect(wb_description, "rate of change")) {
     units <- "Percentage"
   } else if((string_detect(wb_description, "dollar") | string_detect(wb_description, "\\$")) & string_detect(wb_description, "PPP")  ) {
     units <- "International dollars (PPP)"
@@ -565,6 +560,7 @@ get_ecodata_variable_country_wb <- function(varcode, countrycode, varname = NULL
     units <- "Nominal local currency"
   }
 
+  # I might not want this
   indicator <- sprintf("%s %s", raw.df$country[1], info$indicator[1])
   if(is.null(varname)) {
     varname <- stringr::str_squish(stringr::str_remove(indicator, "\\([^()]*\\)"))
@@ -585,13 +581,14 @@ get_ecodata_variable_country_wb <- function(varcode, countrycode, varname = NULL
   attr(df[[varname]], "URL") <- url_str
   access_date <- format.Date(Sys.Date(), "%B %d, %Y")
   attr(df[[varname]], "Access Date") <- access_date
-  cite_str <- sprintf("SOURCE: %s; %s (Accessed on %s)", source_str, url_str, access_date)
+  cite_str <- sprintf("%s; %s (Accessed on %s)", source_str, url_str, access_date)
   attr(df[[varname]], "Cite") <- cite_str
 
   return(df)
 }
 
-#' `get_ecodata_variable_fred()`
+#' Download a single variable from FRED
+#'
 #' Downloads data from FRED for a given variable code or URL
 #' @param varcode String that contains the variable code or URL to the data
 #' @param varname Optional, string for the variable name
@@ -673,16 +670,26 @@ get_ecodata_variable_fred <- function(varcode, varname = NULL, frequency = NULL,
 
   # Figure out units
   useunits <- info$units_short[1]
+  usevarlabel <- info$title[1]
   if(!is.null(units)) {
     units <- stringr::str_to_lower(stringr::str_squish(units))
     if(units %in% c("pch", "pc1", "pca", "cch", "cca")) {
       useunits <- "Percentage Change"
+      usevarlabel <- sprintf("Pct Change in %s", usevarlabel)
     } else if (units %in% c("chg", "ch1")) {
       useunits <- sprintf("Change in %s", info$units_short[1])
+      usevarlabel <- sprintf("Change in %s", usevarlabel)
     } else if (units == "log") {
       useunits <- sprintf("Log %s", info$units_short[1])
+      usevarlabel <- sprintf("Log %s", usevarlabel)
     }
   }
+
+  orig_class <- class(new.df[[varname]])
+  varlabel <- sprintf("%s (%s)", usevarlabel, useunits)
+  Hmisc::label(new.df[[varname]]) <- usevarlabel
+  attr(new.df[[varname]], "label") <- usevarlabel
+  class(new.df[[varname]]) <- orig_class
 
   # Attributes
   attr(new.df[[varname]], "Variable") <- varname
@@ -697,7 +704,7 @@ get_ecodata_variable_fred <- function(varcode, varname = NULL, frequency = NULL,
   attr(new.df[[varname]], "URL") <- url_str
   access_date <- format.Date(Sys.Date(), "%B %d, %Y")
   attr(new.df[[varname]], "Access Date") <- access_date
-  cite_str <- sprintf("SOURCE: %s; %s (Accessed on %s)", source_str, url_str, access_date)
+  cite_str <- sprintf("%s; %s (Accessed on %s)", source_str, url_str, access_date)
   attr(new.df[[varname]], "Cite") <- cite_str
 
   return(new.df)
@@ -798,7 +805,8 @@ get_ecodata_allstates_fred <- function(varcode, frequency = NULL, units = NULL, 
   return(df)
 }
 
-#' `get_ecodata_varnames()`
+#' Get all variable names
+#'
 #' Fetch all the variables in a given data frame, except the date and recession
 #' @param data Data frame with fetched with a get_ecodata() function
 #' @return Returns a vector of variable names
@@ -809,7 +817,8 @@ get_ecodata_varnames <- function(data) {
   return(ecovars)
 }
 
-#' `get_ecodata_variable()`
+#' Download a single variable from FRED or World Bank
+#'
 #' Get data for a single variable from either FRED or World Bank Data, for a given URL or variable code. The function will figure out whether the data is available from FRED or World Bank Data.
 #' @param varcode String that identifies the variable code or URL for the data
 #' @param varname Optional, string for the variable name. Default is the code given by the source.
@@ -870,7 +879,8 @@ get_ecodata_variable <- function(varcode, varname = NULL, frequency = NULL, unit
   return(df)
 }
 
-#' `get_ecodata()`
+#' Download economic data from FRED or World Bank
+#'
 #' Get data for one or more variables from FRED and/or World Bank Data, for given URLs or variable codes. The function will figure out whether the data is available from FRED or World Bank Data.
 #' @param varcodes String for vector of strings that identifies the variable codes or URLs for the data.
 #' @param varnames Optional, string or vector of strings for the variable names. Default is the code given by the source.
@@ -913,7 +923,7 @@ get_ecodata <- function(varcodes, varnames = NULL, frequency = NULL, units = NUL
   if(!is.null(varnames)) {
     varname <- varnames[1]
   }
-  df <- get_ecodata_variable(varcodes[1], varname, varcode = varcode, varname = varname, frequency = frequency, units = units, recessions = FALSE)
+  df <- get_ecodata_variable(varcode = varcodes[1], varname = varname, frequency = frequency, units = units, recessions = FALSE)
 
   if(length(varcodes) > 1) {
     for(v in 2:length(varcodes)) {
@@ -922,7 +932,7 @@ get_ecodata <- function(varcodes, varnames = NULL, frequency = NULL, units = NUL
       if(!is.null(varnames)) {
         varname <- varnames[v]
       }
-      newvar <- get_ecodata_variable(varcode, varname, varcode = varcode, varname = varname, frequency = frequency, units = units, recessions = FALSE)
+      newvar <- get_ecodata_variable(varcode = varcode, varname = varname, frequency = frequency, units = units, recessions = FALSE)
       df <- dplyr::full_join(df, newvar, by = "Date")
     }
   }
@@ -1019,7 +1029,8 @@ ecodata_get_sources <- function(df) {
   return(unique_sources)
 }
 
-#' `ecodata_description(data)`
+#' Get a description of an ecodata data frame
+#'
 #' Get a description of every variable in the given ecodata data frame
 #' @param data Data frame from `get_ecodata()` that includes units information in the meta data
 #' @return Returns a data frame with a row for each variable in the given data frame, and several columns describing attributes of each variable
@@ -1032,11 +1043,18 @@ ecodata_description <- function(data) {
     row.df <- dplyr::as_tibble(attributes(data[[v]]))
     desc.df <- dplyr::bind_rows(desc.df, row.df)
   }
-  desc.df <- dplyr::select(desc.df, -Cite)
+  descitems <- colnames(desc.df)
+  if("Cite" %in% descitems) {
+    desc.df <- dplyr::select(desc.df, -Cite)
+  }
+  if("label" %in% descitems) {
+    desc.df <- dplyr::select(desc.df, -label)
+  }
   return(desc.df)
 }
 
-#' `ecodata_cite(data)`
+#' Create a data frame describing how ecodata variables should be cited
+#'
 #' Get citation information for every variable in the given ecodata data frame
 #' @param data Data frame from `get_ecodata()` that includes units information in the meta data
 #' @return Returns a data frame with a row for each variable in the given data frame, with a column for how to cite each variable
@@ -1053,7 +1071,8 @@ ecodata_cite <- function(data) {
   return(cite.df)
 }
 
-#' `ecodata_description(data)`
+#' Create a table describing variables in an ecodata data frame
+#'
 #' Get a table that describes every variable in the given ecodata data frame
 #' @param data Data frame from `get_ecodata()` that includes units information in the meta data
 #' @return Returns a flextable with a row for each variable in the given data frame, and several columns describing attributes of each variable
@@ -1061,9 +1080,6 @@ ecodata_cite <- function(data) {
 #' @export
 ecodata_description_table <- function(data) {
   desc.df <- ecodata_description(data)
-  desc.df <- desc.df |>
-    dplyr::mutate(Variable = Description) |>
-    dplyr::select(-Description)
 
   tb <- flextable::flextable(desc.df) |>
     flextable::compose(j = "URL",
@@ -1075,7 +1091,8 @@ ecodata_description_table <- function(data) {
   return(tb)
 }
 
-#' `ecodata_cite_table(data)`
+#' Create a table describing how ecodata variables should be cited
+#'
 #' Get a table of citation information for every variable in the given ecodata data frame
 #' @param data Data frame from `get_ecodata()` that includes units information in the meta data
 #' @return Returns a flextable with a row for each variable in the given data frame, with a column for how to cite each variable
@@ -1091,7 +1108,6 @@ ecodata_cite_table <- function(data) {
   tb <- flextable::flextable(var.df) |>
     flextable::compose(j = "Cite",
                        value = flextable::as_paragraph(
-                          "Source: ",
                           desc.df$Source,
                           "; ",
                           flextable::hyperlink_text(
@@ -1167,7 +1183,8 @@ abbreviated_units_dollar <- function(x) {
   return(labs)
 }
 
-#' `ggplot_ecodata_ts(data)`
+#' Create time series plot for ecodata variables
+#'
 #' Make a time series line plot of the variables in the given data frame, in a single plot area.
 #' The number of variables in the data frame should be between 1 and 7
 #' @param data Data frame from `get_ecodata()` that includes a variable called `Date` and the other variables to plot
@@ -1179,7 +1196,7 @@ abbreviated_units_dollar <- function(x) {
 #' @param plot.recessions Optional, logical for whether or not show show NBER recession bars in the plot
 #' @export
 ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, title_strlen = 60, variable_strlen = 85, plot.recessions = FALSE) {
-  linewidth <- 1.5
+  linewidth <- 1.1
   linecolor <- "dodgerblue4"
 
   # Wrap title if necessary
@@ -1273,13 +1290,13 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, tit
     ggplot2::guides(color = ggplot2::guide_legend(nrow = length(plotvars)))  # Each item in a separate row
 
   if(plot.recessions) {
-    plt <- plot + geom_recession(fill="dodgerblue3")
+    plt <- plt + geom_recession(fill="dodgerblue3")
   }
 
   return(plt)
 }
 
-#' ggplot_ecodata_facet
+#' Create faceted time series plot for ecodata variables
 #'
 #' Make a time series line plot of the variables in the given data frame, with each variable in its own facet.
 #' @param data Data frame from `get_ecodata()` that includes a variable called `Date` and the other variables to plot
@@ -1295,7 +1312,7 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, tit
 #' @return Returns a ggplot, faceted by each economic variable
 #' @export
 ggplot_ecodata_facet <- function(data, variables = NULL, title="", ylab = NULL, ncol = 4, scales = "free", color = "dodgerblue4", title_strlen = 60, strip_width = 40, plot.recessions = FALSE) {
-  linewidth <- 1.5
+  linewidth <- 1.1
   linecolor <- "dodgerblue4"
   if(stringr::str_length(title) > title_strlen) {
     # Put a new line first after a colon
@@ -1374,7 +1391,7 @@ ggplot_ecodata_facet <- function(data, variables = NULL, title="", ylab = NULL, 
     ggplot2::guides(color = ggplot2::guide_legend(nrow = length(plotvars)))  # Each item in a separate row
 
   if(plot.recessions) {
-    plt <- plot + geom_recession(fill="dodgerblue3")
+    plt <- plt + geom_recession(fill="dodgerblue3")
   }
 
   return(plt)
@@ -1446,46 +1463,142 @@ ecodata_fred_openapi <- function() {
            })
 }
 
-# if(FALSE) {
-#
-# varcodes <- c(
-#   "https://fred.stlouisfed.org/series/DTB3",
-#   "https://fred.stlouisfed.org/series/DGS10",
-#   "https://fred.stlouisfed.org/series/IR3TIB01DEM156N",
-#   "https://fred.stlouisfed.org/series/IRLTLT01DEM156N",
-#   "https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=US",
-#   "https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=DE"
-# )
-#
-# mydata <- get_ecodata(varcodes)
-#
-# # Plot a time series of the Real GDP data
-# ggplot_ecodata_ts(mydata, title = "Real GDP", variables = c("United States GDP, PPP", "Germany GDP, PPP")) +
-#   geom_recession()
-#
-# # Plot a time series of the U.S. interest rate data
-# ggplot_ecodata_ts(mydata, title = "Interest Rates",
-#                   variables = c("3-Month Treasury Bill Secondary Market Rate, Discount Basis", "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis")) +
-#   geom_recession()
-#
-# # Plot a faceted time series of the U.S. and German interest rate data
-# ggplot_ecodata_facet(mydata, title = "Interest Rates", ncol = 2,
-#                   variables = c("3-Month Treasury Bill Secondary Market Rate, Discount Basis",
-#                                 "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis",
-#                                 "Interest Rates: 3-Month or 90-Day Rates and Yields: Interbank Rates: Total for Germany",
-#                                 "Interest Rates: Long-Term Government Bond Yields: 10-Year: Main (Including Benchmark) for Germany")) +
-#   geom_recession()
-#
-# # I forgot. Can I add on this variable too? Sure!
-# mydata <- add_ecodata(mydata, "GDPC1")
-# mydata <- add_ecodata(mydata, "MEPAINUSA646N")
-#
-# # Get information about the data
-# mydata_description <- ecodata_description(mydata)
-#
-# # Get a pretty table of information about the data
-# ecodata_description_table(mydata)
-#
-# # I need to cite my sources
-# ecodata_cite_table(mydata)
-# }
+#' Full join multiple ecodata data frames
+#'
+#' This function takes any number of data frames, checks that they all contain
+#' a "Date" column, and joins them using `dplyr::full_join()`.
+#'
+#' @param ... Data frames to join.
+#' @return An ecodata data frame containing the full join of all input ecodata data frames
+#' @export
+ecodata_join <- function(...) {
+  # Collect the list of data frames passed as arguments
+  data_frames <- list(...)
+
+  # Check that all input data frames have the "Date" column
+  missing_date <- sapply(data_frames, function(df) !"Date" %in% names(df))
+  if (any(missing_date)) {
+    rlang::abort(
+      "All data frames must contain a 'Date' column.",
+      class = "missing_date_error"
+    )
+  }
+
+  # Use Reduce to iteratively join all data frames by "Date"
+  joined_df <- Reduce(function(x, y) dplyr::full_join(x, y, by = "Date"), data_frames)
+
+  return(joined_df)
+}
+
+#' Compute Year-over-Year Percentage Change with Attribute Copying
+#'
+#' This function calculates the percentage change of a specified variable
+#' from the previous year using the `tsibble` package, and assigns the
+#' same attributes from the original variable to the new one.
+#'
+#' @param data A data frame containing a "Date" column and the variable of interest.
+#' @param variable A string specifying the name of the original variable.
+#' @param new_variable Optional, a string specifying the name of the new variable to store the percentage change. Default will be based on original variable name.
+#' @param units Optional, a string specifying the units for the new variable. Default is "%"
+#' @return An ecodata data frame with the new variable containing the percentage change, with attributes copied.
+#' @export
+ecodata_compute_pctchange <- function(data, variable, new_variable = NULL, units = "%") {
+  if(is.null(new_variable)) {
+    new_variable <- sprintf("Growth Rate of %s", variable)
+  }
+
+  # Convert to a tsibble for time-aware operations
+  ts_data <- tsibble::as_tsibble(data, index = Date)
+
+  # Calculate the appropriate lag based on the time interval
+  time_interval <- attr(data[[variable]], "Frequency")
+
+  if (time_interval == "Annual") {
+    lag_period <- 1
+  } else if (time_interval == "Monthly") {
+    lag_period <- 12
+  } else if (time_interval == "Quarterly") {
+    lag_period <- 4
+  } else if (time_interval == "Daily") {
+    lag_period <- 365
+  } else {
+    stop("Unsupported time interval detected. Please use yearly, quarterly, monthly, daily data.")
+  }
+
+  # Dynamically reference the original variable
+  var_sym <- rlang::sym(variable)
+
+  # Calculate the year-over-year percentage change
+  ts_data <- ts_data |>
+    dplyr::mutate(
+      !!rlang::sym(new_variable) :=
+        ({{ var_sym }} - dplyr::lag({{ var_sym }}, n = lag_period)) /
+        dplyr::lag({{ var_sym }}, n = lag_period) * 100
+    )
+
+  # Convert back to a data frame
+  result_df <- as.data.frame(ts_data)
+
+  # Copy attributes from the original variable to the new one
+  original_attrs <- attributes(data[[variable]])
+  attributes(result_df[[new_variable]]) <- original_attrs
+  old_description <- attr(data[[variable]], "Description")
+  attr(result_df[[new_variable]], "Variable") <- new_variable
+  attr(result_df[[new_variable]], "Description") <- sprintf("Percent Change in %s", old_description)
+  attr(result_df[[new_variable]], "Units") <- units
+
+  return(result_df)
+}
+
+if(FALSE) {
+
+varcodes <- c(
+  "https://fred.stlouisfed.org/series/DTB3",
+  "https://fred.stlouisfed.org/series/DGS10",
+  "https://fred.stlouisfed.org/series/IR3TIB01DEM156N",
+  "https://fred.stlouisfed.org/series/IRLTLT01DEM156N",
+  "https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=US",
+  "https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=DE"
+)
+
+mydata <- get_ecodata(varcodes)
+glimpse(mydata)
+
+# Just get one variable from FRED
+gdp <- get_ecodata("https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=US")
+intrate <- get_ecodata("https://fred.stlouisfed.org/series/DGS10")
+# Just get one variable from World Bank
+poverty <- get_ecodata("https://data.worldbank.org/indicator/SI.POV.DDAY?&start=1984&locations=1W-AR&view=chart")
+
+df <- ecodata_join(mydata, poverty, gdp)
+
+# Plot a time series of the Real GDP data
+ggplot_ecodata_ts(mydata, title = "Real GDP",
+                  variables = c("United States GDP, PPP", "Germany GDP, PPP"),
+                  plot.recessions = TRUE)
+
+# Plot a time series of the U.S. interest rate data
+ggplot_ecodata_ts(mydata, title = "Interest Rates",
+                  variables = c("3-Month Treasury Bill Secondary Market Rate, Discount Basis",
+                                "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis"),
+                  plot.recessions = TRUE)
+
+# Plot a faceted time series of the U.S. and German interest rate data
+ggplot_ecodata_facet(mydata, title = "Interest Rates", ncol = 2, plot.recessions = TRUE,
+                    variables = c("3-Month Treasury Bill Secondary Market Rate, Discount Basis",
+                                  "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis",
+                                  "Interest Rates: 3-Month or 90-Day Rates and Yields: Interbank Rates: Total for Germany",
+                                  "Interest Rates: Long-Term Government Bond Yields: 10-Year: Main (Including Benchmark) for Germany"))
+
+# I forgot. Can I add on this variable too? Sure!
+mydata <- add_ecodata(mydata, "GDPC1")
+
+# Get information about the data
+mydata_description <- ecodata_description(mydata)
+
+# Get a pretty table of information about the data
+ecodata_description_table(mydata)
+
+# I need to cite my sources
+ecodata_cite_table(mydata)
+}

@@ -2,15 +2,49 @@
 % Please edit documentation in R/ecodata.R
 \name{get_ecodata_variable_fred}
 \alias{get_ecodata_variable_fred}
-\title{`get_ecodata_variable_fred()`
-Downloads data from FRED for a given variable code or URL}
+\title{Download a single variable from FRED}
 \usage{
-get_ecodata_variable_fred(varcode, varname = NULL, recessions = FALSE)
+get_ecodata_variable_fred(
+  varcode,
+  varname = NULL,
+  frequency = NULL,
+  units = NULL,
+  recessions = FALSE
+)
 }
 \arguments{
 \item{varcode}{String that contains the variable code or URL to the data}
 
 \item{varname}{Optional, string for the variable name}
+
+\item{frequency}{Optional, string for what frequency to aggregate to. This parameter is passed to `fredr::fredr()`. The default is no aggregation. Possible values include the following:
+- "d" - Daily
+- "w" - Weekly
+- "bw" - Biweekly
+- "m" - Monthly
+- "q" - Quarterly
+- "sa" - Semiannual
+- "a" - Annual
+- "wem" - Weekly, ending Monday
+- "wetu" - Weekly, ending Tuesday
+- "wew" - Weekly, ending Wednesday
+- "weth" - Weekly, ending Thursday
+- "wef" - Weekly, ending Friday
+- "wesa" - Weekly, ending Saturday
+- "wesu" - Weekly, ending Sunday
+- "bwew" - Biweekly, ending Wednesday
+- "bwem" - Biweekly, ending Monday}
+
+\item{units}{Optional, string indicating the data transformation to make when retrieving the data. This parameter is passed to `fredr::fredr()`. The default is no transformation. Possible values include the following:
+- "lin" - Levels (No transformation)
+- "chg" - Change
+- "ch1" - Change from 1 year ago
+- "pch" - Percent change
+- "pc1" - Percent change from 1 year ago
+- "pca" - Compounded annual rate of change
+- "cch" - Continuously compounded rate of change
+- "cca" - Continuously compounded annual rate of change
+- "log" - Natural log}
 
 \item{recessions}{Optional, logical for whether to include an NBER recession dummy variable. Default = FALSE.}
 }
@@ -18,6 +52,5 @@ get_ecodata_variable_fred(varcode, varname = NULL, recessions = FALSE)
 Data frame time series with two variables, Date and the variable requested. The data frame will also include all relevant meta data describing the data and citing its source.
 }
 \description{
-`get_ecodata_variable_fred()`
 Downloads data from FRED for a given variable code or URL
 }

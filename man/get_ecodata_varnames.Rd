@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{get_ecodata_varnames}
 \alias{get_ecodata_varnames}
-\title{`get_ecodata_varnames()`
-Fetch all the variables in a given data frame, except the date and recession}
+\title{Get all variable names}
 \usage{
 get_ecodata_varnames(data)
 }
@@ -14,6 +13,5 @@ get_ecodata_varnames(data)
 Returns a vector of variable names
 }
 \description{
-`get_ecodata_varnames()`
 Fetch all the variables in a given data frame, except the date and recession
 }

@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{ecodata_cite_table}
 \alias{ecodata_cite_table}
-\title{`ecodata_cite_table(data)`
-Get a table of citation information for every variable in the given ecodata data frame}
+\title{Create a table describing how ecodata variables should be cited}
 \usage{
 ecodata_cite_table(data)
 }
@@ -14,7 +13,6 @@ ecodata_cite_table(data)
 Returns a flextable with a row for each variable in the given data frame, with a column for how to cite each variable
 }
 \description{
-`ecodata_cite_table(data)`
 Get a table of citation information for every variable in the given ecodata data frame
 }
 \seealso{

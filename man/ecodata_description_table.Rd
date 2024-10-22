@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{ecodata_description_table}
 \alias{ecodata_description_table}
-\title{`ecodata_description(data)`
-Get a table that describes every variable in the given ecodata data frame}
+\title{Create a table describing variables in an ecodata data frame}
 \usage{
 ecodata_description_table(data)
 }
@@ -14,7 +13,6 @@ ecodata_description_table(data)
 Returns a flextable with a row for each variable in the given data frame, and several columns describing attributes of each variable
 }
 \description{
-`ecodata_description(data)`
 Get a table that describes every variable in the given ecodata data frame
 }
 \seealso{

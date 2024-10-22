@@ -5,7 +5,14 @@
 \title{`add_ecodata()`
 Add data for one or more variables from FRED and/or World Bank Data, for given URLs or variable codes. The function will figure out whether the data is available from FRED or World Bank Data.}
 \usage{
-add_ecodata(data, varcodes, varnames = NULL, recessions = FALSE)
+add_ecodata(
+  data,
+  varcodes,
+  varnames = NULL,
+  frequency = NULL,
+  units = NULL,
+  recessions = FALSE
+)
 }
 \arguments{
 \item{data}{Data frame with existing ecodata, data from FRED and/or World Bank Data}
@@ -13,6 +20,35 @@ add_ecodata(data, varcodes, varnames = NULL, recessions = FALSE)
 \item{varcodes}{String for vector of strings that identifies the variable codes or URLs for the data.}
 
 \item{varnames}{Optional, string or vector of strings for the variable names. Default is the code given by the source.}
+
+\item{frequency}{Optional, string for what frequency to aggregate to. Valid only for FRED data. This parameter is passed to `fredr::fredr()`. The default is no aggregation.
+- "d" - Daily
+- "w" - Weekly
+- "bw" - Biweekly
+- "m" - Monthly
+ - "q" - Quarterly
+ - "sa" - Semiannual
+ - "a" - Annual
+ - "wem" - Weekly, ending Monday
+ - "wetu" - Weekly, ending Tuesday
+ - "wew" - Weekly, ending Wednesday
+ - "weth" - Weekly, ending Thursday
+ - "wef" - Weekly, ending Friday
+ - "wesa" - Weekly, ending Saturday
+ - "wesu" - Weekly, ending Sunday
+ - "bwew" - Biweekly, ending Wednesday
+ - "bwem" - Biweekly, ending Monday}
+
+\item{units}{Optional, string indicating the data transformation to make when retrieving the data. This parameter is passed to `fredr::fredr()` and is valid only for FRED data. The default is no transformation.
+- "lin" - Levels (No transformation)
+- "chg" - Change
+- "ch1" - Change from 1 year ago
+- "pch" - Percent change
+- "pc1" - Percent change from 1 year ago
+- "pca" - Compounded annual rate of change
+- "cch" - Continuously compounded rate of change
+- "cca" - Continuously compounded annual rate of change
+- "log" - Natural log}
 
 \item{recessions}{Logical for whether or not to include a dummy variable identifying a NBER U.S. Recessions. Default = FALSE.}
 }

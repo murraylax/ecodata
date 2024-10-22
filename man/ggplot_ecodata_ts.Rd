@@ -2,9 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{ggplot_ecodata_ts}
 \alias{ggplot_ecodata_ts}
-\title{`ggplot_ecodata_ts(data)`
-Make a time series line plot of the variables in the given data frame, in a single plot area.
-The number of variables in the data frame should be between 1 and 7}
+\title{Create time series plot for ecodata variables}
 \usage{
 ggplot_ecodata_ts(
   data,
@@ -32,7 +30,6 @@ ggplot_ecodata_ts(
 \item{plot.recessions}{Optional, logical for whether or not show show NBER recession bars in the plot}
 }
 \description{
-`ggplot_ecodata_ts(data)`
 Make a time series line plot of the variables in the given data frame, in a single plot area.
 The number of variables in the data frame should be between 1 and 7
 }

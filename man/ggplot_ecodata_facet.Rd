@@ -2,7 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{ggplot_ecodata_facet}
 \alias{ggplot_ecodata_facet}
-\title{ggplot_ecodata_facet}
+\title{Create faceted time series plot for ecodata variables}
 \usage{
 ggplot_ecodata_facet(
   data,
