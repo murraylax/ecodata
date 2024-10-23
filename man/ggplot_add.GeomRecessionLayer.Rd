@@ -5,7 +5,7 @@
 \title{'ggplot_add.GeomRecessionLayer()'
 Define a ggplot_add method to automatically move the recession layer to the back}
 \usage{
-ggplot_add.GeomRecessionLayer(object, plot, object_name)
+\method{ggplot_add}{GeomRecessionLayer}(object, plot, object_name)
 }
 \description{
 'ggplot_add.GeomRecessionLayer()'

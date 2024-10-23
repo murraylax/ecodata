@@ -59,13 +59,53 @@ str_to_lower <- function(...) {
   stringr::str_to_lower(...)
 }
 
-#' `ecodata_theme()`
-#' A ggplot theme that is simple and clean and has a large text size
+#' Theme for ecodata plots
+#'
+#' A ggplot theme that is simple and clean and has a readable text size
 #' @return Returns a ggplot theme that can be added to a `ggplot()` call
 #' @export
 ecodata_theme <- function() {
   rettheme <- ggplot2::theme_bw() +
+    ggplot2::theme(text = ggplot2::element_text(size = 18)) +
+    ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white"))
+
+  return(rettheme)
+}
+
+#' Theme with large text
+#'
+#' A ggplot theme that is simple and clean and has a large text size
+#' @return Returns a ggplot theme that can be added to a `ggplot()` call
+#' @export
+ecodata_theme_large <- function() {
+  rettheme <- ggplot2::theme_bw() +
     ggplot2::theme(text = ggplot2::element_text(size = 22)) +
+    ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white"))
+
+  return(rettheme)
+}
+
+#' Theme with normal-size text
+#'
+#' A ggplot theme that is simple and clean and has a normal sized text
+#' @return Returns a ggplot theme that can be added to a `ggplot()` call
+#' @export
+ecodata_theme_normal <- function() {
+  rettheme <- ggplot2::theme_bw() +
+    ggplot2::theme(text = ggplot2::element_text(size = 18)) +
+    ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white"))
+
+  return(rettheme)
+}
+
+#' Theme with small-size text
+#'
+#' A ggplot theme that is simple and clean and has a normal sized text
+#' @return Returns a ggplot theme that can be added to a `ggplot()` call
+#' @export
+ecodata_theme_small <- function() {
+  rettheme <- ggplot2::theme_bw() +
+    ggplot2::theme(text = ggplot2::element_text(size = 14)) +
     ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white"))
 
   return(rettheme)
@@ -1161,7 +1201,7 @@ abbreviated_units <- function(x) {
   labs <- dplyr::case_when(
     abs(x) >= 1e9 ~ paste0(scales::comma(x / 1e9), " bn"),  # Billions
     abs(x) >= 1e6 ~ paste0(scales::comma(x / 1e6), " ml"),  # Millions
-    abs(x) >= 1e3 ~ paste0(scales::comma(x / 1e3), " th"),  # Thousands
+    # abs(x) >= 1e3 ~ paste0(scales::comma(x / 1e3), " th"),  # Thousands
     TRUE ~ as.character(x)  # Leave smaller numbers as-is
   )
   return(labs)
@@ -1177,7 +1217,7 @@ abbreviated_units_dollar <- function(x) {
   labs <- dplyr::case_when(
     abs(x) >= 1e9 ~ paste0("$", scales::comma(x / 1e9), " bn"),  # Billions
     abs(x) >= 1e6 ~ paste0("$", scales::comma(x / 1e6), " ml"),  # Millions
-    abs(x) >= 1e3 ~ paste0("$", scales::comma(x / 1e3), " th"),  # Thousands
+    # abs(x) >= 1e3 ~ paste0("$", scales::comma(x / 1e3), " th"),  # Thousands
     TRUE ~ scales::dollar(x)  # Smaller numbers with dollar formatting
   )
   return(labs)
@@ -1288,6 +1328,10 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, tit
     ecodata_theme() +
     ggplot2::theme(legend.position = "bottom", legend.justification = "left") +
     ggplot2::guides(color = ggplot2::guide_legend(nrow = length(plotvars)))  # Each item in a separate row
+
+  if(nvar==1) {
+    plt <- plt + ggplot2::theme(legend.position = "none")
+  }
 
   if(plot.recessions) {
     plt <- plt + geom_recession(fill="dodgerblue3")
