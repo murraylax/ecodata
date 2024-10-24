@@ -1645,4 +1645,106 @@ ecodata_description_table(mydata)
 
 # I need to cite my sources
 ecodata_cite_table(mydata)
+
+allstates <- get_ecodata_allstates_fred("https://fred.stlouisfed.org/series/CAUR")
+
+value <- "last"
+fill <- "dodgerblue4"
+order <- "descend"
+lowest <- 10
+highest <- 10
+highlight <- "California"
+
+if(value == "last") {
+  allloc <- df |>
+    tidyr::drop_na() |>
+    filter(Date == max(Date)) |>
+    tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date)
+} else if(value == "first") {
+  allloc <- df |>
+    tidyr::drop_na() |>
+    filter(Date == min(Date)) |>
+    tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date)
+} else if(value == "mean") {
+  allloc <- df |>
+    tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date) |>
+    dplyr::group_by(Location) |>
+    dplyr::summarise(Value = mean(Value, na.rm = TRUE))
+} else if(value == "median") {
+  allloc <- df |>
+    tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date) |>
+    dplyr::group_by(Location) |>
+    dplyr::summarise(Value = median(Value, na.rm = TRUE))
+} else if(value == "smallest") {
+  allloc <- df |>
+    tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date) |>
+    dplyr::group_by(Location) |>
+    dplyr::summarise(Value = min(Value, na.rm = TRUE))
+} else if(value == "largest") {
+  allloc <- df |>
+    tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date) |>
+    dplyr::group_by(Location) |>
+    dplyr::summarise(Value = max(Value, na.rm = TRUE))
+} else {
+  allloc <- df |>
+    filter(Date == value) |>
+    tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date)
 }
+
+if(lowest > 0) {
+  plotdata <- allloc |>
+    dplyr::arrange(Value) |>
+    head(lowest)
+} else if(highest > 0) {
+  plotdata <- allloc |>
+    dplyr::arrange(Value) |>
+    tail(highest)
+}
+
+if(order == "descend") {
+  ggplot2::ggplot(plotdata, ggplot2::aes(x = reorder(Location, Value), y = Value)) +
+    ggplot2::geom_col(fill = fill) +
+    ggplot2::coord_flip() +
+    ecodata_theme() +
+    ggplot2::labs(x = "", y="")
+} else if(order == "ascend") {
+  ggplot2::ggplot(plotdata, ggplot2::aes(x = reorder(Location, dplyr::desc(Value)), y = Value)) +
+    ggplot2::geom_col(fill = fill) +
+    ggplot2::coord_flip() +
+    ecodata_theme() +
+    ggplot2::labs(x = "", y="")
+}
+
+if(string_not_empty(highlight)) {
+  if(!highlight %in% unique(plotdata$Location)) {
+    highlight_row <- filter(allloc, Location == highlight)
+    if(nrow(highlight_row) == 0) {
+      error_message <- sprintf("Location for highlight not found: %s", highlight)
+      stop(error_message)
+    }
+    plotdata <- dplyr::bind_rows(plotdata, highlight_row)
+  }
+  plotdata <- plotdata |>
+    dplyr::mutate(Highlight = (Location %in% highlight))
+
+  mycols <- rev(ecodata_colorscale(2))
+
+  if(order == "descend") {
+    ggplot2::ggplot(plotdata, ggplot2::aes(x = reorder(Location, Value), y = Value, fill = Highlight)) +
+      ggplot2::geom_col() +
+      ggplot2::coord_flip() +
+      ggplot2::scale_fill_manual(values = mycols) +
+      ecodata_theme() +
+      ggplot2::labs(x = "", y="") +
+      ggplot2::theme(legend.position = "none")
+  } else if(order == "ascend") {
+    ggplot2::ggplot(plotdata, ggplot2::aes(x = reorder(Location, rev(Value)), y = Value, fill = Highlight)) +
+      ggplot2::geom_col() +
+      ggplot2::coord_flip() +
+      ggplot2::scale_fill_manual(values = mycols) +
+      ecodata_theme() +
+      ggplot2::labs(x = "", y="") +
+      ggplot2::theme(legend.position = "none")
+  }
+}
+

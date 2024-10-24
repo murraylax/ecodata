@@ -9,6 +9,7 @@ Description: Download and visualize economic data from FRED or World Bank
 License: GPL (>= 3)
 Imports: 
     dplyr,
+    tsibble,
     flextable,
     fredr,
     ggplot2,
