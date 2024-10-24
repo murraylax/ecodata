@@ -1,5 +1,5 @@
 #content{
-    max-width:1220px;
+    max-width:1120px;
 }
 
 .klippy {
@@ -182,11 +182,18 @@ pre, code {
 /* Ensure plots respect their dimensions */
 .rplot img {
     max-width: 90% !important;  /* Ensure plot does not shrink */
-    height: auto;  /* Maintain aspect ratio */
+    height: auto !important;  /* Maintain aspect ratio */
 }
 
 /* Optional: Set maximum plot width */
 figure {
-    max-width: 90%;  /* Allow plots to be larger */
-    margin: 0 auto;  /* Center the plots */
+    max-width: 90% !important;  /* Allow plots to be larger */
+    margin: 0 auto !important;  /* Center the plots */
 }
+
+/* Left-align tables */
+table, .tabwid {
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+

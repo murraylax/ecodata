@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{get_ecodata_variable_wb}
 \alias{get_ecodata_variable_wb}
-\title{`get_ecodata_variable_wb()`
-Retrieve data for a single variable from World Bank Data, given the URL for the data location, variable code, or the partial URL including the variable code and possibly the location}
+\title{Get data for a single variable from World Bank Data}
 \usage{
 get_ecodata_variable_wb(varcode, varname = NULL)
 }
@@ -17,6 +16,5 @@ If the location is part of the text, it will download the variable for just that
 Data frame for the single variable from World Bank Data. If country is specified in the varcode, the data frame will include the date and a single column for a single country. If no country is specified, the data frame will include a column for every country. The data frame will also include all relevant meta data describing the data and citing its source.
 }
 \description{
-`get_ecodata_variable_wb()`
 Retrieve data for a single variable from World Bank Data, given the URL for the data location, variable code, or the partial URL including the variable code and possibly the location
 }

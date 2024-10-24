@@ -429,7 +429,8 @@ get_recessions <- function(data) {
   data <- dplyr::left_join(data, recessions.df, by = "Date")
 }
 
-#' `get_wb_variable_code()`
+#' Extract variable code from World Bank Data URL
+#'
 #' For a given string from a World Bank Data URL or partial URL, extract the code for the variable, but not the location
 #' @param text String that is the URL or partial URL from World Bank Data for a given variable
 #' @export
@@ -451,7 +452,8 @@ get_wb_variable_code <- function(text) {
 }
 
 
-#' `get_ecodata_variable_wb()`
+#' Get data for a single variable from World Bank Data
+#'
 #' Retrieve data for a single variable from World Bank Data, given the URL for the data location, variable code, or the partial URL including the variable code and possibly the location
 #' @param varcode String that is the URL for the data, variable code, or the partial URL including the variable code and possibly the location.
 #'                If the location is part of the text, it will download the variable for just that country/location. If location is not given, it will download the variable for all countries/locations.
@@ -481,18 +483,19 @@ get_ecodata_variable_wb <- function(varcode, varname = NULL) {
       }
     }
   } else {
-    df <- get_ecodata_variable_allcountries_wb(variable_code, varname = varname)
+    df <- get_ecodata_allcountries_wb(variable_code, varname = varname)
   }
   return(df)
 }
 
-#' `get_ecodata_variable_allcountries_wb()`
+#' Retrieve data from World Bank Data for all countries
+#'
 #' Retrieve data for a single variable from World Bank Data for all available countries, given the URL for the data location, variable code, or the partial URL including the variable code.
 #' @param varcode String that is the URL for the data, variable code, or the partial URL including the variable code. If a location is included in the `varcode`, it will be ignored.
 #' @param varname Optional, string to give the variable name. By default, the variable will be named the variable code given in World Bank Data.
 #' @return Data frame for the single variable from World Bank Data. The data frame will include a column for every country. The data frame will also include all relevant meta data describing the data and citing its source.
 #' @export
-get_ecodata_variable_allcountries_wb <- function(varcode, varname = NULL) {
+get_ecodata_allcountries_wb <- function(varcode, varname = NULL) {
   variable_code <- get_wb_variable_code(varcode)
 
   if(variable_code == "") {
@@ -517,7 +520,29 @@ get_ecodata_variable_allcountries_wb <- function(varcode, varname = NULL) {
     varname <- variable_code
   }
 
-  info <- wbstats::wb_search(variable_code)
+  info <- wbstats::wb_search(variable_code, fields = "indicator_id")
+  info <- dplyr::filter(info, indicator_id == variable_code)
+
+  # Infer units from info
+  units <- "None"
+  wb_description <- info$indicator_desc[1]
+  if (string_detect(wb_description, "growth") & (string_detect(wb_description, "percent") | string_detect(wb_description, "rate of change") | string_detect(wb_description, "%")) ) {
+    units <- "Growth rate (percentage)"
+  } else if(string_detect(wb_description, "index")) {
+    units <- "Index"
+  } else if(string_detect(wb_description, "percent") | string_detect(wb_description, "proportion") | string_detect(wb_description, "rate of change")) {
+    units <- "Percentage"
+  } else if((string_detect(wb_description, "dollar") | string_detect(wb_description, "\\$")) & string_detect(wb_description, "PPP")  ) {
+    units <- "International dollars (PPP)"
+  } else if((string_detect(wb_description, "dollar") | string_detect(wb_description, "\\$")) & string_detect(wb_description, "constant")  ) {
+    units <- "Real U.S. dollars"
+  } else if((string_detect(wb_description, "dollar") | string_detect(wb_description, "\\$")) & string_detect(wb_description, "current")  ) {
+    units <- "Nominal U.S. dollars"
+  } else if(string_detect(wb_description, "LCU") & string_detect(wb_description, "constant")  ) {
+    units <- "Real local currency"
+  } else if(string_detect(wb_description, "LCU") & string_detect(wb_description, "current")  ) {
+    units <- "Nominal local currency"
+  }
 
   df <- dplyr::tibble(
     Date = raw.df$date,
@@ -530,28 +555,28 @@ get_ecodata_variable_allcountries_wb <- function(varcode, varname = NULL) {
     dplyr::distinct()
 
   df <- df |>
-    dplyr::mutate(`Variable Name` = sprintf("%s %s", varname, Country)) |>
+    dplyr::mutate(`Variable Name` = Country) |>
     dplyr::select(Date, `Variable Name`, dplyr::all_of(varname)) |>
     tidyr::pivot_wider(names_from = `Variable Name`, values_from = dplyr::all_of(varname)) |>
     dplyr::arrange(Date)
 
-  all_variable_names <- get_ecodata_varnames(df)
-  for(variable_name in all_variable_names) {
-    attr(df[[variable_name]], "Variable") <- varname
-    country <- stringr::str_squish(stringr::str_remove_all(variable_name, varname))
-    country_code <- countries.df$Country_ISO2[countries.df$Country == country]
-    attr(df[[variable_name]], "Code") <- sprintf("%s?locations=%s", varcode, country_code)
-    attr(df[[variable_name]], "Description") <- info$indicator_desc[1]
-    attr(df[[variable_name]], "Frequency") <- "Annual"
-    attr(df[[variable_name]], "Seasonal Adjustment") <- "Not Seasonally Adjusted"
+  all_countries <- get_ecodata_varnames(df)
+  for(country in all_countries) {
+    countrycode <- countries.df$Country_ISO2[countries.df$Country == country]
+    attr(df[[country]], "Variable") <- country
+    attr(df[[country]], "Code") <- sprintf("%s?locations=%s", varcode, countrycode)
+    attr(df[[country]], "Description") <- info$indicator_desc[1]
+    attr(df[[country]], "Frequency") <- "Annual"
+    attr(df[[country]], "Units") <- units
+    attr(df[[country]], "Seasonal Adjustment") <- "Not Seasonally Adjusted"
     source_str <- sprintf("World Bank Data")
-    attr(df[[variable_name]], "Source") <- source_str
-    url_str <- sprintf("https://data.worldbank.org/indicator/%s?locations=%s", varcode, country_code)
-    attr(df[[variable_name]], "URL") <- url_str
+    attr(df[[country]], "Source") <- source_str
+    url_str <- sprintf("https://data.worldbank.org/indicator/%s?locations=%s", varcode, countrycode)
+    attr(df[[country]], "URL") <- url_str
     access_date <- format.Date(Sys.Date(), "%B %d, %Y")
-    attr(df[[variable_name]], "Access Date") <- access_date
+    attr(df[[country]], "Access Date") <- access_date
     cite_str <- sprintf("%s; %s (Accessed on %s)", source_str, url_str, access_date)
-    attr(df[[variable_name]], "Cite") <- cite_str
+    attr(df[[country]], "Cite") <- cite_str
   }
 
   return(df)
@@ -600,7 +625,6 @@ get_ecodata_variable_country_wb <- function(varcode, countrycode, varname = NULL
     units <- "Nominal local currency"
   }
 
-  # I might not want this
   indicator <- sprintf("%s %s", raw.df$country[1], info$indicator[1])
   if(is.null(varname)) {
     varname <- stringr::str_squish(stringr::str_remove(indicator, "\\([^()]*\\)"))
@@ -1223,6 +1247,280 @@ abbreviated_units_dollar <- function(x) {
   return(labs)
 }
 
+#' Create bar plot for ecodata variables
+#'
+#' Make a bar plot of the variables in the given data frame, in a single plot area.
+#'
+#' @param data Data frame from `get_ecodata()` that includes the variables to plot
+#' @param variables Optional, vector of strings that includes the economic variables to plot. If not specified, the function will plot all the variables given in `data`, if possible.
+#' @param title Optional, string for the title of the plot. Default is ""
+#' @param plot_at Optional, string for what value to plot over the time series, can be one of the following:
+#'   - "last" - Plot the last value in the time series
+#'   - "first" - Plot the first value in the time series
+#'   - "mean" - Plot the mean value in the time series
+#'   - "median" - Plot the median value in the time series
+#'   - "smallest" - Plot the smallest value in the time series
+#'   - "largest" - Plot the largest value in the time series
+#'   - A date string in the format "YYYY-MM-DD" - Plot the value at that date
+#'   Default is "last"
+#' @param highlight Optional, string for the variable to highlight in the plot. Default is NULL
+#' @param order Optional, string for the order of the bars in the plot, can be one of the following:
+#'   - "ascend" - Order the bars in ascending order
+#'   - "descend" - Order the bars in descending order
+#'   - "none" - Do not order the bars by the length of the bar. Will be either alphabetical, or in the order given in the `variables` parameter
+#'   Default is "descend"
+#'
+#' @param lowest Optional, for plotting bars only for the lowest values. Select a value greater than 0 to choose this many bars. A value of 0 means this option will not be used. Can only pass values for `lowest` or `highest`, but not both. Default is 0.
+#' @param highest Optional, for plotting bars only for the highest values. Select a value greater than 0 to choose this many bars. A value of 0 means this option will not be used. Can only pass values for `lowest` or `highest`, but not both. Default is 0.
+#' @param ylab Optional, string for the label of the vertical axis. Default is NULL
+#' @param fill Optional, string for the color of the bars. Default is "dodgerblue4"
+#' @param title_strlen Optional, integer for the maximum number of characters in the title before wrapping. Default is 60
+#' @param variable_strlen Optional, integer for the maximum number of characters in the variable names before wrapping. Default is 35
+#' @return A ggplot object with a bar plot of the variables in the given data frame
+#' @export
+ggplot_ecodata_bar <- function(data, variables = NULL, title = "",
+                                   plot_at = "last", highlight = NULL, order = "descend", lowest = 0, highest = 0,
+                                   ylab = NULL, fill = "dodgerblue4", title_strlen = 60, variable_strlen = 35) {
+
+  # Wrap title if necessary
+  if(stringr::str_length(title) > title_strlen) {
+    # Put a new line first after a colon
+    title <- stringr::str_replace(title, ":", ":\n")
+    alllines <- stringr::str_split(title, "\n")[[1]]
+    alllines <- stringr::str_wrap(alllines, title_strlen)
+    title <- paste(alllines, collapse = "\n")
+  }
+
+  # Identify the variables to plot
+  includevars <- get_ecodata_varnames(data)
+  if(!is.null(variables)) {
+    morevars_idx <- names(data) %in% variables
+    includevars <- names(data)[morevars_idx]
+  }
+
+  # filter out observations with all missing values on the variables to include
+  data <- data |>
+    filter(!dplyr::if_all(dplyr::all_of(includevars), is.na))
+  # Linear interpolation for missing values
+  data <- ecodata_linear_interpolate(data, includevars)
+
+  plotvars <- includevars
+
+  # Make sure all plot variables have the same units
+  all_units <- vector(length = length(plotvars))
+  for(v in 1:length(plotvars)) {
+    all_units[v] <- attr(data[[plotvars[v]]], "Units")
+  }
+  unique_units <- unique(all_units)
+  if(length(unique_units) > 1) {
+    msg <- sprintf("Not all variables are in the same units. Units include, %s.", paste(unique_units, sep = ", ", collapse = ", "))
+    warning(msg)
+  }
+  useunits <- unique_units[1]
+  if(is.null(ylab)) {
+    if(useunits == "%" | string_compare(useunits, "percent") | string_compare(useunits, "percentage")) {
+      ylab <- ""
+    } else {
+      ylab <- useunits
+    }
+  }
+
+  # Setup a units function for the vertical axis scale labels
+  units_function <- function(x) abbreviated_units(x)
+  if(string_detect(useunits, "\\$") | str_detect(str_to_lower(useunits), "dollar")) {
+    units_function <- function(x) return(abbreviated_units_dollar(x))
+  } else if(string_detect(useunits, "%") | string_detect(useunits, "percent") | string_detect(useunits, "proportion") | string_detect(useunits, "rate of change")) {
+    units_function <- function(...) return(scales::percent(scale=1, ...))
+  }
+
+  data_sources <- ecodata_get_sources( dplyr::select(data, dplyr::all_of(plotvars)) )
+  if(length(data_sources) == 0) {
+    sources_str <- ""
+  } else {
+    sources_str <- paste(data_sources, collapse = "\n", sep = "\n")
+    if(length(data_sources)==1) sources_str <- sprintf("Source: %s", sources_str)
+    if(length(data_sources)>1) sources_str <- sprintf("Sources:\n %s", sources_str)
+  }
+
+  if(plot_at == "last") {
+    plot.df <- data |>
+      tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date) |>
+      dplyr::group_by(Location) |>
+      tidyr::drop_na() |>
+      dplyr::filter(Date == max(Date)) |>
+      dplyr::ungroup()
+    usedate <- max(data$Date)
+    plot_at_caption = sprintf("Data as of %s", format.Date(usedate, "%b %d, %Y"))
+  } else if(plot_at == "first") {
+    plot.df <- data |>
+      tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date) |>
+      dplyr::group_by(Location) |>
+      tidyr::drop_na() |>
+      dplyr::filter(Date == min(Date)) |>
+      dplyr::ungroup()
+    usedate <- min(data$Date)
+    plot_at_caption = sprintf("Data as of %s", format.Date(usedate, "%b %d, %Y"))
+  } else if(plot_at == "mean") {
+    maxdate <- max(data$Date)
+    mindate <- min(data$Date)
+    plot.df <- data |>
+      tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date) |>
+      dplyr::group_by(Location) |>
+      dplyr::summarise(Value = mean(Value, na.rm = TRUE))
+    plot_at_caption = sprintf("Average value (%s - %s)", format.Date(mindate, "%b %d, %Y"), format.Date(maxdate, "%b %d, %Y"))
+  } else if(plot_at == "median") {
+    maxdate <- max(data$Date)
+    mindate <- min(data$Date)
+    plot.df <- data |>
+      tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date) |>
+      dplyr::group_by(Location) |>
+      dplyr::summarise(Value = median(Value, na.rm = TRUE))
+    plot_at_caption = sprintf("Median value (%s - %s)", format.Date(mindate, "%b %d, %Y"), format.Date(maxdate, "%b %d, %Y"))
+  } else if(plot_at == "smallest") {
+    maxdate <- max(data$Date)
+    mindate <- min(data$Date)
+    plot.df <- data |>
+      tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date) |>
+      dplyr::group_by(Location) |>
+      dplyr::summarise(Value = min(Value, na.rm = TRUE))
+    plot_at_caption = sprintf("Smallest value (%s - %s)", format.Date(mindate, "%b %d, %Y"), format.Date(maxdate, "%b %d, %Y"))
+  } else if(plot_at == "largest") {
+    maxdate <- max(data$Date)
+    mindate <- min(data$Date)
+    plot.df <- data |>
+      tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date) |>
+      dplyr::group_by(Location) |>
+      dplyr::summarise(Value = max(Value, na.rm = TRUE))
+    plot_at_caption = sprintf("Largest value (%s - %s)", format.Date(mindate, "%b %d, %Y"), format.Date(maxdate, "%b %d, %Y"))
+  } else {
+    usedate <- as.Date(plot_at, "%Y-%m-%d")
+    plot.df <- data |>
+      filter(Date == plot_at) |>
+      tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date)
+    plot_at_caption = sprintf("Data as of %s", format.Date(plot_at, "%b %d, %Y"))
+  }
+  if(nrow(plot.df) == 0) {
+    error_message <- sprintf("No data found for the date, \"%s\"", plot_at)
+    stop(error_message)
+  }
+
+  use_caption <- sprintf("%s\n\n%s", plot_at_caption, sources_str)
+
+  if(variable_strlen > 0) {
+    plot.df <- plot.df |>
+      dplyr::mutate(Location = stringr::str_wrap(Location, width = variable_strlen))
+    if(!is.null(variables)) {
+      variables <- stringr::str_wrap(variables, width = variable_strlen)
+    }
+  }
+
+  # If `variables ` is given, make the order of the bars in the plot the same as the order of the variables
+  if(!is.null(variables)) {
+    plot.df <- plot.df |>
+      dplyr::mutate(Location = factor(Location, levels = variables, ordered = TRUE))
+  }
+
+  # Save this. I need to refer to what the data looked like before the possible filter that is next
+  before.filter.df <- plot.df
+
+  # Filter out lowest or highest
+  if(lowest > 0 & highest == 0) {
+    plot.df <- plot.df |>
+      dplyr::arrange(Value) |>
+      head(lowest)
+  } else if(highest > 0 & lowest == 0) {
+    plot.df <- plot.df |>
+      dplyr::arrange(Value) |>
+      tail(highest)
+  } else if(highest != 0 & lowest != 0) {
+    error_message <- "At most, only one of the parameters `lowest` or `highest` should be set."
+    stop(error_message)
+  } else if(highest < 0) {
+    error_message <- "Invalid value: `highest` cannot be negative."
+    stop(error_message)
+  } else if(lowest < 0) {
+    error_message <- "Invalid value: `lowest` cannot be negative."
+    stop(error_message)
+  }
+
+  # Highlight a specific value
+  if(string_not_empty(highlight)) {
+    if(!highlight %in% unique(plot.df$Location)) {
+      # If the highlighted value is not (yet) included in the plot,
+      # It may be valid, but not not part of the highest or lowest values included in plot.df
+      highlight_row <- filter(before.filter.df, Location == highlight)
+      if(nrow(highlight_row) == 0) {
+        error_message <- sprintf("Location for highlight not found: %s", highlight)
+        stop(error_message)
+      }
+      plot.df <- dplyr::bind_rows(plot.df, highlight_row)
+    }
+    plot.df <- plot.df |>
+      dplyr::mutate(Highlight = (Location %in% highlight))
+  }
+
+  # Start the plot!
+  if(string_not_empty(highlight)) {
+    mycols <- rev(ecodata_colorscale(2))
+
+    if(order == "descend") {
+      plt <- ggplot2::ggplot(plot.df, ggplot2::aes(x = reorder(Location, Value), y = Value, fill = Highlight)) +
+        ggplot2::geom_col() +
+        ggplot2::coord_flip() +
+        ggplot2::scale_fill_manual(values = mycols) +
+        ggplot2::scale_y_continuous(labels = units_function, breaks = scales::pretty_breaks(n=5)) +
+        ggplot2::labs(y = ylab, x = "", color = "", title = title, caption = use_caption) +
+        ecodata_theme() +
+        ggplot2::theme(legend.position = "none")
+    } else if(order == "ascend") {
+      plt <- ggplot2::ggplot(plot.df, ggplot2::aes(x = reorder(Location, rev(Value)), y = Value, fill = Highlight)) +
+        ggplot2::geom_col() +
+        ggplot2::coord_flip() +
+        ggplot2::scale_fill_manual(values = mycols) +
+        ggplot2::scale_y_continuous(labels = units_function, breaks = scales::pretty_breaks(n=5)) +
+        ggplot2::labs(y = ylab, x = "", color = "", title = title, caption = use_caption) +
+        ecodata_theme() +
+        ggplot2::theme(legend.position = "none")
+    } else {
+      plt <- ggplot2::ggplot(plot.df, ggplot2::aes(x = Location, y = Value, fill = Highlight)) +
+        ggplot2::geom_col() +
+        ggplot2::coord_flip() +
+        ggplot2::scale_fill_manual(values = mycols) +
+        ggplot2::scale_y_continuous(labels = units_function, breaks = scales::pretty_breaks(n=5)) +
+        ggplot2::labs(y = ylab, x = "", color = "", title = title, caption = use_caption) +
+        ecodata_theme() +
+        ggplot2::theme(legend.position = "none")
+    }
+  } else {
+    if(order == "descend") {
+      plt <- ggplot2::ggplot(plot.df, ggplot2::aes(x = reorder(Location, Value), y = Value)) +
+        ggplot2::geom_col(fill = fill) +
+        ggplot2::coord_flip() +
+        ggplot2::scale_y_continuous(labels = units_function, breaks = scales::pretty_breaks(n=5)) +
+        ggplot2::labs(y = ylab, x = "", color = "", title = title, caption = use_caption) +
+        ecodata_theme() +
+        ggplot2::theme(legend.position = "none")
+    } else if(order == "ascend") {
+      plt <- ggplot2::ggplot(plot.df, ggplot2::aes(x = reorder(Location, dplyr::desc(Value)), y = Value)) +
+        ggplot2::geom_col(fill = fill) +
+        ggplot2::coord_flip() +
+        ggplot2::scale_y_continuous(labels = units_function, breaks = scales::pretty_breaks(n=5)) +
+        ggplot2::labs(y = ylab, x = "", color = "", title = title, caption = use_caption) +
+        ecodata_theme() +
+        ggplot2::theme(legend.position = "none")
+    } else {
+      plt <- ggplot2::ggplot(plot.df, ggplot2::aes(x = Location, y = Value)) +
+        ggplot2::geom_col(fill = fill) +
+        ggplot2::coord_flip() +
+        ggplot2::scale_y_continuous(labels = units_function, breaks = scales::pretty_breaks(n=5)) +
+        ggplot2::labs(y = ylab, x = "", color = "", title = title, caption = use_caption) +
+        ecodata_theme() +
+        ggplot2::theme(legend.position = "none")
+    }
+  }
+  return(plt)
+}
+
 #' Create time series plot for ecodata variables
 #'
 #' Make a time series line plot of the variables in the given data frame, in a single plot area.
@@ -1255,7 +1553,7 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, tit
     includevars <- names(data)[morevars_idx]
   }
 
-  # filter out just the variables to include
+  # filter out observations where all the variables to include are missing
   data <- data |>
     filter(!dplyr::if_all(dplyr::all_of(includevars), is.na))
   # Linear interpolation for missing values
@@ -1596,155 +1894,68 @@ ecodata_compute_pctchange <- function(data, variable, new_variable = NULL, units
 
 if(FALSE) {
 
-varcodes <- c(
-  "https://fred.stlouisfed.org/series/DTB3",
-  "https://fred.stlouisfed.org/series/DGS10",
-  "https://fred.stlouisfed.org/series/IR3TIB01DEM156N",
-  "https://fred.stlouisfed.org/series/IRLTLT01DEM156N",
-  "https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=US",
-  "https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=DE"
-)
+  varcodes <- c(
+    "https://fred.stlouisfed.org/series/DTB3",
+    "https://fred.stlouisfed.org/series/DGS10",
+    "https://fred.stlouisfed.org/series/IR3TIB01DEM156N",
+    "https://fred.stlouisfed.org/series/IRLTLT01DEM156N",
+    "https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=US",
+    "https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=DE"
+  )
 
-mydata <- get_ecodata(varcodes)
-glimpse(mydata)
+  mydata <- get_ecodata(varcodes)
+  glimpse(mydata)
 
-# Just get one variable from FRED
-gdp <- get_ecodata("https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=US")
-intrate <- get_ecodata("https://fred.stlouisfed.org/series/DGS10")
-# Just get one variable from World Bank
-poverty <- get_ecodata("https://data.worldbank.org/indicator/SI.POV.DDAY?&start=1984&locations=1W-AR&view=chart")
+  # Just get one variable from FRED
+  gdp <- get_ecodata("https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.KD?locations=US")
+  intrate <- get_ecodata("https://fred.stlouisfed.org/series/DGS10")
+  # Just get one variable from World Bank
+  poverty <- get_ecodata("https://data.worldbank.org/indicator/SI.POV.DDAY?&start=1984&locations=1W-AR&view=chart")
 
-df <- ecodata_join(mydata, poverty, gdp)
+  df <- ecodata_join(mydata, poverty, gdp)
 
-# Plot a time series of the Real GDP data
-ggplot_ecodata_ts(mydata, title = "Real GDP",
-                  variables = c("United States GDP, PPP", "Germany GDP, PPP"),
-                  plot.recessions = TRUE)
+  # Plot a time series of the Real GDP data
+  ggplot_ecodata_ts(mydata, title = "Real GDP",
+                    variables = c("United States GDP, PPP", "Germany GDP, PPP"),
+                    plot.recessions = TRUE)
 
-# Plot a time series of the U.S. interest rate data
-ggplot_ecodata_ts(mydata, title = "Interest Rates",
-                  variables = c("3-Month Treasury Bill Secondary Market Rate, Discount Basis",
-                                "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis"),
-                  plot.recessions = TRUE)
-
-# Plot a faceted time series of the U.S. and German interest rate data
-ggplot_ecodata_facet(mydata, title = "Interest Rates", ncol = 2, plot.recessions = TRUE,
+  # Plot a time series of the U.S. interest rate data
+  ggplot_ecodata_ts(mydata, title = "Interest Rates",
                     variables = c("3-Month Treasury Bill Secondary Market Rate, Discount Basis",
-                                  "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis",
-                                  "Interest Rates: 3-Month or 90-Day Rates and Yields: Interbank Rates: Total for Germany",
-                                  "Interest Rates: Long-Term Government Bond Yields: 10-Year: Main (Including Benchmark) for Germany"))
+                                  "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis"),
+                    plot.recessions = TRUE)
 
-# I forgot. Can I add on this variable too? Sure!
-mydata <- add_ecodata(mydata, "GDPC1")
+  # Plot a faceted time series of the U.S. and German interest rate data
+  ggplot_ecodata_facet(mydata, title = "Interest Rates", ncol = 2, plot.recessions = TRUE,
+                      variables = c("3-Month Treasury Bill Secondary Market Rate, Discount Basis",
+                                    "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis",
+                                    "Interest Rates: 3-Month or 90-Day Rates and Yields: Interbank Rates: Total for Germany",
+                                    "Interest Rates: Long-Term Government Bond Yields: 10-Year: Main (Including Benchmark) for Germany"))
 
-# Get information about the data
-mydata_description <- ecodata_description(mydata)
+  # I forgot. Can I add on this variable too? Sure!
+  mydata <- add_ecodata(mydata, "GDPC1")
 
-# Get a pretty table of information about the data
-ecodata_description_table(mydata)
+  # Get information about the data
+  mydata_description <- ecodata_description(mydata)
 
-# I need to cite my sources
-ecodata_cite_table(mydata)
+  # Get a pretty table of information about the data
+  ecodata_description_table(mydata)
 
-allstates <- get_ecodata_allstates_fred("https://fred.stlouisfed.org/series/CAUR")
+  # I need to cite my sources
+  ecodata_cite_table(mydata)
 
-value <- "last"
-fill <- "dodgerblue4"
-order <- "descend"
-lowest <- 10
-highest <- 10
-highlight <- "California"
+  allstates <- get_ecodata_allstates_fred("https://fred.stlouisfed.org/series/CAUR")
 
-if(value == "last") {
-  allloc <- df |>
-    tidyr::drop_na() |>
-    filter(Date == max(Date)) |>
-    tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date)
-} else if(value == "first") {
-  allloc <- df |>
-    tidyr::drop_na() |>
-    filter(Date == min(Date)) |>
-    tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date)
-} else if(value == "mean") {
-  allloc <- df |>
-    tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date) |>
-    dplyr::group_by(Location) |>
-    dplyr::summarise(Value = mean(Value, na.rm = TRUE))
-} else if(value == "median") {
-  allloc <- df |>
-    tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date) |>
-    dplyr::group_by(Location) |>
-    dplyr::summarise(Value = median(Value, na.rm = TRUE))
-} else if(value == "smallest") {
-  allloc <- df |>
-    tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date) |>
-    dplyr::group_by(Location) |>
-    dplyr::summarise(Value = min(Value, na.rm = TRUE))
-} else if(value == "largest") {
-  allloc <- df |>
-    tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date) |>
-    dplyr::group_by(Location) |>
-    dplyr::summarise(Value = max(Value, na.rm = TRUE))
-} else {
-  allloc <- df |>
-    filter(Date == value) |>
-    tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date)
+  plot_at <- "last"
+  plot_at <- "smallest"
+  plot_at <- "2023-12-01"
+  fill <- "dodgerblue4"
+  order <- "descend"
+  lowest <- 10
+  highest <- 0
+  highlight <- "California"
+  title <- "Unemployment Rates by State"
+  ggplot_ecodata_bar(allstates, title = title,
+                         plot_at = plot_at, highlight = highlight, order = order,
+                         lowest = lowest, highest = highest, fill = fill)
 }
-
-if(lowest > 0) {
-  plotdata <- allloc |>
-    dplyr::arrange(Value) |>
-    head(lowest)
-} else if(highest > 0) {
-  plotdata <- allloc |>
-    dplyr::arrange(Value) |>
-    tail(highest)
-}
-
-if(order == "descend") {
-  ggplot2::ggplot(plotdata, ggplot2::aes(x = reorder(Location, Value), y = Value)) +
-    ggplot2::geom_col(fill = fill) +
-    ggplot2::coord_flip() +
-    ecodata_theme() +
-    ggplot2::labs(x = "", y="")
-} else if(order == "ascend") {
-  ggplot2::ggplot(plotdata, ggplot2::aes(x = reorder(Location, dplyr::desc(Value)), y = Value)) +
-    ggplot2::geom_col(fill = fill) +
-    ggplot2::coord_flip() +
-    ecodata_theme() +
-    ggplot2::labs(x = "", y="")
-}
-
-if(string_not_empty(highlight)) {
-  if(!highlight %in% unique(plotdata$Location)) {
-    highlight_row <- filter(allloc, Location == highlight)
-    if(nrow(highlight_row) == 0) {
-      error_message <- sprintf("Location for highlight not found: %s", highlight)
-      stop(error_message)
-    }
-    plotdata <- dplyr::bind_rows(plotdata, highlight_row)
-  }
-  plotdata <- plotdata |>
-    dplyr::mutate(Highlight = (Location %in% highlight))
-
-  mycols <- rev(ecodata_colorscale(2))
-
-  if(order == "descend") {
-    ggplot2::ggplot(plotdata, ggplot2::aes(x = reorder(Location, Value), y = Value, fill = Highlight)) +
-      ggplot2::geom_col() +
-      ggplot2::coord_flip() +
-      ggplot2::scale_fill_manual(values = mycols) +
-      ecodata_theme() +
-      ggplot2::labs(x = "", y="") +
-      ggplot2::theme(legend.position = "none")
-  } else if(order == "ascend") {
-    ggplot2::ggplot(plotdata, ggplot2::aes(x = reorder(Location, rev(Value)), y = Value, fill = Highlight)) +
-      ggplot2::geom_col() +
-      ggplot2::coord_flip() +
-      ggplot2::scale_fill_manual(values = mycols) +
-      ecodata_theme() +
-      ggplot2::labs(x = "", y="") +
-      ggplot2::theme(legend.position = "none")
-  }
-}
-

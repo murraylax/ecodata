@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{get_wb_variable_code}
 \alias{get_wb_variable_code}
-\title{`get_wb_variable_code()`
-For a given string from a World Bank Data URL or partial URL, extract the code for the variable, but not the location}
+\title{Extract variable code from World Bank Data URL}
 \usage{
 get_wb_variable_code(text)
 }
@@ -11,6 +10,5 @@ get_wb_variable_code(text)
 \item{text}{String that is the URL or partial URL from World Bank Data for a given variable}
 }
 \description{
-`get_wb_variable_code()`
 For a given string from a World Bank Data URL or partial URL, extract the code for the variable, but not the location
 }

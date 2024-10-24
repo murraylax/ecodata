@@ -26,6 +26,7 @@ knitr::opts_chunk$set(
   message = FALSE,
   collapse = FALSE,
   comment = "#>",
+  ft.align = "left",
   fig.width = 7,  # Width of the plots (in inches)
   fig.height = 4,  # Width of the plots (in inches)
   fig.retina = NULL  # Disable retina scaling
@@ -48,6 +49,8 @@ td {
 </style>
 ')
 ```
+
+By the end of this vignette you will be able to download data from  <a href="https://fred.stlouisfed.org/" target="_blank">FRED (Federal Reserve Economic Data)</a> or <a href="https://data.worldbank.org/" target="_blank">World Bank Data</a>, create professional, publication-ready visualizations; and document your data, **and accomplish all of it with as little as three lines of code**.
 
 # About the Package
 
@@ -107,7 +110,7 @@ fredr::fredr_set_key("abcd1234efgh5678ijkl9012mnop3456")
 
 ## Load libraries
 
-To begin, let us load the [`tidyverse`]() library to wrangle and manipulate the data, and then the *ecodata* package.
+To begin, let us load the *`tidyverse`* library to wrangle and manipulate the data, and then the *ecodata* package.
 
 ```{r}
 library(tidyverse)
@@ -255,7 +258,9 @@ flextable(slice(mydata, (nrow(mydata)-40):(nrow(mydata)-29) )) |>
   flextable::width(width = 2)
 ```
 
-## Time series and faceted plots
+# Plots with Multiple Variables
+
+## Time series plots
 
 We can make a time series as before. The simplest way is to just call `ggplot_ecodata()`.
 
@@ -265,7 +270,9 @@ ggplot_ecodata_ts(mydata, title = "Unemployment and Poverty in U.S.", plot.reces
 
 Note that each series is given its own color, and a legend appears at the bottom of the plot. The function `ggplot_ecodata_ts()` will allow for up to 7 series to plot in a single graph (but three is usually a good maximum to consider). 
 
-Plotting multiple lines on a single plot is best when the variables are directly comparable. While all three variables are percentages, the percentages for poverty rate, unemployment rate, and income share are not directly comparable. This is probably not the most convenient way to visualize these variables.
+## Faceted time series plots
+
+Plotting multiple lines on a single plot is best when the variables are directly comparable. In the example in the previous subsection, all three variables are percentages, but the percentages for poverty rate, unemployment rate, and income share are not directly comparable. This is probably not the most convenient way to visualize these variables.
 
 We can alternatively make a faceted plot using `ggplot_ecodata_facet()`, following a similar structure as above:
 
@@ -318,6 +325,47 @@ glimpse(allstates)
 
 Be cautious with this approach. The FRED API only allows a limited number of requests for given periods of time, before you have to wait to download again. FRED will return an error or a warning when you have reached this limit. 
 
+## Multiple Countries
+
+For World Bank data, you can download the same variable for multiple countries using the `get_ecodata_allcountries()` function.
+
+Here is poverty data for the United States: <a href="https://data.worldbank.org/indicator/SI.POV.DDAY?locations=US" target="_blank">https://data.worldbank.org/indicator/SI.POV.DDAY?locations=US</a>. The following code downloads the poverty rate for all countries:
+
+```{r}
+allcountries <- get_ecodata_allcountries_wb("https://data.worldbank.org/indicator/SI.POV.DDAY?locations=US")
+```
+
+We can take a `glimpse()` at the data to verify that we have a column for every country in the World Bank data set.        
+
+```{r}
+glimpse(allcountries)
+```
+
+There are many missing values (*NA* values) in the data set because the data is not available for all countries for all years.
+
+# Bar Plots
+
+In the previous section, we downloaded data of poverty levels for all countries in the world. We can use the `ggplot_ecodata_bar()` function to make a bar plot to compare poverty levels for several different countries.
+
+The `allcountries` data frame included data on 218 countries over 64 years. It would be impractical to make a bar plot with 218 bars. The `ggplot_ecodata_bar()` function allows us to specify a `lowest` parameter to only plot the countries with the lowest values for poverty, or a `highest` parameter to only plot the countries with the highest values for poverty. The bar plot can only show one poverty value per country. The `plot_at` parameter allows us to specify the date to plot, or we can set this value to "last" to plot the most recent data, "first" to plot the earliest data, or "average" to plot the average value over the years. We will look at the countries with the 10 highest poverty levels for the most recent date available for all countries.
+
+```{r, fig.height=5, fig.width=8}
+ggplot_ecodata_bar(allcountries, 
+                   plot_at = "last", 
+                   highest = 10, 
+                   title = "Countries with Highest Poverty Rates")
+```
+
+It is also possible to highlight a particular country with the `highlight` parameter. Below we highlight Zambia.
+
+```{r, fig.height=5, fig.width=8}
+ggplot_ecodata_bar(allcountries, 
+                   plot_at = "last", 
+                   highest = 10, 
+                   title = "Countries with Highest Poverty Rates",
+                   highlight = "Zambia")
+```
+
 # Data Documentation
 
 ## Finding suggested citation
@@ -344,4 +392,22 @@ htmltools::tags$div(
 ```
 
 The table includes descriptions provided by FRED or World Bank, and a number of other characteristics including frequency, units, seasonal adjustment status, and source.
+
+# Three Lines of Code
+
+The *ecodata* package includes even more functionality than what is described in this document. For routine tasks, this package allows you to accomplish a lot with *just three lines of code*. Here is an example illustrating credit card and mortgage interest rates in the United States.
+
+```{r, warning = FALSE, message = FALSE}
+# Line 1: Download data
+intrates <- get_ecodata(c("https://fred.stlouisfed.org/series/TERMCBCCINTNS", 
+                          "https://fred.stlouisfed.org/series/MORTGAGE30US"))
+```
+```{r, warning = FALSE, message = FALSE, fig.width=9}
+# Line 2: Make a time series plot
+ggplot_ecodata_ts(intrates, title = "Mortgage and Credit Card Interest Rates", plot.recessions = TRUE)
+```
+```{r, warning = FALSE, message = FALSE}
+# Line 3: Cite my sources
+ecodata_cite_table(intrates)
+```
 
