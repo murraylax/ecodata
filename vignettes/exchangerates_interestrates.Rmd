@@ -1,5 +1,5 @@
 ---
-title: "Housing Prices: A Supply and Demand Application of the *ecodata* Package"
+title: "U.S. Dollar to U.K. Pound Exchange Rate: An Application of the *ecodata* Package"
 output: 
   rmdformats::readthedown:
     thumbnails: false   # Optional: Display thumbnails for sections
@@ -85,48 +85,42 @@ library(ecodata)
 
 # Identify the data
 data_sources <- c(
-  "https://fred.stlouisfed.org/series/MSPNHSUS",
-  "https://fred.stlouisfed.org/series/NHSUSSPT",
-  "https://fred.stlouisfed.org/series/WPUIP2311001"
+  "https://fred.stlouisfed.org/series/IR3TIB01USM156N",
+  "https://fred.stlouisfed.org/series/IR3TIB01GBM156N",
+  "https://fred.stlouisfed.org/series/DEXUSUK"
 )
-variable_names <- c("Median Sales Price", "Number of Sales", "Construction Cost Index")
+variable_names <- c("Interest Rate United States", "Interest Rate United Kingdom", "USD / GBP Exchange Rate")
 
 # Download the data
-housingdata <- get_ecodata(data_sources, variable_names)
+mydata <- get_ecodata(data_sources, variable_names)
 
-# Filter for only 2021-2022
-housingdata <- housingdata |>
-  filter(Date >= "2021-01-01", Date <= "2022-12-31")
+# Filter only for 2022
+mydata <- mydata |>
+  filter(Date >= "2022-01-01", Date <= "2022-12-31")
 
 # View the data
-glimpse(housingdata)
-ecodata_description_table(housingdata)
+glimpse(mydata)
+ecodata_description_table(mydata)
 ```
 
 # Plot the data 
 
-Since each variable is measured on a different scale (prices are in dollars, number of sales is in units, and the construction cost index is an index), we will plot each variable on a separate graph.
+## Interest Rates
+
+Below we plot the two interest rates on the same graph.
 
 ```{r}
-# Housing Prices
-ggplot_ecodata_ts(housingdata,
-                  variables = "Median Sales Price", 
-                  title = "Median Sales Price of New Houses in the U.S.", 
-                  ylab = "") 
-```
-```{r}
-# Quantity of Sales
-ggplot_ecodata_ts(housingdata, 
-                  variables = "Number of Sales", 
-                  title = "Number of New Houses Sold in the U.S.")
+# Plot the interest rates
+ggplot_ecodata_ts(mydata, 
+                  variables = c("Interest Rate United States", "Interest Rate United Kingdom"),
+                  title = "Interest Rates in the U.S. and U.K.")
 ```
 
-```{r}
-# Construction Costs
-ggplot_ecodata_ts(housingdata, 
-                  variables = "Construction Cost Index", 
-                  title = "Construction Costs for New Houses in the U.S.")
-```
+We can see that interest rates rose in both countries in 2022, but the increase in the was higher in the United States than the United Kingdom.
+
+## Exchange Rate
+
+
 
 # Observations
 
