@@ -5,23 +5,20 @@ output:
     thumbnails: false   # Optional: Display thumbnails for sections
     lightbox: true     # Optional: Use lightbox effect for images
     number_sections: true  # Number the sections and reflect them in the TOC
+    # code_folding: show  # Options: show | hide
 css: custom-readthedown.css
 author: 
   - name: "James M. Murray"
     affiliation: '<a href="https://www.uwlax.edu/profile/jmurray/" target=_"blank" class="affiliation">University of Wisconsin-La Crosse</a>'
     email: 'jmurray@uwlax.edu'
 date: "Created on `r format(Sys.Date(), '%B %d, %Y')`"
-    
-# output:
-#   prettydoc::html_pretty:
-#     theme: architect
-#     toc: true       # Enable the table of contents
-#     toc_depth: 2    # Include up to level-2 headers
-# output: rmarkdown::html_vignette
+includes:
+  before_body: my_header.html
 vignette: >
   %\VignetteIndexEntry{getting-started}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+
 ---
 
 ```{r, include = FALSE}
@@ -50,32 +47,67 @@ td {
 }
 </style>
 ')
-
 ```
 
 # About the Package
 
-This package makes it easy to download and visualize economic data that is publicly available on [FRED](https://fred.stlouisfed.org/) (Federal Researve Economic Data) or [World Bank](https://data.worldbank.org/). This package is a wrapper for three packages: 
+This package makes it easy to download and visualize economic data that is publicly available on <a href="https://fred.stlouisfed.org/" target="_blank">FRED (Federal Reserve Economic Data)</a> or <a href="https://data.worldbank.org/" target="_blank">World Bank Data</a>. This package is a wrapper for three packages: 
 
-  1.  The [`fredr`](https://cran.r-project.org/web/packages/fredr/) package for downloading data from [FRED](https://data.worldbank.org/)
+  1.  The <a href="https://cran.r-project.org/web/packages/fredr/" target="_blank">*fredr*</a> package for downloading data from <a href="https://fred.stlouisfed.org/" target="_blank">FRED</a>.
   
-  2.  The [`wbstats`](https://cran.r-project.org/web/packages/wbstats/) package for downloading data from [World Bank Data](https://data.worldbank.org/)
+  2.  The <a href="https://cran.r-project.org/web/packages/wbstats/" target="_blank">*wbstats*</a> package for downloading data from <a href="https://data.worldbank.org/" target="_blank">World Bank Data</a>
   
-  3.  The [`ggplot2`](https://ggplot2.tidyverse.org/) package for visualizing data
+  3.  The <a href="https://ggplot2.tidyverse.org/" target="_blank">*ggplot2*</a> package for visualizing data
   
-The `ecodata` package is primarily targeted to novice R users and its primary intention to make the easy things easier. Still, experienced R users might find some of the procedures in this package convenient. With just two or three lines of code, you can use the package to download several variables from FRED and/or World Bank and make professional publication-ready plots. The package also provides a unified framework for downloading and plotting data from either source.
+The *ecodata* package is primarily targeted to novice R users and its primary intention to make the easy things easier. Still, experienced R users might find some of the procedures in this package convenient. With just two or three lines of code, you can use the package to download several variables from FRED and/or World Bank and make professional publication-ready plots. The package also provides a unified framework for downloading and plotting data from either source.
 
-This package is not intended to replace `fredr` or `wbstats`. Those packages include a large amount of functionality which is not duplicated in this package. Experienced R programmers that have more than the simplest needs are best served from the underlying packages, `fredr`, `wbstats`, and `ggplot2`.
+This package is not intended to replace *fredr* or *wbstats*. Those packages include a large amount of functionality which is not duplicated in this package. Experienced R programmers that have more than the simplest needs are best served from the underlying packages, *fredr*, *wbstats*, and *ggplot2*.
 
-The package also does not replace browsing the [FRED](https://data.worldbank.org/) and [World Bank Data](https://data.worldbank.org/) websites to explore and interact with data. In fact, the package provides the next step. After browsing and finding data you are interested in, you just need to copy and paste the URL(s) to retrieve the data using the functions in this package.
+The package also does not replace browsing the <a href="https://fred.stlouisfed.org/" target="_blank">FRED</a> or <a href="https://data.worldbank.org/" target="_blank">World Bank Data</a> websites to explore and interact with data. In fact, the package provides the next step. After browsing and finding data you are interested in, you just need to copy and paste the URL(s) to retrieve the data using the functions in this package.
+
+# Installation
+
+## Install from Github
+
+The package is available on Github at <a href="https://github.com/murraylax/ecodata" target="_blank">https://github.com/murraylax/ecodata</a>. Use the *devtools* package to install directly in R:
+
+```{r, eval = FALSE}
+# install the devtools package, if necessary
+install.packages("devtools")
+
+# Install the ecodata package
+devtools::install_github("murraylax/ecodata")`
+```
+
+## Set up
+
+Load the library:
+
+```{r, eval = FALSE}
+library(ecodata)
+```
+
+The package uses the FRED (Federal Reserve Economic Data) API, which requires an API key. If you have not already done so, you must create an account at <a href="https://fred.stlouisfed.org/" target="_blank">https://fred.stlouisfed.org/</a>, log in, then go to https://fredaccount.stlouisfed.org/apikeys to create an API key. Click the button, `+ Request API Key` and follow instructions. When complete, you will have an API key that will be a 32 character string with letters and numbers, similar to 'abcd1234efgh5678ijkl9012mnop3456' (this is a fictional key, it will not work to use exactly this string).
+
+Set up the API key to use in the *ecodata* package (and/or the *fredr* package) by entering the following in the R console (replace the string with your own key):
+
+```{r, eval = FALSE}
+ecodata_set_fredkey("abcd1234efgh5678ijkl9012mnop3456")
+```
+
+You should only need to do the above once per machine, then the FRED API should be available every time you load R.
+
+If you find that you need to set the FRED key again, you can do so directly from the *fredr* package.
+
+```{r, eval = FALSE}
+fredr::fredr_set_key("abcd1234efgh5678ijkl9012mnop3456")
+```
 
 # Download and Plot your First Variable
 
-This vignette assumes you have already successfully installed the package and set up the FRED API key. Please see the package [README](https://github.com/murraylax/ecodata/blob/main/README.md) for instructions if you have not already completed this step.
-
 ## Load libraries
 
-To begin, let us load the [`tidyverse`]() library to wrangle and manipulate the data, and then the `ecodata` package.
+To begin, let us load the [`tidyverse`]() library to wrangle and manipulate the data, and then the *ecodata* package.
 
 ```{r}
 library(tidyverse)
@@ -84,7 +116,7 @@ library(ecodata)
 
 ## Download the data
 
-Next, let's download a variable from FRED and inspect it. We will download data on real GDP for the United States, which is available on FRED at [https://fred.stlouisfed.org/series/GDPC1](https://fred.stlouisfed.org/series/GDPC1)
+Next, let's download a variable from FRED and inspect it. We will download data on real GDP for the United States, which is available on FRED at <a href="https://fred.stlouisfed.org/series/GDPC1" target="_blank">https://fred.stlouisfed.org/series/GDPC1</a>.
 
 ```{r}
 gdp <- get_ecodata("https://fred.stlouisfed.org/series/GDPC1")
@@ -113,7 +145,7 @@ You can add a title one of two ways. The first is to pass the optional parameter
 ggplot_ecodata_ts(gdp, title = "Real GDP for the United States")
 ```
 
-The other is to use the `labs()` function for adding or changing labels, which is provided by the `ggplot2` package. This approach is likely familiar to experienced R users.
+The other is to use the `labs()` function for adding or changing labels, which is provided by the *ggplot2* package. This approach is likely familiar to experienced R users.
 
 ```{r}
 ggplot_ecodata_ts(gdp) + labs(title = "Real GDP for the United States")
@@ -134,15 +166,26 @@ ggplot_ecodata_ts(gdp) +
   geom_recession()
 ```
 
+## Select date range
+
+Use the tools in the *dplyr* package in combination with *ecodata* functions to select a range of dates to plot. Suppose we want to plot real GDP over the years 2000-2023. The code below starts with our data frame, filters out the appropriate dates, then passes the filtered data to `ggplot_ecodata_ts()`.
+
+```{r}
+gdp |>
+  filter(Date >= "2000-01-01", Date <= "2023-12-31") |>
+  ggplot_ecodata_ts(title = "Real GDP for the United States", plot.recessions = TRUE)
+```
+
+
 # Multiple Variables
 
 We can pull multiple variable from multiple sources all at once. Let's consider the following variables:
 
-  - Income share held by the lowest 20% of the United States population, from World Bank Data: [https://data.worldbank.org/indicator/SI.DST.FRST.20?locations=US](https://data.worldbank.org/indicator/SI.DST.FRST.20?locations=US)
+  - Income share held by the lowest 20% of the United States population, from World Bank Data: <a href="https://data.worldbank.org/indicator/SI.DST.FRST.20?locations=US" target="_blank">https://data.worldbank.org/indicator/SI.DST.FRST.20?locations=US</a>
   
-  - Poverty rate in the United States, as a percentage of the population, from World Bank Data: [https://data.worldbank.org/indicator/SI.POV.DDAY?locations=US](https://data.worldbank.org/indicator/SI.POV.DDAY?locations=US)
+  - Poverty rate in the United States, as a percentage of the population, from World Bank Data: <a href="https://data.worldbank.org/indicator/SI.POV.DDAY?locations=US" target="_blank">https://data.worldbank.org/indicator/SI.POV.DDAY?locations=US</a>
   
-  - Unemployment rate in the United States, from FRED: [https://fred.stlouisfed.org/series/UNRATE](https://fred.stlouisfed.org/series/UNRATE)
+  - Unemployment rate in the United States, from FRED: <a href="https://fred.stlouisfed.org/series/UNRATE" target="_blank">https://fred.stlouisfed.org/series/UNRATE</a>
   
 Some things to make note of that is usually complicated to work with:
 
@@ -261,7 +304,7 @@ mydata |>
 
 For state-level variables in FRED, if you find the variable for one state, you can easily download the same variable for all the U.S. states using...
 
-Here is the unemployment rate for California: [https://fred.stlouisfed.org/series/CAUR](https://fred.stlouisfed.org/series/CAUR). The following code downloads the unemployment rate for all 50 states:
+Here is the unemployment rate for California: <a href="https://fred.stlouisfed.org/series/CAUR" target="_blank">https://fred.stlouisfed.org/series/CAUR</a>. The following code downloads the unemployment rate for all 50 states:
 
 ```{r}
 allstates <- get_ecodata_allstates_fred("https://fred.stlouisfed.org/series/CAUR")

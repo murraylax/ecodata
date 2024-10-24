@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 The package is available from https://github.com/murraylax/ecodata. Use the `devtools` package to install directly in R:
 
-`devtools::install_github("murraylax/ecodata")
+`devtools::install_github("murraylax/ecodata")`
 
 ## Set up
 

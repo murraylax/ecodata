@@ -1,3 +1,38 @@
+#content{
+    max-width:1220px;
+}
+
+.klippy {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px;
+  margin-top: 5px;
+}
+
+.klippy:hover {
+  background-color: #0056b3;
+}
+
+
+.copy-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.copy-button:hover {
+  background-color: #0056b3;
+}
+
+
 /* Target the sidebar background and text */
 #sidebar {
     background: #113458 !important;  /* Dark blue background */
