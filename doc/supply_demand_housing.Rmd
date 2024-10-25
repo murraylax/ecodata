@@ -1,0 +1,142 @@
+---
+title: "Housing Prices: A Supply and Demand Application of the *ecodata* Package"
+output: 
+  rmdformats::readthedown:
+    thumbnails: false   # Optional: Display thumbnails for sections
+    lightbox: true     # Optional: Use lightbox effect for images
+    number_sections: true  # Number the sections and reflect them in the TOC
+    # code_folding: show  # Options: show | hide
+css: custom-readthedown.css
+author: 
+  - name: "James M. Murray"
+    affiliation: '<a href="https://www.uwlax.edu/profile/jmurray/" target=_"blank" class="affiliation">University of Wisconsin-La Crosse</a>'
+    email: 'jmurray@uwlax.edu'
+date: "Created on `r format(Sys.Date(), '%B %d, %Y')`"
+includes:
+  before_body: my_header.html
+vignette: >
+  %\VignetteIndexEntry{getting-started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  collapse = FALSE,
+  comment = "#>",
+  ft.align = "left",
+  fig.width = 10,  # Width of the plots (in inches)
+  fig.height = 4,  # Width of the plots (in inches)
+  fig.retina = NULL  # Disable retina scaling
+)
+# library(gt)
+library(flextable)
+library(htmltools)
+
+cat('
+<style>
+/* Force fixed layout on flextable */
+table {
+    table-layout: fixed !important;
+    width: 100% !important;
+}
+td {
+    overflow: hidden;  /* Prevent content from overflowing */
+    text-overflow: ellipsis;  /* Optional: Add ellipsis for overflowed text */
+}
+</style>
+')
+```
+
+In this vignette, we will look at new housing construction costs, new housing sales prices, and the quantity of new house sales in the United States from 2021-2022, and use supply and demand reasoning to explain what happened in the U.S. housing market.
+
+# Prompts
+
+  1. Download data from FRED on median sales price for new houses in the United States for 2021-2022. 
+
+  2. Download data from FRED on the number of sales for all new houses in the United States for 2021-2022 (hint: FRED describes this as "New Houses Sold by Sales Price in the United States, Total").
+
+  3. Download data from FRED on construction costs for residential houses for 2021-2022 (hint: FRED describes this as "Producer Price Index by Commodity: Inputs to Residential Construction: New Housing Units Under Construction").
+
+  4. Create time series plots for each of the three variables above.
+
+  5. Describe the behavior of each variable over 2021-2022.
+
+  6. Use the supply and demand model for new housing to explain what happened.
+
+
+# Download Data
+
+The following are the variables for median sales price, number of sales, and construction cost index:
+
+  - Median sales price: <a href="https://fred.stlouisfed.org/series/MSPNHSUS" target="_blank">https://fred.stlouisfed.org/series/MSPNHSUS</a>
+  
+  - Number of sales: <a href="https://fred.stlouisfed.org/series/NHSUSSPT" target="_blank">https://fred.stlouisfed.org/series/NHSUSSPT</a>
+  
+  - Construction cost index: <a href="https://fred.stlouisfed.org/series/WPUIP2311001" target="_blank">https://fred.stlouisfed.org/series/WPUIP2311001</a>
+  
+Load the *tidyverse* and *ecodata* libraries and download the data:
+
+```{r}
+library(tidyverse)
+library(ecodata)
+
+# Identify the data
+data_sources <- c(
+  "https://fred.stlouisfed.org/series/MSPNHSUS",
+  "https://fred.stlouisfed.org/series/NHSUSSPT",
+  "https://fred.stlouisfed.org/series/WPUIP2311001"
+)
+variable_names <- c("Median Sales Price", "Number of Sales", "Construction Cost Index")
+
+# Download the data
+housingdata <- get_ecodata(data_sources, variable_names)
+
+# Filter for only 2021-2022
+housingdata <- housingdata |>
+  filter(Date >= "2021-01-01", Date <= "2022-12-31")
+
+# View the data
+glimpse(housingdata)
+ecodata_description_table(housingdata)
+```
+
+# Plot the data 
+
+Since each variable is measured on a different scale (prices are in dollars, number of sales is in units, and the construction cost index is an index), we will plot each variable on a separate graph.
+
+```{r}
+# Housing Prices
+ggplot_ecodata_ts(housingdata,
+                  variables = "Median Sales Price", 
+                  title = "Median Sales Price of New Houses in the U.S.", 
+                  ylab = "") 
+```
+```{r}
+# Quantity of Sales
+ggplot_ecodata_ts(housingdata, 
+                  variables = "Number of Sales", 
+                  title = "Number of New Houses Sold in the U.S.")
+```
+
+```{r}
+# Construction Costs
+ggplot_ecodata_ts(housingdata, 
+                  variables = "Construction Cost Index", 
+                  title = "Construction Costs for New Houses in the U.S.")
+```
+
+# Observations
+
+Construction costs increased from January 2021 until about July 2022. Over the two-year period 2021-2022, housing prices increased, but the quantity of new houses sold decreases. 
+
+# Supply and Demand Analysis
+
+An increase in construction costs increases the cost of producing new houses, which should lead to a decrease in supply. Below, we use a supply and demand model for new houses and shift the supply to the left.
+
+<img src="https://murraylax.org/graphs/Supply_and_Demand/SupplyDemand-DecreaseSupply.png"/>
+
+The leftward shift in supply leads to a higher equilibrium price and a lower equilibrium quantity. This is consistent with the U.S. housing market data from 2021-2022.
+
