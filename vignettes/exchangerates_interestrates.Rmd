@@ -1,5 +1,5 @@
 ---
-title: "U.S. Dollar to U.K. Pound Exchange Rate: An Application of the *ecodata* Package"
+title: "U.S. Dollar to U.K. Pound Exchange Rate"
 output: 
   rmdformats::readthedown:
     thumbnails: false   # Optional: Display thumbnails for sections
@@ -50,32 +50,28 @@ td {
 ')
 ```
 
-In this vignette, we will look at new housing construction costs, new housing sales prices, and the quantity of new house sales in the United States from 2021-2022, and use supply and demand reasoning to explain what happened in the U.S. housing market.
+In this vignette, we will use the *ecodata* package to compare interest rate changes in the United States and the United Kingdom and visualize the impact of these changes on the exchange rate between the two countries. 
 
 # Prompts
 
-  1. Download data from FRED on median sales price for new houses in the United States for 2021-2022. 
-
-  2. Download data from FRED on the number of sales for all new houses in the United States for 2021-2022 (hint: FRED describes this as "New Houses Sold by Sales Price in the United States, Total").
-
-  3. Download data from FRED on construction costs for residential houses for 2021-2022 (hint: FRED describes this as "Producer Price Index by Commodity: Inputs to Residential Construction: New Housing Units Under Construction").
-
-  4. Create time series plots for each of the three variables above.
-
-  5. Describe the behavior of each variable over 2021-2022.
-
-  6. Use the supply and demand model for new housing to explain what happened.
+  - Download data on the USD/GBP exchange rate and interest rates for the United States and the United Kingdom. Make sure to use interest rates that are directly comparable (i.e. interest rates for the same type of asset)
+  
+  - Plot the interest rates for the two countries on the same graph for just the year 2022. What do you observe?
+  
+  - Plot the exchange rate between the two countries for just the year 2022. What do you observe?
+  
+  - What is the impact of the interest rate changes on the exchange rate? Use the supply and demand model for currencies to describe and illustrate the expected impact. Did the model predict what you see in the data?
 
 
 # Download Data
 
-The following are the variables for median sales price, number of sales, and construction cost index:
+The following are the variables for the USD/GBP exchange rate and interest rates for the two countries:
 
-  - Median sales price: <a href="https://fred.stlouisfed.org/series/MSPNHSUS" target="_blank">https://fred.stlouisfed.org/series/MSPNHSUS</a>
+  - Exchange Rate: <a href="https://fred.stlouisfed.org/series/DEXUSUK" target="_blank">https://fred.stlouisfed.org/series/DEXUSUK</a>
+
+  - Interest Rate United States: <a href="https://fred.stlouisfed.org/series/MSPNHSUS" target="_blank">https://fred.stlouisfed.org/series/MSPNHSUS</a>
   
-  - Number of sales: <a href="https://fred.stlouisfed.org/series/NHSUSSPT" target="_blank">https://fred.stlouisfed.org/series/NHSUSSPT</a>
-  
-  - Construction cost index: <a href="https://fred.stlouisfed.org/series/WPUIP2311001" target="_blank">https://fred.stlouisfed.org/series/WPUIP2311001</a>
+  - Interest Rate United Kingdom: <a href="https://fred.stlouisfed.org/series/NHSUSSPT" target="_blank">https://fred.stlouisfed.org/series/NHSUSSPT</a>
   
 Load the *tidyverse* and *ecodata* libraries and download the data:
 
@@ -120,17 +116,26 @@ We can see that interest rates rose in both countries in 2022, but the increase 
 
 ## Exchange Rate
 
+```{r}
+# Plot the interest rates
+ggplot_ecodata_ts(mydata, 
+                  variables = "USD / GBP Exchange Rate",
+                  title = "USD / GDP Exchange Rate")
+```
 
+We see that the exchange rate decreased over the year. Since the exchange rate is expressed with GBP as the denominator, a decrease in the exchange rate means that the U.K. pound depreciated against the U.S. dollar. This is equivalent to the U.S. dollar appreciated against the U.K. pound.
 
 # Observations
 
-Construction costs increased from January 2021 until about July 2022. Over the two-year period 2021-2022, housing prices increased, but the quantity of new houses sold decreases. 
+The interest rate in the United States increased more than in the United Kingdom over 2022, and at the same time there was an appreciation of the U.S. dollar against the U.K. pound.
 
-# Supply and Demand Analysis
+# Currency Supply and Demand
 
-An increase in construction costs increases the cost of producing new houses, which should lead to a decrease in supply. Below, we use a supply and demand model for new houses and shift the supply to the left.
+The larger increase in the interest rate in the United States compared to the United Kingdom would attract financial investors in the U.K. to U.S. financial markets. This leads to an increase the demand for U.S. dollars / increase in the supply of U.K. pounds.
 
-<img src="https://murraylax.org/graphs/Supply_and_Demand/SupplyDemand-DecreaseSupply.png">
+The relatively lower interest rates in the U.K. would lead American financial investors to invest less in the UK. This would decrease the demand for U.K. pounds / decrease the supply of U.S. dollars.
 
-The leftward shift in supply leads to a higher equilibrium price and a lower equilibrium quantity. This is consistent with the U.S. housing market data from 2021-2022.
+The plot below reveals that when these shifts happen, the U.S. dollar appreciates relative to the U.K. pound, and the U.K. pounds depreciates relative to the U.S. dollar. This is consistent with what we saw in the data.
+
+<img src="https://murraylax.org/graphs/Currency_Supply_and_Demand/exchangerates-twoshifts-USD-GBP-2.png"/>
 

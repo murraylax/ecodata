@@ -136,7 +136,7 @@ Construction costs increased from January 2021 until about July 2022. Over the t
 
 An increase in construction costs increases the cost of producing new houses, which should lead to a decrease in supply. Below, we use a supply and demand model for new houses and shift the supply to the left.
 
-<img src="https://murraylax.org/graphs/Supply_and_Demand/SupplyDemand-DecreaseSupply.png">
+<img src="https://murraylax.org/graphs/Supply_and_Demand/SupplyDemand-DecreaseSupply.png"/>
 
 The leftward shift in supply leads to a higher equilibrium price and a lower equilibrium quantity. This is consistent with the U.S. housing market data from 2021-2022.
 
