@@ -2,7 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{ecodata_fred_openapi}
 \alias{ecodata_fred_openapi}
-\title{ecodata_fred_openapi()}
+\title{Test FRED API}
 \usage{
 ecodata_fred_openapi()
 }

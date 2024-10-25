@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{string_empty}
 \alias{string_empty}
-\title{`string_empty(text)`
-Just return TRUE or FALSE if string given is empty ("empty" can include NULL, NA, whitespace only, "")}
+\title{Test if String is Empty}
 \usage{
 string_empty(text)
 }
@@ -14,6 +13,5 @@ string_empty(text)
 Logical, whether or not the string is empty
 }
 \description{
-`string_empty(text)`
 Just return TRUE or FALSE if string given is empty ("empty" can include NULL, NA, whitespace only, "")
 }

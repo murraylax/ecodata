@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{string_not_empty}
 \alias{string_not_empty}
-\title{`string_not_empty(text)`
-Just return TRUE or FALSE if string given is not empty (i.e. not NULL, not NA, not whitespace, not "")}
+\title{Test if String Not Empty}
 \usage{
 string_not_empty(text)
 }
@@ -14,6 +13,5 @@ string_not_empty(text)
 Logical, whether or not the string exists and has characters in it
 }
 \description{
-`string_not_empty(text)`
 Just return TRUE or FALSE if string given is not empty (i.e. not NULL, not NA, not whitespace, not "")
 }

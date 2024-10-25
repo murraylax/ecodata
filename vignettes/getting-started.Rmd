@@ -154,7 +154,7 @@ The other is to use the `labs()` function for adding or changing labels, which i
 ggplot_ecodata_ts(gdp) + labs(title = "Real GDP for the United States")
 ```
 
-You can add NBER recession bars with one of two ways. The simplest is the addition of the optional `title` parameter: 
+You can add NBER recession bars with one of two ways. The simplest is the addition of the optional `plot.recessions` parameter: 
 
 ```{r}
 # Include recession bars with a parameter
@@ -327,7 +327,7 @@ Be cautious with this approach. The FRED API only allows a limited number of req
 
 ## Multiple Countries
 
-For World Bank data, you can download the same variable for multiple countries using the `get_ecodata_allcountries()` function.
+For World Bank data, you can download the same variable for multiple countries using the `get_ecodata_allcountries_wb()` function.
 
 Here is poverty data for the United States: <a href="https://data.worldbank.org/indicator/SI.POV.DDAY?locations=US" target="_blank">https://data.worldbank.org/indicator/SI.POV.DDAY?locations=US</a>. The following code downloads the poverty rate for all countries:
 
@@ -395,16 +395,16 @@ The table includes descriptions provided by FRED or World Bank, and a number of 
 
 # Three Lines of Code
 
-The *ecodata* package includes even more functionality than what is described in this document. For routine tasks, this package allows you to accomplish a lot with *just three lines of code*. Here is an example illustrating credit card and mortgage interest rates in the United States.
+The *ecodata* package includes even more functionality than what is described in this document. For routine tasks, this package allows you to accomplish a lot with *just three lines of code*. Here is an example illustrating market interest rates for U.S. treasuries at 1-year and 10-year maturities.
 
 ```{r, warning = FALSE, message = FALSE}
 # Line 1: Download data
-intrates <- get_ecodata(c("https://fred.stlouisfed.org/series/TERMCBCCINTNS", 
-                          "https://fred.stlouisfed.org/series/MORTGAGE30US"))
+intrates <- get_ecodata(c("https://fred.stlouisfed.org/series/DGS1", 
+                          "https://fred.stlouisfed.org/series/DGS10"), frequency = "m")
 ```
 ```{r, warning = FALSE, message = FALSE, fig.width=9}
 # Line 2: Make a time series plot
-ggplot_ecodata_ts(intrates, title = "Mortgage and Credit Card Interest Rates", plot.recessions = TRUE)
+ggplot_ecodata_ts(intrates, title = "Interest Rates on U.S. Treasuries", plot.recessions = TRUE)
 ```
 ```{r, warning = FALSE, message = FALSE}
 # Line 3: Cite my sources

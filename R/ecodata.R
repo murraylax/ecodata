@@ -17,9 +17,10 @@
 #' @param x An ecodata data frame, the return value from `get_ecodata()`
 #' @seealso \code{\link[dplyr]{glimpse}}
 #' @export
-glimpse <- function(x) {
+glimpse.ecodata <- function(x) {
   cat(attr(x, "label"))
   cat("\n")
+  class(x) <- setdiff(class(x), "ecodata")
   dplyr::glimpse(x)
 }
 
@@ -57,6 +58,95 @@ str_replace <- function(...) {
 #' @seealso [str_to_lower()]
 str_to_lower <- function(...) {
   stringr::str_to_lower(...)
+}
+
+add_ecodata_class <- function(df) {
+  if(!("ecodata" %in% class(df))) {
+    class(df) <- c("ecodata", class(df))
+  }
+  return(df)
+}
+
+#' Function to standardize time series frequency label
+#'
+#' To standardize the frequency description across different sources, this function takes as an input some frequency description,
+#' attempts to decipher it, and returns on the following frequencies:
+#' c("Annual", "Semiannual", "Quarterly", "Monthly", "Biweekly", "Weekly", "Daily")
+#'
+#' @param freq Character string, describing the frequency of a time series
+#' @return Standardized character string to describe the frequency, one of c("Annual", "Semiannual", "Quarterly", "Monthly", "Biweekly", "Weekly", "Daily")
+#' @export
+standardize_frequency_single <- function(freq) {
+  use_frequency <- ""
+  if(string_detect(freq, "annual")) use_frequency <- "Annual"
+  if(string_detect(freq, "semiannual")) use_frequency <- "Semiannual"
+  if(string_detect(freq, "month")) use_frequency <- "Monthly"
+  if(string_detect(freq, "quarter")) use_frequency <- "Quarterly"
+  if(string_detect(freq, "weekly")) use_frequency <- "Weekly"
+  if(string_detect(freq, "biweekly")) use_frequency <- "Biweekly"
+  if(string_detect(freq, "daily")) use_frequency <- "Daily"
+  return(use_frequency)
+}
+
+#' Function to standardize time series frequency label
+#'
+#' To standardize the frequency description across different sources, this function takes as an input some frequency description,
+#' attempts to decipher it, and returns on the following frequencies:
+#' c("Annual", "Semiannual", "Quarterly", "Monthly", "Biweekly", "Weekly", "Daily")
+#'
+#' @param freq Character string or vector of strings, each describing the frequency of a time series
+#' @return Vector of the same length of `freq`, with each value equal to a standard string to describe the frequency.
+#' Return value will be one of c("Annual", "Semiannual", "Quarterly", "Monthly", "Biweekly", "Weekly", "Daily")
+#'
+#' @export
+standardize_frequency <- Vectorize(standardize_frequency_single)
+
+#' Function to return standard frequency types
+#'
+#' @return Returns as an ordered vector, c("Annual", "Semiannual", "Quarterly", "Monthly", "Biweekly", "Weekly", "Daily")
+#' @export
+get_frequency_types <- function() {
+  freq_levels <- c(
+    "Annual",
+    "Semiannual",
+    "Quarterly",
+    "Monthly",
+    "Biweekly",
+    "Weekly",
+    "Daily"
+  )
+  all_freqs <- factor(freq_levels, levels = freq_levels, ordered = TRUE)
+  return(all_freqs)
+}
+
+#' Compute minimum frequency
+#'
+#' Compute minimum frequency of the values within a vector
+#'
+#' @param vec Vector of frequencies. All values must be in c("Annual", "Semiannual", "Quarterly", "Monthly", "Biweekly", "Weekly", "Daily")
+#'
+#' @return Minimum value of the frequencies
+#' @export
+minimum_frequency <- function(vec) {
+  freq_levels <- get_frequency_types()
+  vec <- factor(stringr::str_to_title(vec), levels = freq_levels, ordered = TRUE)
+  minvec <- min(vec)
+  return(minvec)
+}
+
+#' Compute maximum frequency
+#'
+#' Compute maximum frequency of the values within a vector
+#'
+#' @param vec Vector of frequencies. All values must be in c("Annual", "Semiannual", "Quarterly", "Monthly", "Biweekly", "Weekly", "Daily")
+#'
+#' @return Maximum value of the frequencies
+#' @export
+maximum_frequency <- function(vec) {
+  freq_levels <- get_frequency_types()
+  vec <- factor(stringr::str_to_title(vec), levels = freq_levels, ordered = TRUE)
+  maxvec <- max(vec)
+  return(maxvec)
 }
 
 #' Theme for ecodata plots
@@ -485,6 +575,8 @@ get_ecodata_variable_wb <- function(varcode, varname = NULL) {
   } else {
     df <- get_ecodata_allcountries_wb(variable_code, varname = varname)
   }
+
+  df <- add_ecodata_class(df)
   return(df)
 }
 
@@ -579,6 +671,8 @@ get_ecodata_allcountries_wb <- function(varcode, varname = NULL) {
     attr(df[[country]], "Cite") <- cite_str
   }
 
+  df <- add_ecodata_class(df)
+
   return(df)
 }
 
@@ -647,6 +741,8 @@ get_ecodata_variable_country_wb <- function(varcode, countrycode, varname = NULL
   attr(df[[varname]], "Access Date") <- access_date
   cite_str <- sprintf("%s; %s (Accessed on %s)", source_str, url_str, access_date)
   attr(df[[varname]], "Cite") <- cite_str
+
+  df <- add_ecodata_class(df)
 
   return(df)
 }
@@ -759,7 +855,7 @@ get_ecodata_variable_fred <- function(varcode, varname = NULL, frequency = NULL,
   attr(new.df[[varname]], "Variable") <- varname
   attr(new.df[[varname]], "Code") <- varcode
   attr(new.df[[varname]], "Description") <- info$title[1]
-  attr(new.df[[varname]], "Frequency") <- info$frequency[1]
+  attr(new.df[[varname]], "Frequency") <- as.character(standardize_frequency(info$frequency[1]))
   attr(new.df[[varname]], "Units") <- useunits
   attr(new.df[[varname]], "Seasonal Adjustment") <- info$seasonal_adjustment[1]
   source_str <- sprintf("FRED (R) Federal Reserve Bank of St. Louis")
@@ -771,6 +867,7 @@ get_ecodata_variable_fred <- function(varcode, varname = NULL, frequency = NULL,
   cite_str <- sprintf("%s; %s (Accessed on %s)", source_str, url_str, access_date)
   attr(new.df[[varname]], "Cite") <- cite_str
 
+  new.df <- add_ecodata_class(new.df)
   return(new.df)
 }
 
@@ -866,6 +963,8 @@ get_ecodata_allstates_fred <- function(varcode, frequency = NULL, units = NULL, 
   description_remove <- stringr::str_remove(varname, found_state)
   names(df) <- stringr::str_remove(names(df), description_remove)
   names(df) <- stringr::str_to_title(names(df))
+
+  df <- add_ecodata_class(df)
   return(df)
 }
 
@@ -940,6 +1039,8 @@ get_ecodata_variable <- function(varcode, varname = NULL, frequency = NULL, unit
       warning(warnmsg)
     }
   }
+
+  df <- add_ecodata_class(df)
   return(df)
 }
 
@@ -1006,6 +1107,7 @@ get_ecodata <- function(varcodes, varnames = NULL, frequency = NULL, units = NUL
 
   df <- dplyr::arrange(df, Date)
 
+  df <- add_ecodata_class(df)
   return(df)
 }
 
@@ -1052,10 +1154,13 @@ add_ecodata <- function(data, varcodes, varnames = NULL, frequency = NULL, units
     df <- get_recessions(df)
   }
   df <- dplyr::arrange(df, Date)
+
+  df <- add_ecodata_class(df)
   return(df)
 }
 
-#' `ecodata_get_units(df)`
+#' Retrieve all units
+#'
 #' Get unique units for the variables in the given data frame
 #' @param df Data frame from `get_ecodata()` that includes units information in the meta data
 #' @return A vector of unique unit descriptions from the data frame
@@ -1072,6 +1177,26 @@ ecodata_get_units <- function(df) {
   unique_units <- unique(all_units)
   unique_units <- unique_units[unique_units != ""]
   return(unique_units)
+}
+
+#' Retrieve all frequencies
+#'
+#' Get unique frequencies for the variables in the given data frame
+#' @param df Data frame from `get_ecodata()` that includes units information in the meta data
+#' @return A vector of unique unit descriptions from the data frame
+#' @export
+ecodata_get_frequencies <- function(df) {
+  all_freqs <- ""
+  vars <- get_ecodata_varnames(df)
+  for(v in 1:length(vars)) {
+    varname <- vars[v]
+    if(!is.null(attr(df[[varname]], "Units"))) {
+      all_freqs[v] <- attr(df[[varname]], "Frequency")
+    }
+  }
+  unique_freqs <- unique(all_freqs)
+  unique_freqs <- unique_freqs[all_freqs != ""]
+  return(unique_freqs)
 }
 
 #' `ecodata_get_sources(df)`
@@ -1757,7 +1882,8 @@ ecodata_set_fredkey <- function(API_Key) {
                   })
 }
 
-#' `ecodata_get_fredkey()`
+#' Get FRED API key
+#'
 #' Get the FRED API key if it exists. Returns empty string if it doesn't exist
 #' @return String that is the FRED API key. Empty string if it doesn't exist
 #' @export
@@ -1765,7 +1891,8 @@ ecodata_get_fredkey <- function() {
   return(Sys.getenv("FRED_API_KEY"))
 }
 
-#' `string_not_empty(text)`
+#' Test if String Not Empty
+#'
 #' Just return TRUE or FALSE if string given is not empty (i.e. not NULL, not NA, not whitespace, not "")
 #' @param text Text to test if it is not empty
 #' @return Logical, whether or not the string exists and has characters in it
@@ -1776,7 +1903,8 @@ string_not_empty <- function(text) {
   return(TRUE);
 }
 
-#' `string_empty(text)`
+#' Test if String is Empty
+#'
 #' Just return TRUE or FALSE if string given is empty ("empty" can include NULL, NA, whitespace only, "")
 #' @param text Text to test if it is empty
 #' @return Logical, whether or not the string is empty
@@ -1784,7 +1912,7 @@ string_empty <- function(text) {
   return(!string_not_empty(text))
 }
 
-#' ecodata_fred_openapi()
+#' Test FRED API
 #'
 #' Check to see if the FRED API key already exists and is loaded. If it exists as an environmental variable, but is not loaded, it will attempt to load it. Halts execution if the API key is not found, or if downloading from FRED is not successful
 #' @export
@@ -1829,6 +1957,7 @@ ecodata_join <- function(...) {
   # Use Reduce to iteratively join all data frames by "Date"
   joined_df <- Reduce(function(x, y) dplyr::full_join(x, y, by = "Date"), data_frames)
 
+  joined_df <- add_ecodata_class(joined_df)
   return(joined_df)
 }
 
@@ -1889,8 +2018,101 @@ ecodata_compute_pctchange <- function(data, variable, new_variable = NULL, units
   attr(result_df[[new_variable]], "Description") <- sprintf("Percent Change in %s", old_description)
   attr(result_df[[new_variable]], "Units") <- units
 
+  result_df <- add_ecodata_class(result_df)
   return(result_df)
 }
+
+string_and_list <- function(vec, quote_mark = "") {
+  if(is.null(vec)) return(NULL)
+  if(any(is.na(vec))) return(NA)
+  if(length(vec) == 0) return(vec)
+  if(length(vec) == 1) {
+    retstr <- sprintf("%s%s%s", quote_mark, vec[1], quote_mark)
+  }
+  if(length(vec) == 2) {
+    retstr <- sprintf("%s%s%s and %s%s%s", quote_mark, vec[1], quote_mark, quote_mark, vec[2], quote_mark)
+    return(retstr)
+  }
+  retstr <- sprintf("%s%s%s", quote_mark, vec[1], quote_mark)
+  for(i in 2:(length(vec)-1)) {
+    retstr <- sprintf("%s, %s%s%s", retstr, quote_mark, vec[i], quote_mark)
+  }
+  retstr <- sprintf("%s, and %s%s%s", retstr, quote_mark, vec[length(vec)], quote_mark)
+  return(retstr)
+}
+
+
+#' Create and Modify Variables
+#'
+#' Wrapper to the `dplyr::mutate()` function that adds metadata attributes to the new variables.
+#' @param .data An ecodata data frame
+#' @param ... Parameters passed on to mutate
+#' @return An ecodata data frame with the new variables and metadata attributes
+#' @seealso `dplyr::mutate()`
+#' @export
+mutate.ecodata <- function(.data, ...) {
+  print("Stuck")
+  expressions <- rlang::enquos(...)
+
+  # Temporarily remove the "ecodata" class to avoid recursion
+  class(.data) <- setdiff(class(.data), "ecodata")
+
+  # Call mutate
+  result.df <- dplyr::mutate(.data, !!!expressions)
+
+  for(new_var in names(expressions)) {
+    # Extract expression
+    expr <- expressions[[new_var]]
+
+    # Description includes the expression
+    use_description <- sprintf("Computation = %s.", rlang::quo_text(expr))
+
+    #Identify all the variables used in the expression
+    expr_variables <- all.vars(expr)
+
+    # Check if the original variables exist in the input data
+    expr_variables <- intersect(expr_variables, names(.data))
+
+    useunits <- ""
+    usefreq <- ""
+
+    if(length(expr_variables) > 0) {
+      subset.df <- dplyr::select(.data, dplyr::all_of(expr_variables))
+
+      unique_units <- ecodata_get_units(subset.df)
+      if(length(unique_units) > 0) {
+        useunits <- unique_units[1]
+        if(length(unique_units) > 1) {
+          warn_message <- sprintf("Variables in `mutate` expression have different units. Units in the expression include %s. Using '%s'.",
+                                  string_and_list(unique_units, quote_mark = "'"), unique_units[1])
+          warning(warn_message)
+        }
+      }
+
+      unique_freqs <- ecodata_get_frequencies(subset.df)
+      if(length(unique_freqs) > 0) {
+        usefreq <- minimum_frequency(unique_freqs)
+      }
+    }
+
+    # Attributes
+    attr(result.df[[new_var]], "Variable") <- new_var
+    attr(result.df[[new_var]], "Code") <- ""
+    attr(result.df[[new_var]], "Description") <- use_description
+    attr(result.df[[new_var]], "Frequency") <- usefreq
+    attr(result.df[[new_var]], "Units") <- useunits
+    attr(result.df[[new_var]], "Seasonal Adjustment") <- ""
+    attr(result.df[[new_var]], "Source") <- ""
+    attr(result.df[[new_var]], "URL") <- ""
+    attr(result.df[[new_var]], "Access Date") <- ""
+    attr(result.df[[new_var]], "Cite") <- ""
+  }
+
+  result.df <- add_ecodata_class(result.df)
+  return(result.df)
+}
+
+
 
 if(FALSE) {
 
