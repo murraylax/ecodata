@@ -1,8 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600&display=swap');
 
+.reveal .slide-number {
+  top: 10px !important;      /* Adjust distance from the top */
+  right: 10px !important;    /* Adjust distance from the right */
+  position: absolute !important;
+  font-size: 0.9em !important;  /* Optional: Slightly smaller font size */
+  color: #444 !important;    /* Optional: Subtle color for better aesthetics */
+}
+
+.qr-code {
+  position: absolute !important;
+  bottom: 10px !important;
+  left: 10px !important;
+  width: 80px !important;
+  height: 80px !important;
+  z-index: 1000 !important; /* Ensure it appears above other elements */
+}
+
+
 /* General body text */
 body {
-  font-family: 'EB Garamond', serif !important;
+  font-family: 'Source Serif Pro', serif !important;
   font-size: 22px !important;  /* Adjust main text size */
   line-height: 1.4 !important;  /* Better readability */
 }
@@ -13,7 +31,7 @@ h1 {
   font-weight: 700 !important;
   font-size: 70px !important;  /* Smaller title size */
   text-transform: none !important;  /* Prevents all caps */
-  letter-spacing: 0.05em !important;  /* Subtle spacing */
+  letter-spacing: 0.0em !important;  /* Subtle spacing */
 }
 
 h2 {

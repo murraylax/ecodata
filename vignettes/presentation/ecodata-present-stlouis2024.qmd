@@ -2,14 +2,15 @@
 title: "Data Visualization Using R in Undergraduate Macroeconomics"
 author: 
   - name: "James M. Murray, Ph.D."
-    email: "jmurray@uwlax.edu"
-    affiliation: "University of Wisconsin-La Crosse"
+    affiliation: "Department of Economics<br/>University of Wisconsin-La Crosse<br/>Email: jmurray@uwlax.edu<p>St. Louis Fed Professors' Conference</p>"
 date: "November 8, 2024"
+date-format: long
 format: 
   revealjs:
     theme: sky
     slideNumber: true   # Optional: Displays slide numbers
     css: custom-revealjs.css
+
 ---
 
 ## Introduction
@@ -24,7 +25,9 @@ format:
     
     - Produce professional-quality data visualizations
     
-
+<div style="position:absolute; bottom:-55px; right:-200px;">
+  <img src="qrcode.png" width="150" alt="QR Code">
+</div>
 
 
 
