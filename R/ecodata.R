@@ -2026,6 +2026,15 @@ ggplot_ecodata_facet <- function(data, variables = NULL, title="", ylab = NULL, 
     units_function <- function(...) return(scales::percent(scale=1, ...))
   }
 
+  data_sources <- ecodata_get_sources( dplyr::select(data, dplyr::all_of(plotvars)) )
+  if(length(data_sources) == 0) {
+    sources_str <- ""
+  } else {
+    sources_str <- paste(data_sources, collapse = ", ", sep = ", ")
+    if(length(data_sources)==1) sources_str <- sprintf("Source: %s", sources_str)
+    if(length(data_sources)>1) sources_str <- sprintf("Sources: %s", sources_str)
+  }
+
   plot.df <- data |>
     tidyr::pivot_longer(cols = dplyr::all_of(plotvars), names_to = "Variable", values_to = "Value")
 
@@ -2041,7 +2050,7 @@ ggplot_ecodata_facet <- function(data, variables = NULL, title="", ylab = NULL, 
     ggplot2::scale_x_date(breaks = scales::pretty_breaks(n=8)) +
     ggplot2::scale_y_continuous(labels = units_function, breaks = scales::pretty_breaks(n=5)) +
     ggplot2::facet_wrap(ggplot2::vars(Variable), ncol = ncol, scales = scales) +
-    ggplot2::labs(y = ylab, x = "", color = "", title = title) +
+    ggplot2::labs(y = ylab, x = "", color = "", title = title, caption = sources_str) +
     ecodata_theme() +
     ggplot2::theme(legend.position = "bottom", legend) +
     ggplot2::guides(color = ggplot2::guide_legend(nrow = length(plotvars)))  # Each item in a separate row
