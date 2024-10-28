@@ -161,6 +161,28 @@ ggplot_ecodata_bar(allcountries,
                    highlight = "Zambia")
 
 ## -----------------------------------------------------------------------------
+variables <- c("https://fred.stlouisfed.org/series/GDPC1",
+               "https://fred.stlouisfed.org/series/GDPPOT",
+               "https://fred.stlouisfed.org/series/CPIAUCSL")
+
+varnames <- c("Real GDP", "Potential GDP", "CPI")
+
+mydata <- get_ecodata(variables, varnames = varnames)
+
+## -----------------------------------------------------------------------------
+mydata <- ecodata_compute_pctchange(mydata, variable = "CPI", new_variable = "Inflation")
+
+## -----------------------------------------------------------------------------
+ggplot_ecodata_ts(mydata, variables = "Inflation", title = "United States Inflation Rate", plot.recessions = TRUE)
+
+## -----------------------------------------------------------------------------
+mydata <- mydata |> 
+  mutate(`Output Gap` = (`Real GDP` - `Potential GDP`) / `Potential GDP` * 100, units = "Percent")
+
+## -----------------------------------------------------------------------------
+ggplot_ecodata_ts(mydata, variables = "Output Gap", title = "Output Gap", plot.recessions = TRUE)
+
+## -----------------------------------------------------------------------------
 ecodata_cite_table(mydata)
 
 ## ----eval = FALSE-------------------------------------------------------------

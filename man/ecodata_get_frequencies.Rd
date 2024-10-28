@@ -2,7 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{ecodata_get_frequencies}
 \alias{ecodata_get_frequencies}
-\title{Retrieve all frequencies}
+\title{Get all frequencies}
 \usage{
 ecodata_get_frequencies(df)
 }
