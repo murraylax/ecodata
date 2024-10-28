@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600&display=swap');
+
+/* General body text */
+body {
+  font-family: 'EB Garamond', serif !important;
+  font-size: 22px !important;  /* Adjust main text size */
+  line-height: 1.4 !important;  /* Better readability */
+}
+
+/* Titles and headings (h1, h2, h3) */
+h1 {
+  font-family: 'Source Serif Pro', serif !important;
+  font-weight: 700 !important;
+  font-size: 70px !important;  /* Smaller title size */
+  text-transform: none !important;  /* Prevents all caps */
+  letter-spacing: 0.05em !important;  /* Subtle spacing */
+}
+
+h2 {
+  font-family: 'Source Serif Pro', serif !important;
+  font-weight: 700 !important;
+  font-size: 60px !important;
+  text-transform: none !important;
+  letter-spacing: 0.0em !important;
+}
+
+h3 {
+  font-family: 'Source Serif Pro', serif !important;
+  font-weight: 500 !important;
+  font-size: 24px !important;
+}

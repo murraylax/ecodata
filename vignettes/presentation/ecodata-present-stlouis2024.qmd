@@ -1,0 +1,50 @@
+---
+title: "Data Visualization Using R in Undergraduate Macroeconomics"
+author: 
+  - name: "James M. Murray, Ph.D."
+    email: "jmurray@uwlax.edu"
+    affiliation: "University of Wisconsin-La Crosse"
+date: "November 8, 2024"
+format: 
+  revealjs:
+    theme: sky
+    slideNumber: true   # Optional: Displays slide numbers
+    css: custom-revealjs.css
+---
+
+## Introduction
+
+  - Created an R package, ***ecodata***, to facilitate the use of data in undergraduate macroeconomics courses
+  
+  - Wrapper for the ***fredr***, ***wbstats***, and ***ggplot2*** packages
+  
+  - Makes it easy to:
+  
+    - Download data from the Federal Reserve Economic Data (FRED) and World Bank databases
+    
+    - Produce professional-quality data visualizations
+    
+
+
+
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <https://quarto.org/docs/presentations/>.
+
+## Bullets
+
+When you click the **Render** button a document will be generated that includes:
+
+-   Content authored with markdown
+-   Output from executable code
+
+## Code
+
+When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+
