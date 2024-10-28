@@ -7,11 +7,11 @@
 string_empty(text)
 }
 \arguments{
-\item{text}{Text to test if it is empty}
+\item{text}{Character string, or vector of strings, text to test if it is empty}
 }
 \value{
-Logical, whether or not the string is empty
+Logical vector of same length as `text`, whether or not the string is empty
 }
 \description{
-Just return TRUE or FALSE if string given is empty ("empty" can include NULL, NA, whitespace only, "")
+Just return TRUE or FALSE if strings given are empty ("empty" can include NULL, NA, whitespace only, "")
 }

@@ -67,6 +67,13 @@ add_ecodata_class <- function(df) {
   return(df)
 }
 
+is_empty <- function(x) {
+  if(is.null(x)) return(TRUE)
+  if(length(x)==0) return(TRUE)
+  if(is.na(x)) return(TRUE)
+  return(FALSE)
+}
+
 #' Function to standardize time series frequency label
 #'
 #' To standardize the frequency description across different sources, this function takes as an input some frequency description,
@@ -1159,64 +1166,102 @@ add_ecodata <- function(data, varcodes, varnames = NULL, frequency = NULL, units
   return(df)
 }
 
-#' Retrieve all units
+#' Get all units
 #'
 #' Get unique units for the variables in the given data frame
 #' @param df Data frame from `get_ecodata()` that includes units information in the meta data
 #' @return A vector of unique unit descriptions from the data frame
 #' @export
 ecodata_get_units <- function(df) {
-  all_units <- ""
-  vars <- get_ecodata_varnames(df)
-  for(v in 1:length(vars)) {
-    varname <- vars[v]
-    if(!is.null(attr(df[[varname]], "Units"))) {
-      all_units[v] <- attr(df[[varname]], "Units")
-    }
-  }
-  unique_units <- unique(all_units)
-  unique_units <- unique_units[unique_units != ""]
-  return(unique_units)
+  # all_units <- ""
+  # vars <- get_ecodata_varnames(df)
+  # for(v in 1:length(vars)) {
+  #   varname <- vars[v]
+  #   if(!is.null(attr(df[[varname]], "Units"))) {
+  #     all_units[v] <- attr(df[[varname]], "Units")
+  #   }
+  # }
+  # unique_units <- unique(all_units)
+  # unique_units <- unique_units[string_not_empty(unique_units)]
+  # return(unique_units)
+
+  return(ecodata_get_attributes(df, "Units"))
 }
 
-#' Retrieve all frequencies
+#' Get all frequencies
 #'
 #' Get unique frequencies for the variables in the given data frame
 #' @param df Data frame from `get_ecodata()` that includes units information in the meta data
 #' @return A vector of unique unit descriptions from the data frame
 #' @export
 ecodata_get_frequencies <- function(df) {
-  all_freqs <- ""
-  vars <- get_ecodata_varnames(df)
-  for(v in 1:length(vars)) {
-    varname <- vars[v]
-    if(!is.null(attr(df[[varname]], "Units"))) {
-      all_freqs[v] <- attr(df[[varname]], "Frequency")
-    }
-  }
-  unique_freqs <- unique(all_freqs)
-  unique_freqs <- unique_freqs[all_freqs != ""]
-  return(unique_freqs)
+  # all_freqs <- ""
+  # vars <- get_ecodata_varnames(df)
+  # for(v in 1:length(vars)) {
+  #   varname <- vars[v]
+  #   if(!is.null(attr(df[[varname]], "Frequency"))) {
+  #     all_freqs[v] <- attr(df[[varname]], "Frequency")
+  #   }
+  # }
+  # unique_freqs <- unique(all_freqs)
+  # print(unique_freqs)
+  # unique_freqs <- unique_freqs[string_not_empty(unique_freqs)]
+  # return(unique_freqs)
+
+  return(ecodata_get_attributes(df, "Frequency"))
 }
 
-#' `ecodata_get_sources(df)`
-#' Get unique sources for the variables in the data frame
+#' Get Data Sources
+#'
+#' Get unique sources for the variables in the ecodata data frame
+#'
 #' @param df Data frame from `get_ecodata()` that includes units information in the meta data
 #' @return A vector of unique source descriptions from the data frame
 #' @export
 ecodata_get_sources <- function(df) {
-  all_sources <- ""
+  # all_sources <- ""
+  # vars <- get_ecodata_varnames(df)
+  # for(v in 1:length(vars)) {
+  #   if(!is.null(attr(df[[vars[v]]], "Source"))) {
+  #     all_sources[v] <- attr(df[[vars[v]]], "Source")
+  #   }
+  # }
+  # unique_sources <- unique(all_sources)
+  # unique_sources <- unique_sources[string_not_empty(unique_sources)]
+  #
+  # return(unique_sources)
+
+  return(ecodata_get_attributes(df, "Source"))
+}
+
+#' Get a Given Attribute for All Columns
+#'
+#' Get unique values for an attribute for the all the variables in the ecodata data frame
+#'
+#' @param df Data frame from `get_ecodata()` that includes units information in the meta data
+#' @param attribute Character string, attribute to retrieve. Eg: "Units", "Frequency", "Source", etc.
+#' @return A vector of unique source descriptions from the data frame
+#' @export
+ecodata_get_attributes <- function(df, attribute) {
+  if(string_compare(attribute, "URL")) {
+    attribute <- "URL"
+  } else {
+    attribute <- stringr::str_to_title(attribute)
+  }
+  all_attributes <- ""
   vars <- get_ecodata_varnames(df)
   for(v in 1:length(vars)) {
-    if(!is.null(attr(df[[vars[v]]], "Source"))) {
-      all_sources[v] <- attr(df[[vars[v]]], "Source")
+    if(!is_empty(attr(df[[vars[v]]], attribute))) {
+      all_attributes[v] <- attr(df[[vars[v]]], attribute)
     }
   }
-  unique_sources <- unique(all_sources)
-  unique_sources <- unique_sources[unique_sources != ""]
+  unique_attributes <- unique(all_attributes)
+  unique_attributes <- unique_attributes[string_not_empty(unique_attributes)]
 
-  return(unique_sources)
+  return(unique_attributes)
 }
+
+
 
 #' Get a description of an ecodata data frame
 #'
@@ -1270,12 +1315,46 @@ ecodata_cite <- function(data) {
 ecodata_description_table <- function(data) {
   desc.df <- ecodata_description(data)
 
-  tb <- flextable::flextable(desc.df) |>
-    flextable::compose(j = "URL",
-                       value = flextable::as_paragraph(
-                         flextable::hyperlink_text(
-                           x = desc.df$URL, url = desc.df$URL, props = officer::fp_text(color = "blue", font.size = 11)))) |>
+  tb <- flextable::flextable(desc.df)
+
+  # Apply compose() dynamically to the 'URL' column
+  for (i in seq_len(nrow(desc.df))) {
+    # Split URLs for the current row and create hyperlink chunks
+    urls <- unlist(strsplit(desc.df$URL[i], ";"))
+
+    # Create chunks with hyperlinks and "; " separators
+    chunks <- unlist(lapply(seq_along(urls), function(idx) {
+      url_chunk <- flextable::hyperlink_text(
+        urls[idx],
+        url = urls[idx],
+        props = officer::fp_text(color = "blue", font.size = 11)
+      )
+      # Add "; " separator for all but the last URL
+      if (idx < length(urls)) {
+        list(url_chunk, flextable::as_chunk("; "))
+      } else {
+        list(url_chunk)
+      }
+    }), recursive = FALSE)
+
+    # Combine chunks into a paragraph
+    paragraph <- do.call(flextable::as_paragraph, chunks)
+
+    # Insert the paragraph into the flextable for the current row
+    tb <- flextable::compose(
+      tb,
+      i = i, j = "URL",
+      value = paragraph
+    )
+  }
+
+  tb <- tb |>
     flextable::autofit()
+
+    # flextable::compose(j = "URL",
+    #                    value = flextable::as_paragraph(
+    #                      flextable::hyperlink_text(
+    #                        x = desc.df$URL, url = desc.df$URL, props = officer::fp_text(color = "blue", font.size = 11)))) |>
 
   return(tb)
 }
@@ -1372,6 +1451,111 @@ abbreviated_units_dollar <- function(x) {
   return(labs)
 }
 
+
+#' Modify the y-axis scale to use dollar formatting while keeping other settings intact.
+#'
+#' @param axis Optional, character "x" or "y" for which axis to set
+#' @return A scale to add on to a gggplot
+#' @export
+ecodata_scale_dollar <- function(axis = "y") {
+  structure(list(axis = axis), class = "ecodata_scale_dollar")
+}
+
+# Define the ggplot_add() method for the ecodata_scale_dollar class
+ggplot_add.ecodata_scale_dollar <- function(object, plot, object_name) {
+  # Retrieve the current axis scale (y-axis by default)
+  scale <- plot$scales$get_scales(object$axis)
+
+  if (!is.null(scale)) {
+    # Clone the existing scale and update only the labels to dollar format
+    new_scale <- scale$clone()
+    new_scale$labels <- abbreviated_units_dollar
+
+    # Remove the old scale and add the new one
+    plot$scales$scales <- plot$scales$scales[plot$scales$find(object$axis) == FALSE]
+    plot$scales$add(new_scale)
+  } else {
+    # If no scale exists, add one with dollar labels
+    if (object$axis == "y") {
+      plot <- plot + ggplot2::scale_y_continuous(labels = abbreviated_units_dollar)
+    } else if (object$axis == "x") {
+      plot <- plot + ggplot2::scale_x_continuous(labels = abbreviated_units_dollar)
+    }
+  }
+
+  return(plot)  # Ensure the modified plot is returned
+}
+
+#' Modify the y-axis scale to use percent formatting while keeping other settings intact.
+#'
+#' @param axis Optional, character "x" or "y" for which axis to set
+#' @return A scale to add on to a ggplot
+#' @export
+ecodata_scale_percent <- function(axis = "y") {
+  structure(list(axis = axis), class = "ecodata_scale_percent")
+}
+
+# Define the ggplot_add() method for the ecodata_scale_dollar class
+ggplot_add.ecodata_scale_percent <- function(object, plot, object_name) {
+  # Retrieve the current axis scale (y-axis by default)
+  scale <- plot$scales$get_scales(object$axis)
+
+  if (!is.null(scale)) {
+    # Clone the existing scale and update only the labels to dollar format
+    new_scale <- scale$clone()
+    new_scale$labels <- scales::percent_format(scale = 1)
+
+    # Remove the old scale and add the new one
+    plot$scales$scales <- plot$scales$scales[plot$scales$find(object$axis) == FALSE]
+    plot$scales$add(new_scale)
+  } else {
+    # If no scale exists, add one with dollar labels
+    if (object$axis == "y") {
+      plot <- plot + ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 1))
+    } else if (object$axis == "x") {
+      plot <- plot + ggplot2::scale_x_continuous(labels = scales::percent_format(scale = 1))
+    }
+  }
+
+  return(plot)  # Ensure the modified plot is returned
+}
+
+
+#' Modify the y-axis scale to use abbreviated comma formatting while keeping other settings intact.
+#'
+#' @param axis Optional, character "x" or "y" for which axis to set
+#' @return A scale to add on to a gggplot
+#' @export
+ecodata_scale_comma <- function(axis = "y") {
+  structure(list(axis = axis), class = "ecodata_scale_comma")
+}
+
+# Define the ggplot_add() method for the ecodata_scale_dollar class
+ggplot_add.ecodata_scale_comma <- function(object, plot, object_name) {
+  # Retrieve the current axis scale (y-axis by default)
+  scale <- plot$scales$get_scales(object$axis)
+
+  if (!is.null(scale)) {
+    # Clone the existing scale and update only the labels to dollar format
+    new_scale <- scale$clone()
+    new_scale$labels <- abbreviated_units
+
+    # Remove the old scale and add the new one
+    plot$scales$scales <- plot$scales$scales[plot$scales$find(object$axis) == FALSE]
+    plot$scales$add(new_scale)
+  } else {
+    # If no scale exists, add one with dollar labels
+    if (object$axis == "y") {
+      plot <- plot + ggplot2::scale_y_continuous(labels = abbreviated_units)
+    } else if (object$axis == "x") {
+      plot <- plot + ggplot2::scale_x_continuous(labels = abbreviated_units)
+    }
+  }
+
+  return(plot)  # Ensure the modified plot is returned
+}
+
+
 #' Create bar plot for ecodata variables
 #'
 #' Make a bar plot of the variables in the given data frame, in a single plot area.
@@ -1467,6 +1651,7 @@ ggplot_ecodata_bar <- function(data, variables = NULL, title = "",
     if(length(data_sources)>1) sources_str <- sprintf("Sources:\n %s", sources_str)
   }
 
+  plot_at <- stringr::str_squish(stringr::str_to_lower(plot_at))
   if(plot_at == "last") {
     plot.df <- data |>
       tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date) |>
@@ -1518,7 +1703,11 @@ ggplot_ecodata_bar <- function(data, variables = NULL, title = "",
       dplyr::summarise(Value = max(Value, na.rm = TRUE))
     plot_at_caption = sprintf("Largest value (%s - %s)", format.Date(mindate, "%b %d, %Y"), format.Date(maxdate, "%b %d, %Y"))
   } else {
-    usedate <- as.Date(plot_at, "%Y-%m-%d")
+    usedate <- tryCatch(as.Date(plot_at, format = "%Y-%m-%d"),
+                        error = function(e) {
+                          error_message <- sprintf("Cannot identify date \"%s\"", plot_at)
+                          stop(error_message)
+                        })
     plot.df <- data |>
       filter(Date == plot_at) |>
       tidyr::pivot_longer(names_to = "Location", values_to = "Value", -Date)
@@ -1894,20 +2083,37 @@ ecodata_get_fredkey <- function() {
 #' Test if String Not Empty
 #'
 #' Just return TRUE or FALSE if string given is not empty (i.e. not NULL, not NA, not whitespace, not "")
-#' @param text Text to test if it is not empty
+#' @param text Character string, text to test if it is not empty
 #' @return Logical, whether or not the string exists and has characters in it
-string_not_empty <- function(text) {
+#' @export
+string_not_empty_single <- function(text) {
   if(is.null(text)) return(FALSE)
+  if(length(text) == 0) return(FALSE)
   if(is.na(text)) return(FALSE)
   if(stringr::str_squish(text)=="") return(FALSE)
   return(TRUE);
 }
 
+#' Test if String Not Empty
+#'
+#' Just return TRUE or FALSE if string given is not empty (i.e. not NULL, not NA, not whitespace, not "")
+#' @param text Charcter string or vector of strings, text to test if it is not empty
+#' @return Logical with same length as text, whether or not the string exists and has characters in it
+#' @export
+string_not_empty <- function(text) {
+  if(is.null(text)) return(FALSE)
+  if(length(text) == 0) return(FALSE)
+  sapply(text, function(tt) {
+    return(string_not_empty_single(tt))
+  })
+}
+
 #' Test if String is Empty
 #'
-#' Just return TRUE or FALSE if string given is empty ("empty" can include NULL, NA, whitespace only, "")
-#' @param text Text to test if it is empty
-#' @return Logical, whether or not the string is empty
+#' Just return TRUE or FALSE if strings given are empty ("empty" can include NULL, NA, whitespace only, "")
+#' @param text Character string, or vector of strings, text to test if it is empty
+#' @return Logical vector of same length as `text`, whether or not the string is empty
+#' @export
 string_empty <- function(text) {
   return(!string_not_empty(text))
 }
@@ -2028,11 +2234,14 @@ string_and_list <- function(vec, quote_mark = "") {
   if(length(vec) == 0) return(vec)
   if(length(vec) == 1) {
     retstr <- sprintf("%s%s%s", quote_mark, vec[1], quote_mark)
+    return(retstr)
   }
   if(length(vec) == 2) {
     retstr <- sprintf("%s%s%s and %s%s%s", quote_mark, vec[1], quote_mark, quote_mark, vec[2], quote_mark)
     return(retstr)
   }
+
+  # More than 2 strings
   retstr <- sprintf("%s%s%s", quote_mark, vec[1], quote_mark)
   for(i in 2:(length(vec)-1)) {
     retstr <- sprintf("%s, %s%s%s", retstr, quote_mark, vec[i], quote_mark)
@@ -2047,12 +2256,42 @@ string_and_list <- function(vec, quote_mark = "") {
 #' Wrapper to the `dplyr::mutate()` function that adds metadata attributes to the new variables.
 #' @param .data An ecodata data frame
 #' @param ... Parameters passed on to mutate
+#' @param units Optional, character string, or vector of strings, for the units to give to the new variables.
+#'              Should be a vector of the same length as the number of expressions, or a single string if
+#'              all the expressions have the same units.
+#'              Default for each new variable is to use the units for the first variable in the expression.
 #' @return An ecodata data frame with the new variables and metadata attributes
 #' @seealso `dplyr::mutate()`
 #' @export
-mutate.ecodata <- function(.data, ...) {
-  print("Stuck")
+mutate <- function(.data, ..., units = NULL) {
+  if(!("ecodata" %in% class(.data))) {
+    dplyr::mutate(.data, ...)
+  } else {
+    mutate.ecodata(.data, ..., units = units)
+  }
+}
+
+#' Create and Modify Variables
+#'
+#' Wrapper to the `dplyr::mutate()` function that adds metadata attributes to the new variables.
+#' @param .data An ecodata data frame
+#' @param ... Parameters passed on to mutate
+#' @param units Optional, character string, or vector of strings, for the units to give to the new variables.
+#'              Should be a vector of the same length as the number of expressions, or a single string if
+#'              all the expressions have the same units.
+#'              Default for each new variable is to use the units for the first variable in the expression.
+#' @return An ecodata data frame with the new variables and metadata attributes
+#' @seealso `dplyr::mutate()`
+#' @export
+mutate.ecodata <- function(.data, ..., units = NULL) {
   expressions <- rlang::enquos(...)
+
+  if(!is.null(units)) {
+    if(length(units) != 1 | length(units) != length(expressions)) {
+      error_message <- "Number of items in `units` parameter should equal 1 or length of number of expressions."
+      stop(error_message)
+    }
+  }
 
   # Temporarily remove the "ecodata" class to avoid recursion
   class(.data) <- setdiff(class(.data), "ecodata")
@@ -2060,7 +2299,8 @@ mutate.ecodata <- function(.data, ...) {
   # Call mutate
   result.df <- dplyr::mutate(.data, !!!expressions)
 
-  for(new_var in names(expressions)) {
+  for(vi in 1:length(expressions)) {
+    new_var <- names(expressions)[vi]
     # Extract expression
     expr <- expressions[[new_var]]
 
@@ -2073,25 +2313,59 @@ mutate.ecodata <- function(.data, ...) {
     # Check if the original variables exist in the input data
     expr_variables <- intersect(expr_variables, names(.data))
 
-    useunits <- ""
-    usefreq <- ""
+    # useunits <- ""
+    # usefreq <- ""
+    # usesources <- ""
 
     if(length(expr_variables) > 0) {
       subset.df <- dplyr::select(.data, dplyr::all_of(expr_variables))
 
-      unique_units <- ecodata_get_units(subset.df)
-      if(length(unique_units) > 0) {
-        useunits <- unique_units[1]
-        if(length(unique_units) > 1) {
-          warn_message <- sprintf("Variables in `mutate` expression have different units. Units in the expression include %s. Using '%s'.",
-                                  string_and_list(unique_units, quote_mark = "'"), unique_units[1])
-          warning(warn_message)
+      if(!is.null(units)) {
+        if(length(units) == 1) {
+          useunits <- units[1]
+        } else {
+          useunits <- units[vi]
+        }
+      } else {
+        unique_units <- ecodata_get_units(subset.df)
+        if(length(unique_units) > 0) {
+          useunits <- unique_units[1]
+          if(length(unique_units) > 1) {
+            warn_message <- sprintf("No `units` parameter specified, and the variables in the expression for `%s` have different units. Units in the expression include %s. Using '%s'.",
+                                    new_var, string_and_list(unique_units, quote_mark = "'"), unique_units[1])
+            warning(warn_message)
+          }
         }
       }
 
       unique_freqs <- ecodata_get_frequencies(subset.df)
       if(length(unique_freqs) > 0) {
         usefreq <- minimum_frequency(unique_freqs)
+      }
+
+      unique_sources <- ecodata_get_sources(subset.df)
+      usesources <- paste(unique_sources, collapse = ";")
+
+      unique_urls <- ecodata_get_attributes(subset.df, "URL")
+      useurls <- paste(unique_urls, collapse = ";")
+
+      unique_accessdates <- ecodata_get_attributes(subset.df, "Access Date")
+      useaccessdates <- paste(unique_accessdates, collapse = "; ")
+
+      unique_sa <- ecodata_get_attributes(subset.df, "Seasonal Adjustment")
+      if(length(unique_sa) == 0) {
+        usesa <- ""
+      } else if(length(unique_sa) == 1) {
+        usesa <- unique_sa
+      }
+      if(length(unique_sa) > 1) {
+        sa_types <- unique_sa[ !string_detect(unique_sa, "not ") ]
+        if(length(sa_types) > 0) {
+          usesa <- sa_types[1]
+        } else {
+          usesa <- "Not Seasonally Adjusted"
+        }
+        warnmessage <- sprintf("Variables in expression for %s have different values for `Seasonal Adjustment` attribute. Values include: %s. Using %s.", new_var, string_and_list(unique_sa, "'"), usesa)
       }
     }
 
@@ -2101,10 +2375,10 @@ mutate.ecodata <- function(.data, ...) {
     attr(result.df[[new_var]], "Description") <- use_description
     attr(result.df[[new_var]], "Frequency") <- usefreq
     attr(result.df[[new_var]], "Units") <- useunits
-    attr(result.df[[new_var]], "Seasonal Adjustment") <- ""
-    attr(result.df[[new_var]], "Source") <- ""
-    attr(result.df[[new_var]], "URL") <- ""
-    attr(result.df[[new_var]], "Access Date") <- ""
+    attr(result.df[[new_var]], "Seasonal Adjustment") <- usesa
+    attr(result.df[[new_var]], "Source") <- usesources
+    attr(result.df[[new_var]], "URL") <- useurls
+    attr(result.df[[new_var]], "Access Date") <- useaccessdates
     attr(result.df[[new_var]], "Cite") <- ""
   }
 
@@ -2180,4 +2454,25 @@ if(FALSE) {
   ggplot_ecodata_bar(allstates, title = title,
                          plot_at = plot_at, highlight = highlight, order = order,
                          lowest = lowest, highest = highest, fill = fill)
+
+  variables <- c("https://fred.stlouisfed.org/series/GDPC1",
+                 "https://fred.stlouisfed.org/series/GDPPOT",
+                 "https://fred.stlouisfed.org/series/CPIAUCSL")
+
+  varnames <- c("Real GDP", "Potential GDP", "CPI")
+
+  df <- get_ecodata(variables, varnames = varnames)
+  ecodata_description_table(df)
+
+  df <- ecodata_compute_pctchange(df, "CPI", new_variable = "Inflation")
+  ecodata_description_table(df)
+
+  df <- df |>
+    mutate(`Output Gap` = (`Real GDP` - `Potential GDP`) / `Potential GDP` * 100, units = "Percent")
+  ecodata_description_table(df)
+  ecodata_cite_table(df)
+
+  ggplot_ecodata_ts(df, "Output Gap", title = "Output Gap", plot.recessions = TRUE) +
+    ecodata_scale_dollar()
+
 }

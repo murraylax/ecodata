@@ -366,6 +366,55 @@ ggplot_ecodata_bar(allcountries,
                    highlight = "Zambia")
 ```
 
+# Data Transformations
+
+You can use *ecodata* functions such as `ecodata_compute_pctchange()` an *ecodata*-specific `mutate()` function to compute data transformations.
+
+## Example Data
+
+Let us demonstrate with data on real GDP, potential GDP, and the Consumer Price Index. First we download the data:
+
+```{r}
+variables <- c("https://fred.stlouisfed.org/series/GDPC1",
+               "https://fred.stlouisfed.org/series/GDPPOT",
+               "https://fred.stlouisfed.org/series/CPIAUCSL")
+
+varnames <- c("Real GDP", "Potential GDP", "CPI")
+
+mydata <- get_ecodata(variables, varnames = varnames)
+```
+
+## Computing Growth Rate
+
+The data on the Consumer Price Index is not too meaningful by itself, but the growth rate is the inflation rate for consumer prices. We can compute the growth rate of any variable with `ecodata_compute_pctchange()` as follows:
+
+```{r}
+mydata <- ecodata_compute_pctchange(mydata, variable = "CPI", new_variable = "Inflation")
+```
+
+This will create a new variable called `Inflation` that is equal to the year-over-year growth rate in the variable `CPI`.
+
+Here we plot our new variable:
+
+```{r}
+ggplot_ecodata_ts(mydata, variables = "Inflation", title = "United States Inflation Rate", plot.recessions = TRUE)
+```
+
+## Custom Data Transformation
+
+Let us create a variable called `Output Gap` that is the difference between real GDP and potential GDP, as a percentage of potential GDP. We can use the `mutate()` function to do this. The `mutate()` function for *ecodata* data frames also takes as a parameter `units`, to specify what units to give the new variable. Since the output gap is a percentage, we set `units = "Percent"`.
+
+```{r}
+mydata <- mydata |> 
+  mutate(`Output Gap` = (`Real GDP` - `Potential GDP`) / `Potential GDP` * 100, units = "Percent")
+```
+
+Let use plot this variable:
+
+```{r}
+ggplot_ecodata_ts(mydata, variables = "Output Gap", title = "Output Gap", plot.recessions = TRUE)
+```
+
 # Data Documentation
 
 ## Finding suggested citation

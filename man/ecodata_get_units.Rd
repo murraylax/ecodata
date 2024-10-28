@@ -2,7 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{ecodata_get_units}
 \alias{ecodata_get_units}
-\title{Retrieve all units}
+\title{Get all units}
 \usage{
 ecodata_get_units(df)
 }

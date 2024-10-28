@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{ecodata_get_sources}
 \alias{ecodata_get_sources}
-\title{`ecodata_get_sources(df)`
-Get unique sources for the variables in the data frame}
+\title{Get Data Sources}
 \usage{
 ecodata_get_sources(df)
 }
@@ -14,6 +13,5 @@ ecodata_get_sources(df)
 A vector of unique source descriptions from the data frame
 }
 \description{
-`ecodata_get_sources(df)`
-Get unique sources for the variables in the data frame
+Get unique sources for the variables in the ecodata data frame
 }
