@@ -1872,22 +1872,14 @@ ggplot_ecodata_bar <- function(data, variables = NULL, title = "",
 #' The number of variables in the data frame should be between 1 and 7
 #' @param data Data frame from `get_ecodata()` that includes a variable called `Date` and the other variables to plot
 #' @param title Optional, string for the title of the plot. Default is ""
-#' @param colors Optional, string or vector of strings for the color of the lines. Default is to use the ecodata color scale. Should either be a single color or a vector of colors with the same length as the number of variables to plot.
+#' @param color Optional, string or vector of strings for the color of the lines. Default is to use the ecodata color scale. Should either be a single color or a vector of colors with the same length as the number of variables to plot.
 #' @param ylab Optional, string for the y-axis label. Default is the units of the meta data for the variables to be plotted
 #' @param variables Optional, vector of strings that includes the economic variables to plot. If not specified, the function will plot all the variables given in `data`, if possible.
 #' @param title_strlen Optional, word-wrap the length of the title by this many characters. Default = 60.
 #' @param variable_strlen Optional, word-wrap the length of the variable names by this many characters. Default = 85.
 #' @param plot.recessions Optional, logical for whether or not show show NBER recession bars in the plot
 #' @export
-ggplot_ecodata_ts <- function(data, variables = NULL, title="", colors = NULL,  ylab = NULL, title_strlen = 60, variable_strlen = 85, plot.recessions = FALSE) {
-
-  if(!is.null(colors)) {
-    if(length(colors) > 1) {
-      if(length(colors) != length(variables)) {
-        stop("The number of colors must be the same as the number of variables to plot, or a single color to give all the variables the same color.")
-      }
-    }
-  }
+ggplot_ecodata_ts <- function(data, variables = NULL, title="", color = NULL,  ylab = NULL, title_strlen = 60, variable_strlen = 85, plot.recessions = FALSE) {
 
   linewidth <- 1.1
 
@@ -1905,6 +1897,15 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", colors = NULL,  
   if(!is.null(variables)) {
     morevars_idx <- names(data) %in% variables
     includevars <- names(data)[morevars_idx]
+  }
+
+  # Check appropriate color parameter
+  if(!is.null(color)) {
+    if(length(color) > 1) {
+      if(length(color) != length(includevars)) {
+        stop("The number of colors must be the same as the number of variables to plot, or a single color to give all the variables the same color.")
+      }
+    }
   }
 
   # filter out observations where all the variables to include are missing
@@ -1959,13 +1960,13 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", colors = NULL,  
     if(length(data_sources)>1) sources_str <- sprintf("Sources:\n %s", sources_str)
   }
 
-  if(is.null(colors)) {
+  if(is.null(color)) {
     mycols <- rev(ecodata_colorscale(nvar))
   } else {
-    if(length(colors) == 1) {
-      mycols <- rep(colors, nvar)
+    if(length(color) == 1) {
+      mycols <- rep(color, nvar)
     } else {
-      mycols <- colors
+      mycols <- color
     }
   }
 
@@ -2470,7 +2471,7 @@ if(FALSE) {
   ggplot_ecodata_ts(mydata, title = "Real GDP",
                     variables = c("United States GDP, PPP", "Germany GDP, PPP"),
                     plot.recessions = TRUE,
-                    colors = c("orange", "green"))
+                    color = c("orange", "green"))
 
   # Plot a time series of the U.S. interest rate data
   ggplot_ecodata_ts(mydata, title = "Interest Rates",
@@ -2533,5 +2534,5 @@ if(FALSE) {
     ecodata_scale_dollar()
 
   bapps <- get_ecodata("BABATOTALSAUS")
-  ggplot_ecodata_ts(bapps)
+  ggplot_ecodata_ts(bapps, color = "green")
 }

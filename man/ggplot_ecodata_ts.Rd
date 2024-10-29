@@ -8,7 +8,7 @@ ggplot_ecodata_ts(
   data,
   variables = NULL,
   title = "",
-  colors = NULL,
+  color = NULL,
   ylab = NULL,
   title_strlen = 60,
   variable_strlen = 85,
@@ -22,7 +22,7 @@ ggplot_ecodata_ts(
 
 \item{title}{Optional, string for the title of the plot. Default is ""}
 
-\item{colors}{Optional, string or vector of strings for the color of the lines. Default is to use the ecodata color scale. Should either be a single color or a vector of colors with the same length as the number of variables to plot.}
+\item{color}{Optional, string or vector of strings for the color of the lines. Default is to use the ecodata color scale. Should either be a single color or a vector of colors with the same length as the number of variables to plot.}
 
 \item{ylab}{Optional, string for the y-axis label. Default is the units of the meta data for the variables to be plotted}
 
