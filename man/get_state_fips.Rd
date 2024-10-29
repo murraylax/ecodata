@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{get_state_fips}
 \alias{get_state_fips}
-\title{`get_state_fips(state)`
-Get the FIPS code for a given state}
+\title{Get the FIPS code for a U.S. state}
 \usage{
 get_state_fips(state)
 }
@@ -14,6 +13,5 @@ get_state_fips(state)
 String that is the FIPS code for the state
 }
 \description{
-`get_state_fips(state)`
-Get the FIPS code for a given state
+Get the FIPS code for a given U.S. state
 }

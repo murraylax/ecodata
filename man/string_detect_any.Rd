@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{string_detect_any}
 \alias{string_detect_any}
-\title{`string_detect_any()`
-Discover whether any of the strings in `str` contain `pattern`}
+\title{Detect a pattern in any of a vector of strings}
 \usage{
 string_detect_any(str, pattern)
 }
@@ -16,6 +15,5 @@ string_detect_any(str, pattern)
 Logical on whether the pattern was found in any of the strings
 }
 \description{
-`string_detect_any()`
 Discover whether any of the strings in `str` contain `pattern`
 }

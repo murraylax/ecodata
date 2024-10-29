@@ -2,15 +2,14 @@
 % Please edit documentation in R/ecodata.R
 \name{str_to_lower}
 \alias{str_to_lower}
-\title{`str_to_lower()`
-Wrapper for `stringr::str_to_lower()`}
+\title{Convert string to lower case}
 \usage{
 str_to_lower(...)
 }
 \description{
-`str_to_lower()`
 Wrapper for `stringr::str_to_lower()`
 }
 \seealso{
 [str_to_lower()]
 }
+\keyword{internal}

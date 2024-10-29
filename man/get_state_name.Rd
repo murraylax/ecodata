@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{get_state_name}
 \alias{get_state_name}
-\title{`get_state_name(state)`
-Get the state name for the given abbreviation or FIPS code}
+\title{Get name of a U.S. State}
 \usage{
 get_state_name(state)
 }
@@ -14,6 +13,5 @@ get_state_name(state)
 String that is the name of the state
 }
 \description{
-`get_state_name(state)`
 Get the state name for the given abbreviation or FIPS code
 }

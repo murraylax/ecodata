@@ -1,7 +1,7 @@
-# ecodata
+# ECODATA
 R package for downloading and visualizing data from FRED and World Bank
 
-Copyright (C) 2004 James M. Murray
+Copyright (C) 2024 James M. Murray
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Installation
 
-The package is available from https://github.com/murraylax/ecodata. Use the `devtools` package to install directly in R:
+The package is available from <a href="https://github.com/murraylax/ecodata" target="_blank">https://github.com/murraylax/ecodata</a>. Use the `devtools` package to install directly in R:
 
 `devtools::install_github("murraylax/ecodata")`
 
@@ -38,12 +38,8 @@ You should only need to do the above once per machine, then the FRED API should 
 
 ## Get started
 
-You can find real GDP data for the United States on FRED here: https://fred.stlouisfed.org/series/GDPC1
-
-You can download it and load into R with the following call:
-
-`mydata <- get_ecodata("https://fred.stlouisfed.org/series/GDPC1")`
-
-You can plot the data with the following call:
-
-`ggplot_ecodata_ts(mydata)`
+  - Vignette: <a href="https://murraylax.org/ecodata/getting-started.html" target="_blank">Getting started with the ECODATA package</a>
+  
+  - Browse vingettes: <a href="https://murraylax.org/ecodata/table_of_contents.html" target="_blank">Table of contents</a>
+  
+  - <a href="https://murraylax.org/ecodata/manual/" target="_blank">Reference Manual</a>

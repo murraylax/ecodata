@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{get_ecodata_variable_country_wb}
 \alias{get_ecodata_variable_country_wb}
-\title{`get_ecodata_variable_wb()`
-Downloads data from World Bank for a given varcode and countrycode, sets the variable equal to varname}
+\title{Download single variable for a single country from World Bank Data}
 \usage{
 get_ecodata_variable_country_wb(varcode, countrycode, varname = NULL)
 }
@@ -18,6 +17,5 @@ get_ecodata_variable_country_wb(varcode, countrycode, varname = NULL)
 Data frame time series with two variables, Date and the variable requested. The data frame will also include all relevant meta data describing the data and citing its source.
 }
 \description{
-`get_ecodata_variable_wb()`
-Downloads data from World Bank for a given varcode and countrycode, sets the variable equal to varname
+Download data from World Bank Data for a given varcode and countrycode, sets the variable equal to varname
 }

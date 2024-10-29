@@ -1,0 +1,10 @@
+pandoc: '3.2'
+pkgdown: 2.1.1
+pkgdown_sha: ~
+articles:
+  exchangerates_interestrates: exchangerates_interestrates.html
+  getting-started: getting-started.html
+  supply_demand_housing: supply_demand_housing.html
+  table_of_contents: table_of_contents.html
+  unemployment_recessions: unemployment_recessions.html
+last_built: 2024-10-29T18:13Z

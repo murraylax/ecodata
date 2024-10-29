@@ -1,5 +1,5 @@
 ---
-title: "U.S. Dollar to U.K. Pound Exchange Rate"
+title: "Exchange Rates and Interest Rates: An Application of the *ECODATA* Package"
 output: 
   rmdformats::readthedown:
     thumbnails: false   # Optional: Display thumbnails for sections

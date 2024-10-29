@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{get_varcode_url_fred}
 \alias{get_varcode_url_fred}
-\title{`get_varcode_url_fred()`
-Extract a variable code from a FRED URL}
+\title{Get a variable code from a FRED URL}
 \usage{
 get_varcode_url_fred(url)
 }
@@ -14,6 +13,5 @@ get_varcode_url_fred(url)
 String that is the variable code
 }
 \description{
-`get_varcode_url_fred()`
 Extract a variable code from a FRED URL
 }

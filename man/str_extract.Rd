@@ -2,15 +2,14 @@
 % Please edit documentation in R/ecodata.R
 \name{str_extract}
 \alias{str_extract}
-\title{`str_extract()`
-Wrapper for `stringr::str_extract()`}
+\title{Extract a pattern from a string}
 \usage{
 str_extract(...)
 }
 \description{
-`str_extract()`
 Wrapper for `stringr::str_extract()`
 }
 \seealso{
 [stringr::str_extract()]
 }
+\keyword{internal}

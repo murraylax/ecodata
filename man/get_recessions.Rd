@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{get_recessions}
 \alias{get_recessions}
-\title{`get_recessions(data)`
-Get NBER recession dates that line up with data in the data frame}
+\title{Get NBER recession dates}
 \usage{
 get_recessions(data)
 }
@@ -14,6 +13,5 @@ get_recessions(data)
 A copy of the data frame, `data`, with a new variable `Recession` equal to TRUE or FALSE if there was a recession in the time period
 }
 \description{
-`get_recessions(data)`
 Get NBER recession dates that line up with data in the data frame
 }

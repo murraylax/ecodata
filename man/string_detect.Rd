@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{string_detect}
 \alias{string_detect}
-\title{`string_detect()`
-Detect a pattern in a string, ignoring case}
+\title{Detect a pattern in a string, ignoring case}
 \usage{
 string_detect(str, pattern)
 }
@@ -16,6 +15,5 @@ string_detect(str, pattern)
 Logical indicating whether or not the pattern was found
 }
 \description{
-`string_detect()`
 Detect a pattern in a string, ignoring case
 }

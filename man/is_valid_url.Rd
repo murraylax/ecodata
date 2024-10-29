@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{is_valid_url}
 \alias{is_valid_url}
-\title{`is_valid_url()`
-Test whether a string is a valid URL to an actual web address}
+\title{Test if a string is a valid URL}
 \usage{
 is_valid_url(url)
 }
@@ -14,6 +13,5 @@ is_valid_url(url)
 Logical, whether or not the string was actually a valid URL
 }
 \description{
-`is_valid_url()`
 Test whether a string is a valid URL to an actual web address
 }

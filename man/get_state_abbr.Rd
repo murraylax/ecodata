@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{get_state_abbr}
 \alias{get_state_abbr}
-\title{`get_state_abbr(state)`
-Get the two-letter abbreviation for a state, given the name of the state or the FIPS code}
+\title{Get the two-letter abbreviation for a state}
 \usage{
 get_state_abbr(state)
 }
@@ -14,6 +13,5 @@ get_state_abbr(state)
 String that is the two-letter abbreviation for the state
 }
 \description{
-`get_state_abbr(state)`
 Get the two-letter abbreviation for a state, given the name of the state or the FIPS code
 }

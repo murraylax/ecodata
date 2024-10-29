@@ -2,12 +2,10 @@
 % Please edit documentation in R/ecodata.R
 \name{ggplot_add.GeomRecessionLayer}
 \alias{ggplot_add.GeomRecessionLayer}
-\title{'ggplot_add.GeomRecessionLayer()'
-Define a ggplot_add method to automatically move the recession layer to the back}
+\title{Add a geom recession layer}
 \usage{
 ggplot_add.GeomRecessionLayer(object, plot, object_name)
 }
 \description{
-'ggplot_add.GeomRecessionLayer()'
 Define a ggplot_add method to automatically move the recession layer to the back
 }

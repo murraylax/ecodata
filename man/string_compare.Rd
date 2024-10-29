@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{string_compare}
 \alias{string_compare}
-\title{`string_compare()`
-Compare two strings, ignoring case and whitespace}
+\title{Compare two strings, ignoring case and whitespace}
 \usage{
 string_compare(str1, str2)
 }
@@ -16,6 +15,5 @@ string_compare(str1, str2)
 Boolen on whether the strings match
 }
 \description{
-`string_compare()`
 Compare two strings, ignoring case and whitespace
 }

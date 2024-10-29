@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{ecodata_linear_interpolate}
 \alias{ecodata_linear_interpolate}
-\title{`ecodata_linear_interpolate()`
-Perform a linear interpolation for any missing values for an ecodata data frame. This is useful for plotting time series with mixed frequencies.}
+\title{Perform a linear interpolation for missing values}
 \usage{
 ecodata_linear_interpolate(df, variable_names = NULL)
 }
@@ -16,6 +15,5 @@ ecodata_linear_interpolate(df, variable_names = NULL)
 An ecodata data frame with the same structure as `df`, with NA values replaced with linear interpolations.
 }
 \description{
-`ecodata_linear_interpolate()`
 Perform a linear interpolation for any missing values for an ecodata data frame. This is useful for plotting time series with mixed frequencies.
 }

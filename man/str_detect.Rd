@@ -2,15 +2,14 @@
 % Please edit documentation in R/ecodata.R
 \name{str_detect}
 \alias{str_detect}
-\title{`str_detect()`
-Wrapper for `stringr::str_detect()`}
+\title{Detect a pattern in a string}
 \usage{
 str_detect(...)
 }
 \description{
-`str_detect()`
 Wrapper for `stringr::str_detect()`
 }
 \seealso{
 [stringr::str_detect()]
 }
+\keyword{internal}

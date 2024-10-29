@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{get_state_fips_all}
 \alias{get_state_fips_all}
-\title{`get_state_fips_all()`
-Get a data frame with all the U.S. states and their FIPS codes. Data comes from `usmaps::fips_info()`}
+\title{Get FIPS codes for all U.S. States}
 \usage{
 get_state_fips_all()
 }
@@ -11,7 +10,6 @@ get_state_fips_all()
 A data frame with all the U.S. states and their FIPS codes
 }
 \description{
-`get_state_fips_all()`
 Get a data frame with all the U.S. states and their FIPS codes. Data comes from `usmaps::fips_info()`
 }
 \seealso{

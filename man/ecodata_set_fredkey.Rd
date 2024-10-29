@@ -2,9 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{ecodata_set_fredkey}
 \alias{ecodata_set_fredkey}
-\title{`ecodata_set_fredkey(key)`
-Set the FRED key as a permanent environmental variable, and make it available immediately
-This will append the ~/.Renviron file}
+\title{Set the FRED API key}
 \usage{
 ecodata_set_fredkey(API_Key)
 }
@@ -12,7 +10,6 @@ ecodata_set_fredkey(API_Key)
 \item{API_Key}{String that is the API key for FRED. Go to https://fredaccount.stlouisfed.org/apikeys to request a key.}
 }
 \description{
-`ecodata_set_fredkey(key)`
-Set the FRED key as a permanent environmental variable, and make it available immediately
+Set the FRED API key as a permanent environmental variable, and make it available immediately
 This will append the ~/.Renviron file
 }

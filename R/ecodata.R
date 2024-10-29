@@ -45,34 +45,47 @@ filter <- function(...) {
   dplyr::filter(...)
 }
 
-#' `str_detect()`
+#' Detect a pattern in a string
+#'
 #' Wrapper for `stringr::str_detect()`
 #' @seealso [stringr::str_detect()]
+#' @keywords internal
 str_detect <- function(...) {
   stringr::str_detect(...)
 }
 
-#' `rename()`
+#' Rename a variable
+#'
 #' Wrapper for `dplyr::rename()`
 #' @seealso [dplyr::rename()]
+#' @keywords internal
 rename <- function(...) {
   dplyr::rename(...)
 }
 
-#' `str_replace()`
+#' Replace a pattern in a string
+#'
 #' Wrapper for `stringr::str_replace()`
 #' @seealso [stringr::str_replace()]
+#' @keywords internal
 str_replace <- function(...) {
   stringr::str_replace(...)
 }
 
-#' `str_to_lower()`
+#' Convert string to lower case
+#'
 #' Wrapper for `stringr::str_to_lower()`
 #' @seealso [str_to_lower()]
+#' @keywords internal
 str_to_lower <- function(...) {
   stringr::str_to_lower(...)
 }
 
+#' Add 'ecodata' to the class of a date frame
+#'
+#' @param df A data frame that has the features of an ecodata data frame
+#' @return The same data frame, but with the class 'ecodata' added
+#' @export
 add_ecodata_class <- function(df) {
   if(!("ecodata" %in% class(df))) {
     class(df) <- c("ecodata", class(df))
@@ -80,6 +93,11 @@ add_ecodata_class <- function(df) {
   return(df)
 }
 
+#' Test if a string is empty
+#'
+#' @param x A character string
+#' @return Logical, whether or not the string is empty
+#' @export
 is_empty <- function(x) {
   if(is.null(x)) return(TRUE)
   if(length(x)==0) return(TRUE)
@@ -221,11 +239,13 @@ ecodata_theme_small <- function() {
   return(rettheme)
 }
 
-#' `ecodata_linear_interpolate()`
+#' Perform a linear interpolation for missing values
+#'
 #' Perform a linear interpolation for any missing values for an ecodata data frame. This is useful for plotting time series with mixed frequencies.
 #' @param df An ecodata data frame
 #' @param variable_names Optional, vector of strings for the names of the variables in `df` to perform the linear interpolation. Default is to perform the operation on all the variables.
 #' @return An ecodata data frame with the same structure as `df`, with NA values replaced with linear interpolations.
+#' @export
 ecodata_linear_interpolate <- function(df, variable_names = NULL) {
   if(is.null(variable_names)) {
     variable_names <- get_ecodata_varnames(df)
@@ -247,22 +267,24 @@ ecodata_linear_interpolate <- function(df, variable_names = NULL) {
   return(df)
 }
 
-#' `string_compare()`
 #' Compare two strings, ignoring case and whitespace
+#'
 #' @param str1 String to compare
 #' @param str2 Another string to compare
 #' @return Boolen on whether the strings match
+#' @export
 string_compare <- function(str1, str2) {
   return(
     stringr::str_squish(stringr::str_to_lower(str1)) == stringr::str_squish(stringr::str_to_lower(str2))
   )
 }
 
-#' `string_detect()`
 #' Detect a pattern in a string, ignoring case
+#'
 #' @param str String to search
 #' @param pattern Pattern to look for
 #' @return Logical indicating whether or not the pattern was found
+#' @export
 string_detect <- function(str, pattern) {
   return(
     stringr::str_detect(
@@ -271,27 +293,33 @@ string_detect <- function(str, pattern) {
   )
 }
 
-#' `str_extract()`
+#' Extract a pattern from a string
+#'
 #' Wrapper for `stringr::str_extract()`
 #' @seealso [stringr::str_extract()]
+#' @keywords internal
 str_extract <- function(...) {
   stringr::str_extract(...)
 }
 
-#' `string_detect_any()`
+#' Detect a pattern in any of a vector of strings
+#'
 #' Discover whether any of the strings in `str` contain `pattern`
 #' @param str Vector of strings to search through
 #' @param pattern Pattern to search for
 #' @return Logical on whether the pattern was found in any of the strings
+#' @export
 string_detect_any <- function(str, pattern) {
   return(any(string_detect(str, pattern)))
 }
 
-#' `string_which()`
+#' Get index into string where a pattern if found
+#'
 #' Wrapper for `str_which()` while ignoring case, returns what index into the string the pattern is found
 #' @param str String or vector of strings to search through
 #' @param pattern Pattern to look for
 #' @return Integer index into the string that the pattern was found
+#' @export
 string_which <- function(str, pattern) {
   return(
     stringr::str_which(
@@ -300,10 +328,12 @@ string_which <- function(str, pattern) {
   )
 }
 
-#' `is_valid_url()`
+#' Test if a string is a valid URL
+#'
 #' Test whether a string is a valid URL to an actual web address
 #' @param url String, that is maybe a URL
 #' @return Logical, whether or not the string was actually a valid URL
+#' @export
 is_valid_url <- function(url) {
   response <- tryCatch({
     httr::HEAD(url)
@@ -317,7 +347,8 @@ is_valid_url <- function(url) {
   return(retval)
 }
 
-#' `get_varcode_url_fred()`
+#' Get a variable code from a FRED URL
+#'
 #' Extract a variable code from a FRED URL
 #' @param url String that is a URL to a FRED data series
 #' @return String that is the variable code
@@ -333,8 +364,9 @@ get_varcode_url_fred <- function(url) {
   return(varcode)
 }
 
-#' `get_varcode_url_worldbank()`
-#' Extract a variable code from a Workbank URL
+#' Get a variable code from a World Bank Data URL
+#'
+#' Get a variable code from a World Bank Data URL
 #' @param url String that is a URL to a World Bank data series
 #' @return String that is the variable code
 #' @export
@@ -349,8 +381,9 @@ get_varcode_url_worldbank <- function(url) {
   return(varcode)
 }
 
-#' `get_varcode_url()`
-#' Extract a variable code from a FRED or Workbank URL
+#' Get a variable code from a FRED or World Bank Data URL
+#'
+#' Get a variable code from a FRED or World Bank Data URL
 #' @param url String that is a URL to a FRED or World Bank data series
 #' @return String that is the variable code
 #' @export
@@ -367,7 +400,8 @@ get_varcode_url <- function(url) {
   return(varcode)
 }
 
-#' `get_state_fips_all()`
+#' Get FIPS codes for all U.S. States
+#'
 #' Get a data frame with all the U.S. states and their FIPS codes. Data comes from `usmaps::fips_info()`
 #' @return A data frame with all the U.S. states and their FIPS codes
 #' @seealso [usmaps::fips_info()]
@@ -381,8 +415,9 @@ get_state_fips_all <- function() {
   return(fips_codes.df)
 }
 
-#' `get_state_fips(state)`
-#' Get the FIPS code for a given state
+#' Get the FIPS code for a U.S. state
+#'
+#' Get the FIPS code for a given U.S. state
 #' @param state String that is either the full name of the state or the two-letter abbreviation
 #' @return String that is the FIPS code for the state
 #' @export
@@ -399,7 +434,8 @@ get_state_fips <- function(state) {
   return(state_fips.df$FIPS[1])
 }
 
-#' `get_state_name(state)`
+#' Get name of a U.S. State
+#'
 #' Get the state name for the given abbreviation or FIPS code
 #' @param state String that is a FIPS code or two-letter abbreviation
 #' @return String that is the name of the state
@@ -417,7 +453,8 @@ get_state_name <- function(state) {
   return(state_fips.df$State[1])
 }
 
-#' `get_state_abbr(state)`
+#' Get the two-letter abbreviation for a state
+#'
 #' Get the two-letter abbreviation for a state, given the name of the state or the FIPS code
 #' @param state String that is a name of a state or the FIPS code
 #' @return String that is the two-letter abbreviation for the state
@@ -435,8 +472,9 @@ get_state_abbr <- function(state) {
   return(state_fips.df$Abbr[1])
 }
 
-#' `geom_recession()`
-#' Return a geom_rect() that identifies recessions in a time series plot
+#' Get a geom_rect() that identifies recessions
+#'
+#' Return a geom_rect() that identifies recessions for a given time series plot
 #' @param data Data frame
 #' @param alpha Numeric transparency parameter. Default = 0.2.
 #' @param fill String identifying the fill color, default is "dodgerblue3"
@@ -502,7 +540,8 @@ GeomRecession <- ggplot2::ggproto("GeomRecession", ggplot2::Geom,
   draw_key = ggplot2::draw_key_rect  # Use the default rectangle key in legends
 )
 
-#' 'ggplot_add.GeomRecessionLayer()'
+#' Add a geom recession layer
+#'
 #' Define a ggplot_add method to automatically move the recession layer to the back
 ggplot_add.GeomRecessionLayer <- function(object, plot, object_name) {
   # Add the layer to the plot
@@ -519,7 +558,8 @@ ggplot_add.GeomRecessionLayer <- function(object, plot, object_name) {
   return(plot)
 }
 
-#' `get_recessions(data)`
+#' Get NBER recession dates
+#'
 #' Get NBER recession dates that line up with data in the data frame
 #' @param data Data frame with a time series
 #' @return A copy of the data frame, `data`, with a new variable `Recession` equal to TRUE or FALSE if there was a recession in the time period
@@ -697,8 +737,9 @@ get_ecodata_allcountries_wb <- function(varcode, varname = NULL) {
 }
 
 
-#' `get_ecodata_variable_wb()`
-#' Downloads data from World Bank for a given varcode and countrycode, sets the variable equal to varname
+#' Download single variable for a single country from World Bank Data
+#'
+#' Download data from World Bank Data for a given varcode and countrycode, sets the variable equal to varname
 #' @param varcode String that is the variable code
 #' @param countrycode String that is the country code
 #' @param varname Optional, string for the variable name
@@ -1131,7 +1172,8 @@ get_ecodata <- function(varcodes, varnames = NULL, frequency = NULL, units = NUL
   return(df)
 }
 
-#' `add_ecodata()`
+#' Download data and add to existing *ecodata* data frame
+#'
 #' Add data for one or more variables from FRED and/or World Bank Data, for given URLs or variable codes. The function will figure out whether the data is available from FRED or World Bank Data.
 #' @param data Data frame with existing ecodata, data from FRED and/or World Bank Data
 #' @param varcodes String for vector of strings that identifies the variable codes or URLs for the data.
@@ -2110,8 +2152,9 @@ ggplot_ecodata_facet <- function(data, variables = NULL, title="", ylab = NULL, 
   return(plt)
 }
 
-#' `ecodata_set_fredkey(key)`
-#' Set the FRED key as a permanent environmental variable, and make it available immediately
+#' Set the FRED API key
+#'
+#' Set the FRED API key as a permanent environmental variable, and make it available immediately
 #' This will append the ~/.Renviron file
 #' @param API_Key String that is the API key for FRED. Go to https://fredaccount.stlouisfed.org/apikeys to request a key.
 #' @export
@@ -2224,19 +2267,18 @@ ecodata_join <- function(...) {
   return(joined_df)
 }
 
-#' Compute Year-over-Year Percentage Change with Attribute Copying
+#' Compute Year-over-Year Percentage Change
 #'
 #' This function calculates the percentage change of a specified variable
-#' from the previous year using the `tsibble` package, and assigns the
-#' same attributes from the original variable to the new one.
+#' from the previous year and assigns the same attributes from the original variable to the new one.
 #'
 #' @param data A data frame containing a "Date" column and the variable of interest.
 #' @param variable A string specifying the name of the original variable.
 #' @param new_variable Optional, a string specifying the name of the new variable to store the percentage change. Default will be based on original variable name.
-#' @param units Optional, a string specifying the units for the new variable. Default is "%"
+#' @param units Optional, a string specifying the units for the new variable. Default is "Percent"
 #' @return An ecodata data frame with the new variable containing the percentage change, with attributes copied.
 #' @export
-ecodata_compute_pctchange <- function(data, variable, new_variable = NULL, units = "%") {
+ecodata_compute_pctchange <- function(data, variable, new_variable = NULL, units = "Percent") {
   if(is.null(new_variable)) {
     new_variable <- sprintf("Growth Rate of %s", variable)
   }

@@ -1,5 +1,5 @@
 ---
-title: "Getting Started with the *ecodata* Package"
+title: "Getting Started with the *ECODATA* Package"
 output: 
   rmdformats::readthedown:
     thumbnails: false   # Optional: Display thumbnails for sections

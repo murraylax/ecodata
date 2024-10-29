@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{string_which}
 \alias{string_which}
-\title{`string_which()`
-Wrapper for `str_which()` while ignoring case, returns what index into the string the pattern is found}
+\title{Get index into string where a pattern if found}
 \usage{
 string_which(str, pattern)
 }
@@ -16,6 +15,5 @@ string_which(str, pattern)
 Integer index into the string that the pattern was found
 }
 \description{
-`string_which()`
 Wrapper for `str_which()` while ignoring case, returns what index into the string the pattern is found
 }

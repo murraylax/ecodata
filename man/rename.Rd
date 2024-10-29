@@ -2,15 +2,14 @@
 % Please edit documentation in R/ecodata.R
 \name{rename}
 \alias{rename}
-\title{`rename()`
-Wrapper for `dplyr::rename()`}
+\title{Rename a variable}
 \usage{
 rename(...)
 }
 \description{
-`rename()`
 Wrapper for `dplyr::rename()`
 }
 \seealso{
 [dplyr::rename()]
 }
+\keyword{internal}

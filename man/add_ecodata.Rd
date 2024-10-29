@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{add_ecodata}
 \alias{add_ecodata}
-\title{`add_ecodata()`
-Add data for one or more variables from FRED and/or World Bank Data, for given URLs or variable codes. The function will figure out whether the data is available from FRED or World Bank Data.}
+\title{Download data and add to existing *ecodata* data frame}
 \usage{
 add_ecodata(
   data,
@@ -56,6 +55,5 @@ add_ecodata(
 Data frame merged with original data frame that includes the new variables requested. The data frame will also include all relevant meta data describing the data and citing its source.
 }
 \description{
-`add_ecodata()`
 Add data for one or more variables from FRED and/or World Bank Data, for given URLs or variable codes. The function will figure out whether the data is available from FRED or World Bank Data.
 }

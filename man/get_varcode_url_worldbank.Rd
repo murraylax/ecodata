@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{get_varcode_url_worldbank}
 \alias{get_varcode_url_worldbank}
-\title{`get_varcode_url_worldbank()`
-Extract a variable code from a Workbank URL}
+\title{Get a variable code from a World Bank Data URL}
 \usage{
 get_varcode_url_worldbank(url)
 }
@@ -14,6 +13,5 @@ get_varcode_url_worldbank(url)
 String that is the variable code
 }
 \description{
-`get_varcode_url_worldbank()`
-Extract a variable code from a Workbank URL
+Get a variable code from a World Bank Data URL
 }

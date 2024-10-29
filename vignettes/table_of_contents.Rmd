@@ -1,0 +1,93 @@
+---
+title: "Documentation for the *ECODATA* Package"
+output: 
+  rmdformats::readthedown:
+    thumbnails: false   # Optional: Display thumbnails for sections
+    lightbox: true     # Optional: Use lightbox effect for images
+    number_sections: true  # Number the sections and reflect them in the TOC
+    # code_folding: show  # Options: show | hide
+css: custom-readthedown.css
+author: 
+  - name: "James M. Murray"
+    affiliation: '<a href="https://www.uwlax.edu/profile/jmurray/" target=_"blank" class="affiliation">University of Wisconsin-La Crosse</a>'
+    email: 'jmurray@uwlax.edu'
+date: "Created on `r format(Sys.Date(), '%B %d, %Y')`"
+includes:
+  before_body: my_header.html
+vignette: >
+  %\VignetteIndexEntry{getting-started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  collapse = FALSE,
+  comment = "#>",
+  ft.align = "left",
+  fig.width = 8,  # Width of the plots (in inches)
+  fig.height = 4,  # Width of the plots (in inches)
+  fig.retina = NULL  # Disable retina scaling
+)
+# library(gt)
+library(flextable)
+library(htmltools)
+
+cat('
+<style>
+/* Force fixed layout on flextable */
+table {
+    table-layout: fixed !important;
+    width: 100% !important;
+}
+td {
+    overflow: hidden;  /* Prevent content from overflowing */
+    text-overflow: ellipsis;  /* Optional: Add ellipsis for overflowed text */
+}
+</style>
+')
+```
+
+# About the Package
+
+This package makes it easy to download economic data that is publicly available on <a href="https://fred.stlouisfed.org/" target="_blank">FRED (Federal Reserve Economic Data)</a> or <a href="https://data.worldbank.org/" target="_blank">World Bank Data</a> and make professional publication-ready plots with just a few lines of code.
+
+The *ecodata* package is primarily targeted to novice R users and its primary intention to make the easy things easier. Still, experienced R users might find some of the procedures in this package convenient. With just two or three lines of code, you can use the package to download several variables from FRED and/or World Bank, produce plots, and document your data sources. The package provides a unified framework for downloading and plotting data from either source.
+
+# Getting Started
+
+  - Vignette: <a href="getting-started.html"><strong>Getting Started</strong></a>
+  
+    Start here if you are new to the *ecodata* package. This vignette provides an overview of the package and demonstrates many of the most common uses for the package. The vignette also describes how to install the package and set it up to work with the FRED API. 
+    <p/>
+    
+  - Posit Cloud: <a href="https://posit.cloud/content/9084731" target="_blank"><strong>Use the package in Posit Cloud</strong></a>
+  
+    Posit Cloud is a cloud-based platform for RStudio. The package is pre-installed in Posit Cloud, so you can use it without having to install it yourself. You must create an account on <a href="https://posit.cloud" target="_blank">Posit Cloud</a>, if you have not already done so. Free plans are available.
+     
+# Instructional Vignettes
+
+These vignettes are examples of prompts to use in undergraduate macroeconomics courses to help students use data to think critically about macroeconomics concepts, and learn how to accomplish this using the *ecodata* package.
+
+  - Vignette: <a href="supply_demand_housing.html"><strong>Supply and Demand for Housing</strong></a>
+  
+    This vignette demonstrates how to download and visualize data on construction prices, new house prices, and housing starts and examine whether the data matches what a supply and demand model would predict for the housing market.
+    <p/>
+
+  - Vignette: <a href="exchangerates_interestrates.html"><strong>Exchange Rates and Interest Rates</strong></a>
+  
+    This vignette demonstrates how to download and visualize data on exchange rates and interest rates interest rates in different countries and examine whether the data matches what a supply and demand model for currencies would predict for the relationship between exchange rates and interest rates.
+    <p/>
+
+  - Vignette: <a href="unemployment_recessions.html"><strong>Unemployment and Recessions</strong></a>
+  
+    This vignette demonstrates how to download and visualize data on unemployment and during the 2008-2009 recession and subsequent recovery, and compare the experiences across different U.S. states.
+    <p/>
+    
+# Reference
+
+  - <a href="https://murraylax.org/ecodata/manual/" target="_blank">Reference Manual</a>
+  
+    The reference manual provides detailed information about the functions in the package and how to use them.

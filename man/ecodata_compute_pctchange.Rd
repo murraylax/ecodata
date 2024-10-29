@@ -2,9 +2,14 @@
 % Please edit documentation in R/ecodata.R
 \name{ecodata_compute_pctchange}
 \alias{ecodata_compute_pctchange}
-\title{Compute Year-over-Year Percentage Change with Attribute Copying}
+\title{Compute Year-over-Year Percentage Change}
 \usage{
-ecodata_compute_pctchange(data, variable, new_variable = NULL, units = "\%")
+ecodata_compute_pctchange(
+  data,
+  variable,
+  new_variable = NULL,
+  units = "Percent"
+)
 }
 \arguments{
 \item{data}{A data frame containing a "Date" column and the variable of interest.}
@@ -13,13 +18,12 @@ ecodata_compute_pctchange(data, variable, new_variable = NULL, units = "\%")
 
 \item{new_variable}{Optional, a string specifying the name of the new variable to store the percentage change. Default will be based on original variable name.}
 
-\item{units}{Optional, a string specifying the units for the new variable. Default is "%"}
+\item{units}{Optional, a string specifying the units for the new variable. Default is "Percent"}
 }
 \value{
 An ecodata data frame with the new variable containing the percentage change, with attributes copied.
 }
 \description{
 This function calculates the percentage change of a specified variable
-from the previous year using the `tsibble` package, and assigns the
-same attributes from the original variable to the new one.
+from the previous year and assigns the same attributes from the original variable to the new one.
 }

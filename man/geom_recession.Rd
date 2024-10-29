@@ -2,8 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{geom_recession}
 \alias{geom_recession}
-\title{`geom_recession()`
-Return a geom_rect() that identifies recessions in a time series plot}
+\title{Get a geom_rect() that identifies recessions}
 \usage{
 geom_recession(
   data = NULL,
@@ -27,6 +26,5 @@ geom_recession(
 A geom_rect() that can be added to a ggplot time series plot
 }
 \description{
-`geom_recession()`
-Return a geom_rect() that identifies recessions in a time series plot
+Return a geom_rect() that identifies recessions for a given time series plot
 }

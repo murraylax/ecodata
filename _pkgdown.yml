@@ -1,0 +1,12 @@
+articles:
+- title: Getting Started
+  navbar: ~
+  contents:
+  - table_of_contents
+  - getting-started
+- title: Instructional Vignettes
+  navbar: ~
+  contents:
+  - supply_demand_housing
+  - exchangerates_interestrates
+  - unemployment_recessions

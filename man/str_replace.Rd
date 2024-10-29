@@ -2,15 +2,14 @@
 % Please edit documentation in R/ecodata.R
 \name{str_replace}
 \alias{str_replace}
-\title{`str_replace()`
-Wrapper for `stringr::str_replace()`}
+\title{Replace a pattern in a string}
 \usage{
 str_replace(...)
 }
 \description{
-`str_replace()`
 Wrapper for `stringr::str_replace()`
 }
 \seealso{
 [stringr::str_replace()]
 }
+\keyword{internal}
