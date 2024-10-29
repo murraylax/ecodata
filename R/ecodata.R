@@ -24,10 +24,23 @@ glimpse.ecodata <- function(x) {
   dplyr::glimpse(x)
 }
 
-#' `filter()`
+#' Get a glimpse of ecodata
+#'
+#' A override of dplyr's glimpse() that also prints the label for the dataframe
+#' Just prints information about the dataframe
+#'
+#' @param x An ecodata data frame, the return value from `get_ecodata()`
+#' @seealso \code{\link[dplyr]{glimpse}}
+#' @export
+glimpse <- function(x) {
+  glimpse.ecodata(x)
+}
+
+#' Keep rows that match a condition
 #'
 #' A wrapper for `dplyr::filter()`.
 #' @seealso [dplyr::filter()]
+#' @export
 filter <- function(...) {
   dplyr::filter(...)
 }
@@ -1430,7 +1443,7 @@ abbreviated_units <- function(x) {
     abs(x) >= 1e9 ~ paste0(scales::comma(x / 1e9), " bn"),  # Billions
     abs(x) >= 1e6 ~ paste0(scales::comma(x / 1e6), " ml"),  # Millions
     # abs(x) >= 1e3 ~ paste0(scales::comma(x / 1e3), " th"),  # Thousands
-    TRUE ~ as.character(x)  # Leave smaller numbers as-is
+    TRUE ~ scales::comma(x)  # Leave smaller numbers as-is
   )
   return(labs)
 }
@@ -1582,14 +1595,34 @@ ggplot_add.ecodata_scale_comma <- function(object, plot, object_name) {
 #' @param lowest Optional, for plotting bars only for the lowest values. Select a value greater than 0 to choose this many bars. A value of 0 means this option will not be used. Can only pass values for `lowest` or `highest`, but not both. Default is 0.
 #' @param highest Optional, for plotting bars only for the highest values. Select a value greater than 0 to choose this many bars. A value of 0 means this option will not be used. Can only pass values for `lowest` or `highest`, but not both. Default is 0.
 #' @param ylab Optional, string for the label of the vertical axis. Default is NULL
-#' @param fill Optional, string for the color of the bars. Default is "dodgerblue4"
+#' @param fill Optional, string, or vector of strings, for the color of the bars. Default is "dodgerblue4". If you want to highlight a variable, pass a vector of length 2. The first element is the color for the other bars, and the second element is the color for the highlighted variable.
 #' @param title_strlen Optional, integer for the maximum number of characters in the title before wrapping. Default is 60
 #' @param variable_strlen Optional, integer for the maximum number of characters in the variable names before wrapping. Default is 35
 #' @return A ggplot object with a bar plot of the variables in the given data frame
 #' @export
 ggplot_ecodata_bar <- function(data, variables = NULL, title = "",
                                    plot_at = "last", highlight = NULL, order = "descend", lowest = 0, highest = 0,
-                                   ylab = NULL, fill = "dodgerblue4", title_strlen = 60, variable_strlen = 35) {
+                                   ylab = NULL, fill = NULL, title_strlen = 60, variable_strlen = 35) {
+
+  if(!is.null(fill)) {
+    if(!is.null(highlight)) {
+      if(length(fill) != 2) {
+        stop("If you want to highlight a variable, you must pass a vector of length 2 for the `fill` parameter. The first element is the color for the other bars, and the second element is the color for the highlighted variable.")
+      } else {
+        mycols = fill
+      }
+    } else {
+      if(length(fill) != 1) {
+        stop("You must pass a single color for the `fill` parameter, when not highlighting a variable with a second color")
+      }
+    }
+  } else {
+    if(!is.null(highlight)) {
+      mycols <- c("dodgerblue4", "firebrick")
+    } else {
+      fill <- "dodgerblue4"
+    }
+  }
 
   # Wrap title if necessary
   if(stringr::str_length(title) > title_strlen) {
@@ -1775,8 +1808,6 @@ ggplot_ecodata_bar <- function(data, variables = NULL, title = "",
 
   # Start the plot!
   if(string_not_empty(highlight)) {
-    mycols <- rev(ecodata_colorscale(2))
-
     if(order == "descend") {
       plt <- ggplot2::ggplot(plot.df, ggplot2::aes(x = reorder(Location, Value), y = Value, fill = Highlight)) +
         ggplot2::geom_col() +
@@ -1841,15 +1872,24 @@ ggplot_ecodata_bar <- function(data, variables = NULL, title = "",
 #' The number of variables in the data frame should be between 1 and 7
 #' @param data Data frame from `get_ecodata()` that includes a variable called `Date` and the other variables to plot
 #' @param title Optional, string for the title of the plot. Default is ""
+#' @param colors Optional, string or vector of strings for the color of the lines. Default is to use the ecodata color scale. Should either be a single color or a vector of colors with the same length as the number of variables to plot.
 #' @param ylab Optional, string for the y-axis label. Default is the units of the meta data for the variables to be plotted
 #' @param variables Optional, vector of strings that includes the economic variables to plot. If not specified, the function will plot all the variables given in `data`, if possible.
 #' @param title_strlen Optional, word-wrap the length of the title by this many characters. Default = 60.
 #' @param variable_strlen Optional, word-wrap the length of the variable names by this many characters. Default = 85.
 #' @param plot.recessions Optional, logical for whether or not show show NBER recession bars in the plot
 #' @export
-ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, title_strlen = 60, variable_strlen = 85, plot.recessions = FALSE) {
+ggplot_ecodata_ts <- function(data, variables = NULL, title="", colors = NULL,  ylab = NULL, title_strlen = 60, variable_strlen = 85, plot.recessions = FALSE) {
+
+  if(!is.null(colors)) {
+    if(length(colors) > 1) {
+      if(length(colors) != length(variables)) {
+        stop("The number of colors must be the same as the number of variables to plot, or a single color to give all the variables the same color.")
+      }
+    }
+  }
+
   linewidth <- 1.1
-  linecolor <- "dodgerblue4"
 
   # Wrap title if necessary
   if(stringr::str_length(title) > title_strlen) {
@@ -1895,7 +1935,7 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, tit
   }
   useunits <- unique_units[1]
   if(is.null(ylab)) {
-    if(useunits == "%" | string_compare(useunits, "percent") | string_compare(useunits, "percentage")) {
+    if(useunits == "%" | string_compare(useunits, "percent") | string_compare(useunits, "percentage") | string_compare(useunits, "number")) {
       ylab <- ""
     } else {
       ylab <- useunits
@@ -1919,7 +1959,15 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, tit
     if(length(data_sources)>1) sources_str <- sprintf("Sources:\n %s", sources_str)
   }
 
-  mycols <- rev(ecodata_colorscale(nvar))
+  if(is.null(colors)) {
+    mycols <- rev(ecodata_colorscale(nvar))
+  } else {
+    if(length(colors) == 1) {
+      mycols <- rep(colors, nvar)
+    } else {
+      mycols <- colors
+    }
+  }
 
   plot.df <- data |>
     tidyr::pivot_longer(cols = dplyr::all_of(plotvars), names_to = "Variable", values_to = "Value")
@@ -1969,7 +2017,6 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", ylab = NULL, tit
 #' @export
 ggplot_ecodata_facet <- function(data, variables = NULL, title="", ylab = NULL, ncol = 4, scales = "free", color = "dodgerblue4", title_strlen = 60, strip_width = 40, plot.recessions = FALSE) {
   linewidth <- 1.1
-  linecolor <- "dodgerblue4"
   if(stringr::str_length(title) > title_strlen) {
     # Put a new line first after a colon
     title <- stringr::str_replace(title, ":", ":\n")
@@ -2422,7 +2469,8 @@ if(FALSE) {
   # Plot a time series of the Real GDP data
   ggplot_ecodata_ts(mydata, title = "Real GDP",
                     variables = c("United States GDP, PPP", "Germany GDP, PPP"),
-                    plot.recessions = TRUE)
+                    plot.recessions = TRUE,
+                    colors = c("orange", "green"))
 
   # Plot a time series of the U.S. interest rate data
   ggplot_ecodata_ts(mydata, title = "Interest Rates",
@@ -2484,4 +2532,6 @@ if(FALSE) {
   ggplot_ecodata_ts(df, "Output Gap", title = "Output Gap", plot.recessions = TRUE) +
     ecodata_scale_dollar()
 
+  bapps <- get_ecodata("BABATOTALSAUS")
+  ggplot_ecodata_ts(bapps)
 }

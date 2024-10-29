@@ -14,7 +14,7 @@ ggplot_ecodata_bar(
   lowest = 0,
   highest = 0,
   ylab = NULL,
-  fill = "dodgerblue4",
+  fill = NULL,
   title_strlen = 60,
   variable_strlen = 35
 )
@@ -50,7 +50,7 @@ Default is "descend"}
 
 \item{ylab}{Optional, string for the label of the vertical axis. Default is NULL}
 
-\item{fill}{Optional, string for the color of the bars. Default is "dodgerblue4"}
+\item{fill}{Optional, string, or vector of strings, for the color of the bars. Default is "dodgerblue4". If you want to highlight a variable, pass a vector of length 2. The first element is the color for the other bars, and the second element is the color for the highlighted variable.}
 
 \item{title_strlen}{Optional, integer for the maximum number of characters in the title before wrapping. Default is 60}
 

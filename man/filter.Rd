@@ -2,7 +2,7 @@
 % Please edit documentation in R/ecodata.R
 \name{filter}
 \alias{filter}
-\title{`filter()`}
+\title{Keep rows that match a condition}
 \usage{
 filter(...)
 }
