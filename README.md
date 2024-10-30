@@ -42,4 +42,4 @@ You should only need to do the above once per machine, then the FRED API should 
   
   - Browse vingettes: <a href="https://murraylax.org/ecodata/table_of_contents.html" target="_blank">Table of contents</a>
   
-  - <a href="https://murraylax.org/ecodata/manual/" target="_blank">Reference Manual</a>
+  - <a href="https://murraylax.org/ecodata/manual/reference/" target="_blank">Reference Manual</a>

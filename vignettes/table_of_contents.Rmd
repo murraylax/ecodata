@@ -88,6 +88,11 @@ These vignettes are examples of prompts to use in undergraduate macroeconomics c
     
 # Reference
 
-  - <a href="https://murraylax.org/ecodata/manual/" target="_blank">Reference Manual</a>
+  - <a href="https://murraylax.org/ecodata/manual/reference/" target="_blank"><strong>Reference Manual</strong></a>
   
     The reference manual provides detailed information about the functions in the package and how to use them.
+    
+# Presentations
+
+  - <a href="https://murraylax.org/ecodata/present.html" target="_blank"><strong>Presentation slides</strong></a> for the St. Louis Fed Professors' Conference, November 7-8, 2024.
+  
