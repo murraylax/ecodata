@@ -1,3 +1,6 @@
+<!-- README.md -->
+![](man/figures/logo.png)
+
 # ECODATA
 R package for downloading and visualizing data from FRED and World Bank
 
