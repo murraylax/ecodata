@@ -5,7 +5,6 @@ output:
     thumbnails: false   # Optional: Display thumbnails for sections
     lightbox: true     # Optional: Use lightbox effect for images
     number_sections: true  # Number the sections and reflect them in the TOC
-    # code_folding: show  # Options: show | hide
 css: custom-readthedown.css
 author: 
   - name: "James M. Murray"
@@ -95,4 +94,5 @@ These vignettes are examples of prompts to use in undergraduate macroeconomics c
 # Presentations
 
   - <a href="https://murraylax.org/ecodata/present.html" target="_blank"><strong>Presentation slides</strong></a> for the St. Louis Fed Professors' Conference, November 7-8, 2024.
-  
+
+

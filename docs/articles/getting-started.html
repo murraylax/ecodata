@@ -6,6 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Getting Started with the *ECODATA* Package • ecodata</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -90,7 +96,7 @@ of Wisconsin-La
 Crosse</a><br><a class="author_email" href="mailto:#"></a><a href="mailto:jmurray@uwlax.edu" class="email">jmurray@uwlax.edu</a>
       </address>
                   
-            <h4 data-toc-skip class="date">Created on October 30,
+            <h4 data-toc-skip class="date">Created on October 31,
 2024</h4>
       
 
@@ -219,52 +225,52 @@ FRED at
 <code class="sourceCode R"><span><span class="va">gdp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_ecodata.html">get_ecodata</a></span><span class="op">(</span><span class="st">"https://fred.stlouisfed.org/series/GDPC1"</span><span class="op">)</span></span></code></pre></div>
 <p>Here is a look at the first ten rows of the data set.</p>
 <div class="tabwid tabwid_left">
-<style>.cl-0f494a94{}.cl-0f3982f8{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-0f40324c{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-0f407720{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0f407734{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-0f40773e{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table data-quarto-disable-processing="true" class="table cl-0f494a94">
+<style>.cl-6665494a{}.cl-66568824{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-665cb348{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-665cf4fc{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665cf506{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-665cf510{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table data-quarto-disable-processing="true" class="table cl-6665494a">
 <thead><tr style="overflow-wrap:break-word;">
-<th class="cl-0f407720"><p class="cl-0f40324c"><span class="cl-0f3982f8">Date</span></p></th>
-<th class="cl-0f407720"><p class="cl-0f40324c"><span class="cl-0f3982f8">Real Gross Domestic Product</span></p></th>
+<th class="cl-665cf4fc"><p class="cl-665cb348"><span class="cl-66568824">Date</span></p></th>
+<th class="cl-665cf4fc"><p class="cl-665cb348"><span class="cl-66568824">Real Gross Domestic Product</span></p></th>
 </tr></thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">1947-01-01</span></p></td>
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">2,182.681</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">1947-01-01</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">2,182.681</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">1947-04-01</span></p></td>
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">2,176.892</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">1947-04-01</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">2,176.892</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">1947-07-01</span></p></td>
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">2,172.432</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">1947-07-01</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">2,172.432</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">1947-10-01</span></p></td>
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">2,206.452</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">1947-10-01</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">2,206.452</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">1948-01-01</span></p></td>
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">2,239.682</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">1948-01-01</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">2,239.682</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">1948-04-01</span></p></td>
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">2,276.690</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">1948-04-01</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">2,276.690</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">1948-07-01</span></p></td>
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">2,289.770</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">1948-07-01</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">2,289.770</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">1948-10-01</span></p></td>
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">2,292.364</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">1948-10-01</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">2,292.364</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">1949-01-01</span></p></td>
-<td class="cl-0f407734"><p class="cl-0f40324c"><span class="cl-0f3982f8">2,260.807</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">1949-01-01</span></p></td>
+<td class="cl-665cf506"><p class="cl-665cb348"><span class="cl-66568824">2,260.807</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-0f40773e"><p class="cl-0f40324c"><span class="cl-0f3982f8">1949-04-01</span></p></td>
-<td class="cl-0f40773e"><p class="cl-0f40324c"><span class="cl-0f3982f8">2,253.128</span></p></td>
+<td class="cl-665cf510"><p class="cl-665cb348"><span class="cl-66568824">1949-04-01</span></p></td>
+<td class="cl-665cf510"><p class="cl-665cb348"><span class="cl-66568824">2,253.128</span></p></td>
 </tr>
 </tbody>
 </table>
@@ -366,86 +372,86 @@ background.</p>
 <code class="sourceCode R"><span><span class="va">mydata</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_ecodata.html">get_ecodata</a></span><span class="op">(</span><span class="va">my_variables</span><span class="op">)</span></span></code></pre></div>
 <p>Here is a look at the first twelve rows of the data set.</p>
 <div class="tabwid tabwid_left">
-<style>.cl-12eb1a2e{}.cl-12de2148{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-12e2cfea{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-12e30186{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-12e30190{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-12e3019a{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table data-quarto-disable-processing="true" class="table cl-12eb1a2e">
+<style>.cl-697e7dcc{}.cl-696f9816{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-6974e99c{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-6975227c{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-69752290{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6975229a{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table data-quarto-disable-processing="true" class="table cl-697e7dcc">
 <thead><tr style="overflow-wrap:break-word;">
-<th class="cl-12e30186"><p class="cl-12e2cfea"><span class="cl-12de2148">Date</span></p></th>
-<th class="cl-12e30186"><p class="cl-12e2cfea"><span class="cl-12de2148">United States Income share held by lowest 20%</span></p></th>
-<th class="cl-12e30186"><p class="cl-12e2cfea"><span class="cl-12de2148">United States Poverty headcount ratio at $1.90 a day (% of population)</span></p></th>
-<th class="cl-12e30186"><p class="cl-12e2cfea"><span class="cl-12de2148">Unemployment Rate</span></p></th>
+<th class="cl-6975227c"><p class="cl-6974e99c"><span class="cl-696f9816">Date</span></p></th>
+<th class="cl-6975227c"><p class="cl-6974e99c"><span class="cl-696f9816">United States Income share held by lowest 20%</span></p></th>
+<th class="cl-6975227c"><p class="cl-6974e99c"><span class="cl-696f9816">United States Poverty headcount ratio at $1.90 a day (% of population)</span></p></th>
+<th class="cl-6975227c"><p class="cl-6974e99c"><span class="cl-696f9816">Unemployment Rate</span></p></th>
 </tr></thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">1948-01-01</span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">3.4</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">1948-01-01</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">3.4</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">1948-02-01</span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">3.8</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">1948-02-01</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">3.8</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">1948-03-01</span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">4.0</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">1948-03-01</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">4.0</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">1948-04-01</span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">3.9</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">1948-04-01</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">3.9</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">1948-05-01</span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">3.5</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">1948-05-01</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">3.5</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">1948-06-01</span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">3.6</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">1948-06-01</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">3.6</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">1948-07-01</span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">3.6</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">1948-07-01</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">3.6</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">1948-08-01</span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">3.9</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">1948-08-01</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">3.9</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">1948-09-01</span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">3.8</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">1948-09-01</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">3.8</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">1948-10-01</span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">3.7</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">1948-10-01</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">3.7</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">1948-11-01</span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e30190"><p class="cl-12e2cfea"><span class="cl-12de2148">3.8</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">1948-11-01</span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-69752290"><p class="cl-6974e99c"><span class="cl-696f9816">3.8</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-12e3019a"><p class="cl-12e2cfea"><span class="cl-12de2148">1948-12-01</span></p></td>
-<td class="cl-12e3019a"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e3019a"><p class="cl-12e2cfea"><span class="cl-12de2148"></span></p></td>
-<td class="cl-12e3019a"><p class="cl-12e2cfea"><span class="cl-12de2148">4.0</span></p></td>
+<td class="cl-6975229a"><p class="cl-6974e99c"><span class="cl-696f9816">1948-12-01</span></p></td>
+<td class="cl-6975229a"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-6975229a"><p class="cl-6974e99c"><span class="cl-696f9816"></span></p></td>
+<td class="cl-6975229a"><p class="cl-6974e99c"><span class="cl-696f9816">4.0</span></p></td>
 </tr>
 </tbody>
 </table>
@@ -456,86 +462,86 @@ observations. This is because the unemployment rate data is available
 back to 1956, while the World Bank data is available to 1963. If we look
 at a slice of more recent data, we see the following:</p>
 <div class="tabwid tabwid_left">
-<style>.cl-130f7d10{}.cl-1303dce4{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-1308978e{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-1308cc0e{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1308cc22{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-1308cc23{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table data-quarto-disable-processing="true" class="table cl-130f7d10">
+<style>.cl-69aa7b34{}.cl-699b3fa2{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-69a19082{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-69a1e460{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-69a1e47e{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-69a1e488{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table data-quarto-disable-processing="true" class="table cl-69aa7b34">
 <thead><tr style="overflow-wrap:break-word;">
-<th class="cl-1308cc0e"><p class="cl-1308978e"><span class="cl-1303dce4">Date</span></p></th>
-<th class="cl-1308cc0e"><p class="cl-1308978e"><span class="cl-1303dce4">United States Income share held by lowest 20%</span></p></th>
-<th class="cl-1308cc0e"><p class="cl-1308978e"><span class="cl-1303dce4">United States Poverty headcount ratio at $1.90 a day (% of population)</span></p></th>
-<th class="cl-1308cc0e"><p class="cl-1308978e"><span class="cl-1303dce4">Unemployment Rate</span></p></th>
+<th class="cl-69a1e460"><p class="cl-69a19082"><span class="cl-699b3fa2">Date</span></p></th>
+<th class="cl-69a1e460"><p class="cl-69a19082"><span class="cl-699b3fa2">United States Income share held by lowest 20%</span></p></th>
+<th class="cl-69a1e460"><p class="cl-69a19082"><span class="cl-699b3fa2">United States Poverty headcount ratio at $1.90 a day (% of population)</span></p></th>
+<th class="cl-69a1e460"><p class="cl-69a19082"><span class="cl-699b3fa2">Unemployment Rate</span></p></th>
 </tr></thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">2021-05-01</span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">5.8</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">2021-05-01</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">5.8</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">2021-06-01</span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">5.9</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">2021-06-01</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">5.9</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">2021-07-01</span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">5.4</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">2021-07-01</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">5.4</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">2021-08-01</span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">5.1</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">2021-08-01</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">5.1</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">2021-09-01</span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">4.7</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">2021-09-01</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">4.7</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">2021-10-01</span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">4.5</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">2021-10-01</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">4.5</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">2021-11-01</span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">4.1</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">2021-11-01</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">4.1</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">2021-12-01</span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">3.9</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">2021-12-01</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">3.9</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">2022-01-01</span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">5.2</span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">1.2</span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">4.0</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">2022-01-01</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">5.2</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">1.2</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">4.0</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">2022-02-01</span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">3.8</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">2022-02-01</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">3.8</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">2022-03-01</span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc22"><p class="cl-1308978e"><span class="cl-1303dce4">3.6</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">2022-03-01</span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e47e"><p class="cl-69a19082"><span class="cl-699b3fa2">3.6</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-1308cc23"><p class="cl-1308978e"><span class="cl-1303dce4">2022-04-01</span></p></td>
-<td class="cl-1308cc23"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc23"><p class="cl-1308978e"><span class="cl-1303dce4"></span></p></td>
-<td class="cl-1308cc23"><p class="cl-1308978e"><span class="cl-1303dce4">3.7</span></p></td>
+<td class="cl-69a1e488"><p class="cl-69a19082"><span class="cl-699b3fa2">2022-04-01</span></p></td>
+<td class="cl-69a1e488"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e488"><p class="cl-69a19082"><span class="cl-699b3fa2"></span></p></td>
+<td class="cl-69a1e488"><p class="cl-69a19082"><span class="cl-699b3fa2">3.7</span></p></td>
 </tr>
 </tbody>
 </table>
@@ -567,86 +573,86 @@ locations, and specify convenient variable names:</p>
 <span><span class="va">mydata</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_ecodata.html">get_ecodata</a></span><span class="op">(</span><span class="va">my_variables</span>, <span class="va">variable_names</span><span class="op">)</span></span></code></pre></div>
 <p>Here is a slice of the data from 2021-2022.</p>
 <div class="tabwid tabwid_left">
-<style>.cl-13bf9aec{}.cl-13b307fa{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-13b7a45e{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-13b7d2f8{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-13b7d316{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-13b7d317{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table data-quarto-disable-processing="true" class="table cl-13bf9aec">
+<style>.cl-6a7d2ca0{}.cl-6a6c91ba{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-6a72e6f0{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-6a732aa2{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6a732ab6{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6a732aca{width:2in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table data-quarto-disable-processing="true" class="table cl-6a7d2ca0">
 <thead><tr style="overflow-wrap:break-word;">
-<th class="cl-13b7d2f8"><p class="cl-13b7a45e"><span class="cl-13b307fa">Date</span></p></th>
-<th class="cl-13b7d2f8"><p class="cl-13b7a45e"><span class="cl-13b307fa">Income Share of Bottom 20%</span></p></th>
-<th class="cl-13b7d2f8"><p class="cl-13b7a45e"><span class="cl-13b307fa">Poverty Rate</span></p></th>
-<th class="cl-13b7d2f8"><p class="cl-13b7a45e"><span class="cl-13b307fa">Unemployent Rate</span></p></th>
+<th class="cl-6a732aa2"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">Date</span></p></th>
+<th class="cl-6a732aa2"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">Income Share of Bottom 20%</span></p></th>
+<th class="cl-6a732aa2"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">Poverty Rate</span></p></th>
+<th class="cl-6a732aa2"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">Unemployent Rate</span></p></th>
 </tr></thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">2021-05-01</span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">5.8</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">2021-05-01</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">5.8</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">2021-06-01</span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">5.9</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">2021-06-01</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">5.9</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">2021-07-01</span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">5.4</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">2021-07-01</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">5.4</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">2021-08-01</span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">5.1</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">2021-08-01</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">5.1</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">2021-09-01</span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">4.7</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">2021-09-01</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">4.7</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">2021-10-01</span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">4.5</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">2021-10-01</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">4.5</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">2021-11-01</span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">4.1</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">2021-11-01</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">4.1</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">2021-12-01</span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">3.9</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">2021-12-01</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">3.9</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">2022-01-01</span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">5.2</span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">1.2</span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">4.0</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">2022-01-01</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">5.2</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">1.2</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">4.0</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">2022-02-01</span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">3.8</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">2022-02-01</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">3.8</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">2022-03-01</span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d316"><p class="cl-13b7a45e"><span class="cl-13b307fa">3.6</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">2022-03-01</span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732ab6"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">3.6</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-13b7d317"><p class="cl-13b7a45e"><span class="cl-13b307fa">2022-04-01</span></p></td>
-<td class="cl-13b7d317"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d317"><p class="cl-13b7a45e"><span class="cl-13b307fa"></span></p></td>
-<td class="cl-13b7d317"><p class="cl-13b7a45e"><span class="cl-13b307fa">3.7</span></p></td>
+<td class="cl-6a732aca"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">2022-04-01</span></p></td>
+<td class="cl-6a732aca"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732aca"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba"></span></p></td>
+<td class="cl-6a732aca"><p class="cl-6a72e6f0"><span class="cl-6a6c91ba">3.7</span></p></td>
 </tr>
 </tbody>
 </table>
@@ -1137,32 +1143,32 @@ information for <code>mydata</code> from above as follows:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ecodata_cite_table.html">ecodata_cite_table</a></span><span class="op">(</span><span class="va">mydata</span><span class="op">)</span></span></code></pre></div>
 <div class="tabwid tabwid_left">
-<style>.cl-202d144e{}.cl-20225a5e{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-20225a72{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 255, 1.00);background-color:transparent;}.cl-2026dd90{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-20270dce{width:1.337in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-20270dd8{width:11.723in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-20270de2{width:1.337in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-20270de3{width:11.723in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-20270dec{width:1.337in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-20270df6{width:11.723in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table data-quarto-disable-processing="true" class="table cl-202d144e">
+<style>.cl-8647519a{}.cl-86389c54{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-86389c72{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 255, 1.00);background-color:transparent;}.cl-863eb5e4{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-863ef2de{width:1.337in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-863ef2f2{width:11.723in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-863ef2fc{width:1.337in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-863ef306{width:11.723in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-863ef31a{width:1.337in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-863ef324{width:11.723in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table data-quarto-disable-processing="true" class="table cl-8647519a">
 <thead><tr style="overflow-wrap:break-word;">
-<th class="cl-20270dce"><p class="cl-2026dd90"><span class="cl-20225a5e">Variable</span></p></th>
-<th class="cl-20270dd8"><p class="cl-2026dd90"><span class="cl-20225a5e">Cite</span></p></th>
+<th class="cl-863ef2de"><p class="cl-863eb5e4"><span class="cl-86389c54">Variable</span></p></th>
+<th class="cl-863ef2f2"><p class="cl-863eb5e4"><span class="cl-86389c54">Cite</span></p></th>
 </tr></thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-20270de2"><p class="cl-2026dd90"><span class="cl-20225a5e">Real GDP</span></p></td>
-<td class="cl-20270de3"><p class="cl-2026dd90"><span class="cl-20225a5e">FRED (R) Federal Reserve Bank of St. Louis</span><span class="cl-20225a5e">; </span><a href="https://fred.stlouisfed.org/series/GDPC1" class="external-link"><span class="cl-20225a72">https://fred.stlouisfed.org/series/GDPC1</span></a><span class="cl-20225a5e">; Accessed on </span><span class="cl-20225a5e">October 30, 2024</span><span class="cl-20225a5e">.</span></p></td>
+<td class="cl-863ef2fc"><p class="cl-863eb5e4"><span class="cl-86389c54">Real GDP</span></p></td>
+<td class="cl-863ef306"><p class="cl-863eb5e4"><span class="cl-86389c54">FRED (R) Federal Reserve Bank of St. Louis</span><span class="cl-86389c54">; </span><a href="https://fred.stlouisfed.org/series/GDPC1" class="external-link"><span class="cl-86389c72">https://fred.stlouisfed.org/series/GDPC1</span></a><span class="cl-86389c54">; Accessed on </span><span class="cl-86389c54">October 31, 2024</span><span class="cl-86389c54">.</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-20270de2"><p class="cl-2026dd90"><span class="cl-20225a5e">Potential GDP</span></p></td>
-<td class="cl-20270de3"><p class="cl-2026dd90"><span class="cl-20225a5e">FRED (R) Federal Reserve Bank of St. Louis</span><span class="cl-20225a5e">; </span><a href="https://fred.stlouisfed.org/series/GDPPOT" class="external-link"><span class="cl-20225a72">https://fred.stlouisfed.org/series/GDPPOT</span></a><span class="cl-20225a5e">; Accessed on </span><span class="cl-20225a5e">October 30, 2024</span><span class="cl-20225a5e">.</span></p></td>
+<td class="cl-863ef2fc"><p class="cl-863eb5e4"><span class="cl-86389c54">Potential GDP</span></p></td>
+<td class="cl-863ef306"><p class="cl-863eb5e4"><span class="cl-86389c54">FRED (R) Federal Reserve Bank of St. Louis</span><span class="cl-86389c54">; </span><a href="https://fred.stlouisfed.org/series/GDPPOT" class="external-link"><span class="cl-86389c72">https://fred.stlouisfed.org/series/GDPPOT</span></a><span class="cl-86389c54">; Accessed on </span><span class="cl-86389c54">October 31, 2024</span><span class="cl-86389c54">.</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-20270de2"><p class="cl-2026dd90"><span class="cl-20225a5e">CPI</span></p></td>
-<td class="cl-20270de3"><p class="cl-2026dd90"><span class="cl-20225a5e">FRED (R) Federal Reserve Bank of St. Louis</span><span class="cl-20225a5e">; </span><a href="https://fred.stlouisfed.org/series/CPIAUCSL" class="external-link"><span class="cl-20225a72">https://fred.stlouisfed.org/series/CPIAUCSL</span></a><span class="cl-20225a5e">; Accessed on </span><span class="cl-20225a5e">October 30, 2024</span><span class="cl-20225a5e">.</span></p></td>
+<td class="cl-863ef2fc"><p class="cl-863eb5e4"><span class="cl-86389c54">CPI</span></p></td>
+<td class="cl-863ef306"><p class="cl-863eb5e4"><span class="cl-86389c54">FRED (R) Federal Reserve Bank of St. Louis</span><span class="cl-86389c54">; </span><a href="https://fred.stlouisfed.org/series/CPIAUCSL" class="external-link"><span class="cl-86389c72">https://fred.stlouisfed.org/series/CPIAUCSL</span></a><span class="cl-86389c54">; Accessed on </span><span class="cl-86389c54">October 31, 2024</span><span class="cl-86389c54">.</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-20270de2"><p class="cl-2026dd90"><span class="cl-20225a5e">Inflation</span></p></td>
-<td class="cl-20270de3"><p class="cl-2026dd90"><span class="cl-20225a5e">FRED (R) Federal Reserve Bank of St. Louis</span><span class="cl-20225a5e">; </span><a href="https://fred.stlouisfed.org/series/CPIAUCSL" class="external-link"><span class="cl-20225a72">https://fred.stlouisfed.org/series/CPIAUCSL</span></a><span class="cl-20225a5e">; Accessed on </span><span class="cl-20225a5e">October 30, 2024</span><span class="cl-20225a5e">.</span></p></td>
+<td class="cl-863ef2fc"><p class="cl-863eb5e4"><span class="cl-86389c54">Inflation</span></p></td>
+<td class="cl-863ef306"><p class="cl-863eb5e4"><span class="cl-86389c54">FRED (R) Federal Reserve Bank of St. Louis</span><span class="cl-86389c54">; </span><a href="https://fred.stlouisfed.org/series/CPIAUCSL" class="external-link"><span class="cl-86389c72">https://fred.stlouisfed.org/series/CPIAUCSL</span></a><span class="cl-86389c54">; Accessed on </span><span class="cl-86389c54">October 31, 2024</span><span class="cl-86389c54">.</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-20270dec"><p class="cl-2026dd90"><span class="cl-20225a5e">Output Gap</span></p></td>
-<td class="cl-20270df6"><p class="cl-2026dd90"><span class="cl-20225a5e">FRED (R) Federal Reserve Bank of St. Louis</span><span class="cl-20225a5e">; </span><a href="https://fred.stlouisfed.org/series/GDPC1;https://fred.stlouisfed.org/series/GDPPOT" class="external-link"><span class="cl-20225a72">https://fred.stlouisfed.org/series/GDPC1;https://fred.stlouisfed.org/series/GDPPOT</span></a><span class="cl-20225a5e">; Accessed on </span><span class="cl-20225a5e">October 30, 2024</span><span class="cl-20225a5e">.</span></p></td>
+<td class="cl-863ef31a"><p class="cl-863eb5e4"><span class="cl-86389c54">Output Gap</span></p></td>
+<td class="cl-863ef324"><p class="cl-863eb5e4"><span class="cl-86389c54">FRED (R) Federal Reserve Bank of St. Louis</span><span class="cl-86389c54">; </span><a href="https://fred.stlouisfed.org/series/GDPC1;https://fred.stlouisfed.org/series/GDPPOT" class="external-link"><span class="cl-86389c72">https://fred.stlouisfed.org/series/GDPC1;https://fred.stlouisfed.org/series/GDPPOT</span></a><span class="cl-86389c54">; Accessed on </span><span class="cl-86389c54">October 31, 2024</span><span class="cl-86389c54">.</span></p></td>
 </tr>
 </tbody>
 </table>
@@ -1178,74 +1184,74 @@ information for <code>mydata</code> from above as follows:</p>
 <div style="overflow-x: auto; width: 100%; max-width: 100%;">
 <style></style>
 <div class="tabwid">
-<style>.cl-2074a28c{}.cl-2069a42c{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-2069a440{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 255, 1.00);background-color:transparent;}.cl-206e1d54{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-206e50f8{width:1.337in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e5102{width:1.034in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e510c{width:7.669in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e5116{width:1.089in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e5117{width:2.009in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e5120{width:2.81in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e512a{width:3.585in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e5134{width:5.887in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e5135{width:1.625in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e513e{width:1.337in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e513f{width:1.034in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e5148{width:7.669in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e5152{width:1.089in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e515c{width:2.009in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e5166{width:2.81in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e5167{width:3.585in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e5170{width:5.887in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e517a{width:1.625in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e517b{width:1.337in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e5184{width:1.034in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e518e{width:7.669in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e518f{width:1.089in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e5198{width:2.009in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e5199{width:2.81in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e51a2{width:3.585in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e51ac{width:5.887in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-206e51ad{width:1.625in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table data-quarto-disable-processing="true" class="table cl-2074a28c">
+<style>.cl-86a06c3a{}.cl-8692d2fa{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-8692d318{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 255, 1.00);background-color:transparent;}.cl-869867a6{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-8698a720{width:1.337in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a734{width:1.034in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a748{width:7.669in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a749{width:1.089in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a752{width:2.009in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a75c{width:2.81in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a766{width:3.585in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a770{width:5.887in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a771{width:1.625in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a77a{width:1.337in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a784{width:1.034in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a785{width:7.669in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a78e{width:1.089in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a798{width:2.009in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a7a2{width:2.81in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a7ac{width:3.585in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a7b6{width:5.887in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a7c0{width:1.625in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a7ca{width:1.337in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a7cb{width:1.034in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a7d4{width:7.669in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a7de{width:1.089in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a7e8{width:2.009in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a7e9{width:2.81in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a7f2{width:3.585in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a7f3{width:5.887in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-8698a7fc{width:1.625in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table data-quarto-disable-processing="true" class="table cl-86a06c3a">
 <thead><tr style="overflow-wrap:break-word;">
-<th class="cl-206e50f8"><p class="cl-206e1d54"><span class="cl-2069a42c">Variable</span></p></th>
-<th class="cl-206e5102"><p class="cl-206e1d54"><span class="cl-2069a42c">Code</span></p></th>
-<th class="cl-206e510c"><p class="cl-206e1d54"><span class="cl-2069a42c">Description</span></p></th>
-<th class="cl-206e5116"><p class="cl-206e1d54"><span class="cl-2069a42c">Frequency</span></p></th>
-<th class="cl-206e5117"><p class="cl-206e1d54"><span class="cl-2069a42c">Units</span></p></th>
-<th class="cl-206e5120"><p class="cl-206e1d54"><span class="cl-2069a42c">Seasonal Adjustment</span></p></th>
-<th class="cl-206e512a"><p class="cl-206e1d54"><span class="cl-2069a42c">Source</span></p></th>
-<th class="cl-206e5134"><p class="cl-206e1d54"><span class="cl-2069a42c">URL</span></p></th>
-<th class="cl-206e5135"><p class="cl-206e1d54"><span class="cl-2069a42c">Access Date</span></p></th>
+<th class="cl-8698a720"><p class="cl-869867a6"><span class="cl-8692d2fa">Variable</span></p></th>
+<th class="cl-8698a734"><p class="cl-869867a6"><span class="cl-8692d2fa">Code</span></p></th>
+<th class="cl-8698a748"><p class="cl-869867a6"><span class="cl-8692d2fa">Description</span></p></th>
+<th class="cl-8698a749"><p class="cl-869867a6"><span class="cl-8692d2fa">Frequency</span></p></th>
+<th class="cl-8698a752"><p class="cl-869867a6"><span class="cl-8692d2fa">Units</span></p></th>
+<th class="cl-8698a75c"><p class="cl-869867a6"><span class="cl-8692d2fa">Seasonal Adjustment</span></p></th>
+<th class="cl-8698a766"><p class="cl-869867a6"><span class="cl-8692d2fa">Source</span></p></th>
+<th class="cl-8698a770"><p class="cl-869867a6"><span class="cl-8692d2fa">URL</span></p></th>
+<th class="cl-8698a771"><p class="cl-869867a6"><span class="cl-8692d2fa">Access Date</span></p></th>
 </tr></thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-206e513e"><p class="cl-206e1d54"><span class="cl-2069a42c">Real GDP</span></p></td>
-<td class="cl-206e513f"><p class="cl-206e1d54"><span class="cl-2069a42c">GDPC1</span></p></td>
-<td class="cl-206e5148"><p class="cl-206e1d54"><span class="cl-2069a42c">Real Gross Domestic Product</span></p></td>
-<td class="cl-206e5152"><p class="cl-206e1d54"><span class="cl-2069a42c">Quarterly</span></p></td>
-<td class="cl-206e515c"><p class="cl-206e1d54"><span class="cl-2069a42c">Bil. of Chn. 2017 $</span></p></td>
-<td class="cl-206e5166"><p class="cl-206e1d54"><span class="cl-2069a42c">Seasonally Adjusted Annual Rate</span></p></td>
-<td class="cl-206e5167"><p class="cl-206e1d54"><span class="cl-2069a42c">FRED (R) Federal Reserve Bank of St. Louis</span></p></td>
-<td class="cl-206e5170"><p class="cl-206e1d54"><a href="https://fred.stlouisfed.org/series/GDPC1" class="external-link"><span class="cl-2069a440">https://fred.stlouisfed.org/series/GDPC1</span></a></p></td>
-<td class="cl-206e517a"><p class="cl-206e1d54"><span class="cl-2069a42c">October 30, 2024</span></p></td>
+<td class="cl-8698a77a"><p class="cl-869867a6"><span class="cl-8692d2fa">Real GDP</span></p></td>
+<td class="cl-8698a784"><p class="cl-869867a6"><span class="cl-8692d2fa">GDPC1</span></p></td>
+<td class="cl-8698a785"><p class="cl-869867a6"><span class="cl-8692d2fa">Real Gross Domestic Product</span></p></td>
+<td class="cl-8698a78e"><p class="cl-869867a6"><span class="cl-8692d2fa">Quarterly</span></p></td>
+<td class="cl-8698a798"><p class="cl-869867a6"><span class="cl-8692d2fa">Bil. of Chn. 2017 $</span></p></td>
+<td class="cl-8698a7a2"><p class="cl-869867a6"><span class="cl-8692d2fa">Seasonally Adjusted Annual Rate</span></p></td>
+<td class="cl-8698a7ac"><p class="cl-869867a6"><span class="cl-8692d2fa">FRED (R) Federal Reserve Bank of St. Louis</span></p></td>
+<td class="cl-8698a7b6"><p class="cl-869867a6"><a href="https://fred.stlouisfed.org/series/GDPC1" class="external-link"><span class="cl-8692d318">https://fred.stlouisfed.org/series/GDPC1</span></a></p></td>
+<td class="cl-8698a7c0"><p class="cl-869867a6"><span class="cl-8692d2fa">October 31, 2024</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-206e513e"><p class="cl-206e1d54"><span class="cl-2069a42c">Potential GDP</span></p></td>
-<td class="cl-206e513f"><p class="cl-206e1d54"><span class="cl-2069a42c">GDPPOT</span></p></td>
-<td class="cl-206e5148"><p class="cl-206e1d54"><span class="cl-2069a42c">Real Potential Gross Domestic Product</span></p></td>
-<td class="cl-206e5152"><p class="cl-206e1d54"><span class="cl-2069a42c">Quarterly</span></p></td>
-<td class="cl-206e515c"><p class="cl-206e1d54"><span class="cl-2069a42c">Bil. of Chn. 2017 $</span></p></td>
-<td class="cl-206e5166"><p class="cl-206e1d54"><span class="cl-2069a42c">Not Seasonally Adjusted</span></p></td>
-<td class="cl-206e5167"><p class="cl-206e1d54"><span class="cl-2069a42c">FRED (R) Federal Reserve Bank of St. Louis</span></p></td>
-<td class="cl-206e5170"><p class="cl-206e1d54"><a href="https://fred.stlouisfed.org/series/GDPPOT" class="external-link"><span class="cl-2069a440">https://fred.stlouisfed.org/series/GDPPOT</span></a></p></td>
-<td class="cl-206e517a"><p class="cl-206e1d54"><span class="cl-2069a42c">October 30, 2024</span></p></td>
+<td class="cl-8698a77a"><p class="cl-869867a6"><span class="cl-8692d2fa">Potential GDP</span></p></td>
+<td class="cl-8698a784"><p class="cl-869867a6"><span class="cl-8692d2fa">GDPPOT</span></p></td>
+<td class="cl-8698a785"><p class="cl-869867a6"><span class="cl-8692d2fa">Real Potential Gross Domestic Product</span></p></td>
+<td class="cl-8698a78e"><p class="cl-869867a6"><span class="cl-8692d2fa">Quarterly</span></p></td>
+<td class="cl-8698a798"><p class="cl-869867a6"><span class="cl-8692d2fa">Bil. of Chn. 2017 $</span></p></td>
+<td class="cl-8698a7a2"><p class="cl-869867a6"><span class="cl-8692d2fa">Not Seasonally Adjusted</span></p></td>
+<td class="cl-8698a7ac"><p class="cl-869867a6"><span class="cl-8692d2fa">FRED (R) Federal Reserve Bank of St. Louis</span></p></td>
+<td class="cl-8698a7b6"><p class="cl-869867a6"><a href="https://fred.stlouisfed.org/series/GDPPOT" class="external-link"><span class="cl-8692d318">https://fred.stlouisfed.org/series/GDPPOT</span></a></p></td>
+<td class="cl-8698a7c0"><p class="cl-869867a6"><span class="cl-8692d2fa">October 31, 2024</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-206e513e"><p class="cl-206e1d54"><span class="cl-2069a42c">CPI</span></p></td>
-<td class="cl-206e513f"><p class="cl-206e1d54"><span class="cl-2069a42c">CPIAUCSL</span></p></td>
-<td class="cl-206e5148"><p class="cl-206e1d54"><span class="cl-2069a42c">Consumer Price Index for All Urban Consumers: All Items in U.S. City Average</span></p></td>
-<td class="cl-206e5152"><p class="cl-206e1d54"><span class="cl-2069a42c">Monthly</span></p></td>
-<td class="cl-206e515c"><p class="cl-206e1d54"><span class="cl-2069a42c">Index 1982-1984=100</span></p></td>
-<td class="cl-206e5166"><p class="cl-206e1d54"><span class="cl-2069a42c">Seasonally Adjusted</span></p></td>
-<td class="cl-206e5167"><p class="cl-206e1d54"><span class="cl-2069a42c">FRED (R) Federal Reserve Bank of St. Louis</span></p></td>
-<td class="cl-206e5170"><p class="cl-206e1d54"><a href="https://fred.stlouisfed.org/series/CPIAUCSL" class="external-link"><span class="cl-2069a440">https://fred.stlouisfed.org/series/CPIAUCSL</span></a></p></td>
-<td class="cl-206e517a"><p class="cl-206e1d54"><span class="cl-2069a42c">October 30, 2024</span></p></td>
+<td class="cl-8698a77a"><p class="cl-869867a6"><span class="cl-8692d2fa">CPI</span></p></td>
+<td class="cl-8698a784"><p class="cl-869867a6"><span class="cl-8692d2fa">CPIAUCSL</span></p></td>
+<td class="cl-8698a785"><p class="cl-869867a6"><span class="cl-8692d2fa">Consumer Price Index for All Urban Consumers: All Items in U.S. City Average</span></p></td>
+<td class="cl-8698a78e"><p class="cl-869867a6"><span class="cl-8692d2fa">Monthly</span></p></td>
+<td class="cl-8698a798"><p class="cl-869867a6"><span class="cl-8692d2fa">Index 1982-1984=100</span></p></td>
+<td class="cl-8698a7a2"><p class="cl-869867a6"><span class="cl-8692d2fa">Seasonally Adjusted</span></p></td>
+<td class="cl-8698a7ac"><p class="cl-869867a6"><span class="cl-8692d2fa">FRED (R) Federal Reserve Bank of St. Louis</span></p></td>
+<td class="cl-8698a7b6"><p class="cl-869867a6"><a href="https://fred.stlouisfed.org/series/CPIAUCSL" class="external-link"><span class="cl-8692d318">https://fred.stlouisfed.org/series/CPIAUCSL</span></a></p></td>
+<td class="cl-8698a7c0"><p class="cl-869867a6"><span class="cl-8692d2fa">October 31, 2024</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-206e513e"><p class="cl-206e1d54"><span class="cl-2069a42c">Inflation</span></p></td>
-<td class="cl-206e513f"><p class="cl-206e1d54"><span class="cl-2069a42c">CPIAUCSL</span></p></td>
-<td class="cl-206e5148"><p class="cl-206e1d54"><span class="cl-2069a42c">Percent Change in Consumer Price Index for All Urban Consumers: All Items in U.S. City Average</span></p></td>
-<td class="cl-206e5152"><p class="cl-206e1d54"><span class="cl-2069a42c">Monthly</span></p></td>
-<td class="cl-206e515c"><p class="cl-206e1d54"><span class="cl-2069a42c">Percent</span></p></td>
-<td class="cl-206e5166"><p class="cl-206e1d54"><span class="cl-2069a42c">Seasonally Adjusted</span></p></td>
-<td class="cl-206e5167"><p class="cl-206e1d54"><span class="cl-2069a42c">FRED (R) Federal Reserve Bank of St. Louis</span></p></td>
-<td class="cl-206e5170"><p class="cl-206e1d54"><a href="https://fred.stlouisfed.org/series/CPIAUCSL" class="external-link"><span class="cl-2069a440">https://fred.stlouisfed.org/series/CPIAUCSL</span></a></p></td>
-<td class="cl-206e517a"><p class="cl-206e1d54"><span class="cl-2069a42c">October 30, 2024</span></p></td>
+<td class="cl-8698a77a"><p class="cl-869867a6"><span class="cl-8692d2fa">Inflation</span></p></td>
+<td class="cl-8698a784"><p class="cl-869867a6"><span class="cl-8692d2fa">CPIAUCSL</span></p></td>
+<td class="cl-8698a785"><p class="cl-869867a6"><span class="cl-8692d2fa">Percent Change in Consumer Price Index for All Urban Consumers: All Items in U.S. City Average</span></p></td>
+<td class="cl-8698a78e"><p class="cl-869867a6"><span class="cl-8692d2fa">Monthly</span></p></td>
+<td class="cl-8698a798"><p class="cl-869867a6"><span class="cl-8692d2fa">Percent</span></p></td>
+<td class="cl-8698a7a2"><p class="cl-869867a6"><span class="cl-8692d2fa">Seasonally Adjusted</span></p></td>
+<td class="cl-8698a7ac"><p class="cl-869867a6"><span class="cl-8692d2fa">FRED (R) Federal Reserve Bank of St. Louis</span></p></td>
+<td class="cl-8698a7b6"><p class="cl-869867a6"><a href="https://fred.stlouisfed.org/series/CPIAUCSL" class="external-link"><span class="cl-8692d318">https://fred.stlouisfed.org/series/CPIAUCSL</span></a></p></td>
+<td class="cl-8698a7c0"><p class="cl-869867a6"><span class="cl-8692d2fa">October 31, 2024</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-206e517b"><p class="cl-206e1d54"><span class="cl-2069a42c">Output Gap</span></p></td>
-<td class="cl-206e5184"><p class="cl-206e1d54"><span class="cl-2069a42c"></span></p></td>
-<td class="cl-206e518e"><p class="cl-206e1d54"><span class="cl-2069a42c">Computation = (`Real GDP` - `Potential GDP`)/`Potential GDP` * 100.</span></p></td>
-<td class="cl-206e518f"><p class="cl-206e1d54"><span class="cl-2069a42c">Quarterly</span></p></td>
-<td class="cl-206e5198"><p class="cl-206e1d54"><span class="cl-2069a42c">Percent</span></p></td>
-<td class="cl-206e5199"><p class="cl-206e1d54"><span class="cl-2069a42c">Seasonally Adjusted Annual Rate</span></p></td>
-<td class="cl-206e51a2"><p class="cl-206e1d54"><span class="cl-2069a42c">FRED (R) Federal Reserve Bank of St. Louis</span></p></td>
-<td class="cl-206e51ac"><p class="cl-206e1d54"><a href="https://fred.stlouisfed.org/series/GDPC1" class="external-link"><span class="cl-2069a440">https://fred.stlouisfed.org/series/GDPC1</span></a><span class="cl-2069a42c">; </span><a href="https://fred.stlouisfed.org/series/GDPPOT" class="external-link"><span class="cl-2069a440">https://fred.stlouisfed.org/series/GDPPOT</span></a></p></td>
-<td class="cl-206e51ad"><p class="cl-206e1d54"><span class="cl-2069a42c">October 30, 2024</span></p></td>
+<td class="cl-8698a7ca"><p class="cl-869867a6"><span class="cl-8692d2fa">Output Gap</span></p></td>
+<td class="cl-8698a7cb"><p class="cl-869867a6"><span class="cl-8692d2fa"></span></p></td>
+<td class="cl-8698a7d4"><p class="cl-869867a6"><span class="cl-8692d2fa">Computation = (`Real GDP` - `Potential GDP`)/`Potential GDP` * 100.</span></p></td>
+<td class="cl-8698a7de"><p class="cl-869867a6"><span class="cl-8692d2fa">Quarterly</span></p></td>
+<td class="cl-8698a7e8"><p class="cl-869867a6"><span class="cl-8692d2fa">Percent</span></p></td>
+<td class="cl-8698a7e9"><p class="cl-869867a6"><span class="cl-8692d2fa">Seasonally Adjusted Annual Rate</span></p></td>
+<td class="cl-8698a7f2"><p class="cl-869867a6"><span class="cl-8692d2fa">FRED (R) Federal Reserve Bank of St. Louis</span></p></td>
+<td class="cl-8698a7f3"><p class="cl-869867a6"><a href="https://fred.stlouisfed.org/series/GDPC1" class="external-link"><span class="cl-8692d318">https://fred.stlouisfed.org/series/GDPC1</span></a><span class="cl-8692d2fa">; </span><a href="https://fred.stlouisfed.org/series/GDPPOT" class="external-link"><span class="cl-8692d318">https://fred.stlouisfed.org/series/GDPPOT</span></a></p></td>
+<td class="cl-8698a7fc"><p class="cl-869867a6"><span class="cl-8692d2fa">October 31, 2024</span></p></td>
 </tr>
 </tbody>
 </table>
@@ -1276,20 +1282,20 @@ treasuries at 1-year and 10-year maturities.</p>
 <code class="sourceCode R"><span><span class="co"># Line 3: Cite my sources</span></span>
 <span><span class="fu"><a href="../reference/ecodata_cite_table.html">ecodata_cite_table</a></span><span class="op">(</span><span class="va">intrates</span><span class="op">)</span></span></code></pre></div>
 <div class="tabwid tabwid_left">
-<style>.cl-21bb81d8{}.cl-21aef63e{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-21aef652{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 255, 1.00);background-color:transparent;}.cl-21b3cae2{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-21b417a4{width:8.115in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-21b417c2{width:8.845in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-21b417cc{width:8.115in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-21b417d6{width:8.845in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-21b417e0{width:8.115in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-21b417ea{width:8.845in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table data-quarto-disable-processing="true" class="table cl-21bb81d8">
+<style>.cl-881673ca{}.cl-880a041e{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-880a0432{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 255, 1.00);background-color:transparent;}.cl-880f7a02{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-880fbea4{width:8.115in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-880fbec2{width:8.845in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-880fbecc{width:8.115in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-880fbed6{width:8.845in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-880fbee0{width:8.115in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-880fbeea{width:8.845in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table data-quarto-disable-processing="true" class="table cl-881673ca">
 <thead><tr style="overflow-wrap:break-word;">
-<th class="cl-21b417a4"><p class="cl-21b3cae2"><span class="cl-21aef63e">Variable</span></p></th>
-<th class="cl-21b417c2"><p class="cl-21b3cae2"><span class="cl-21aef63e">Cite</span></p></th>
+<th class="cl-880fbea4"><p class="cl-880f7a02"><span class="cl-880a041e">Variable</span></p></th>
+<th class="cl-880fbec2"><p class="cl-880f7a02"><span class="cl-880a041e">Cite</span></p></th>
 </tr></thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-21b417cc"><p class="cl-21b3cae2"><span class="cl-21aef63e">Market Yield on U.S. Treasury Securities at 1-Year Constant Maturity, Quoted on an Investment Basis</span></p></td>
-<td class="cl-21b417d6"><p class="cl-21b3cae2"><span class="cl-21aef63e">FRED (R) Federal Reserve Bank of St. Louis</span><span class="cl-21aef63e">; </span><a href="https://fred.stlouisfed.org/series/DGS1" class="external-link"><span class="cl-21aef652">https://fred.stlouisfed.org/series/DGS1</span></a><span class="cl-21aef63e">; Accessed on </span><span class="cl-21aef63e">October 30, 2024</span><span class="cl-21aef63e">.</span></p></td>
+<td class="cl-880fbecc"><p class="cl-880f7a02"><span class="cl-880a041e">Market Yield on U.S. Treasury Securities at 1-Year Constant Maturity, Quoted on an Investment Basis</span></p></td>
+<td class="cl-880fbed6"><p class="cl-880f7a02"><span class="cl-880a041e">FRED (R) Federal Reserve Bank of St. Louis</span><span class="cl-880a041e">; </span><a href="https://fred.stlouisfed.org/series/DGS1" class="external-link"><span class="cl-880a0432">https://fred.stlouisfed.org/series/DGS1</span></a><span class="cl-880a041e">; Accessed on </span><span class="cl-880a041e">October 31, 2024</span><span class="cl-880a041e">.</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-21b417e0"><p class="cl-21b3cae2"><span class="cl-21aef63e">Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis</span></p></td>
-<td class="cl-21b417ea"><p class="cl-21b3cae2"><span class="cl-21aef63e">FRED (R) Federal Reserve Bank of St. Louis</span><span class="cl-21aef63e">; </span><a href="https://fred.stlouisfed.org/series/DGS10" class="external-link"><span class="cl-21aef652">https://fred.stlouisfed.org/series/DGS10</span></a><span class="cl-21aef63e">; Accessed on </span><span class="cl-21aef63e">October 30, 2024</span><span class="cl-21aef63e">.</span></p></td>
+<td class="cl-880fbee0"><p class="cl-880f7a02"><span class="cl-880a041e">Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis</span></p></td>
+<td class="cl-880fbeea"><p class="cl-880f7a02"><span class="cl-880a041e">FRED (R) Federal Reserve Bank of St. Louis</span><span class="cl-880a041e">; </span><a href="https://fred.stlouisfed.org/series/DGS10" class="external-link"><span class="cl-880a0432">https://fred.stlouisfed.org/series/DGS10</span></a><span class="cl-880a041e">; Accessed on </span><span class="cl-880a041e">October 31, 2024</span><span class="cl-880a041e">.</span></p></td>
 </tr>
 </tbody>
 </table>

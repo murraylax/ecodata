@@ -2,6 +2,14 @@
     max-width:1220px;
 }
 
+.custom-logo {
+  width: 100px !important;
+  height: auto !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+
 .klippy {
   background-color: #007bff;
   color: white;
@@ -37,6 +45,26 @@
 #sidebar {
     background: #113458 !important;  /* Dark blue background */
     color: #FFFFFF !important;  /* White text for the sidebar */
+    padding-top: 10px !important; /* Adjust padding if needed to avoid overlap */
+}
+
+/* Add a logo at the top of the sidebar with adjustable size */
+#sidebar::after {
+    content: "" !important;
+    display: block !important;
+    width: 120px !important;         /* Set width of the image */
+    height: 120px !important;        /* Set height of the image */
+    margin-top: 10px !important;     /* Adjust top margin */
+    margin-bottom: 20px !important;     /* Adjust top margin */
+    margin: 10px 10px !important;    /* Adjust left margin */
+    background-image: url("logo.png") !important; /* Path to your logo */
+    background-size: contain !important; /* Adjusts image to fit within width and height */
+    background-repeat: no-repeat !important;
+    background-position: left top !important; /* Position image within the sidebar */
+    position: absolute !important;
+    bottom: 130px !important; /* Position logo above author information */
+    left: 60px !important;
+    transform: translateX(-50%);
 }
 
 /* Style the sidebar section headers */
