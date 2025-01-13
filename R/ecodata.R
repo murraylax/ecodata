@@ -844,7 +844,8 @@ get_ecodata_variable_country_wb <- function(varcode, countrycode, varname = NULL
 #' @return Data frame time series with two variables, Date and the variable requested. The data frame will also include all relevant meta data describing the data and citing its source.
 #' @export
 get_ecodata_variable_fred <- function(varcode, varname = NULL, frequency = NULL, units = NULL, recessions = FALSE) {
-  # ecodata_fred_openapi()
+  ecodata_fred_hasapi()
+
   orig_varcode <- varcode
   if(is_valid_url(varcode)) {
     varcode <- tryCatch({
@@ -969,7 +970,7 @@ get_ecodata_variable_fred <- function(varcode, varname = NULL, frequency = NULL,
 #' @return Data frame the variable requested for all U.S. states. The data frame will include a date variable and a column for every U.S. state. The data frame will also include all relevant meta data describing the data and citing its source.
 #' @export
 get_ecodata_allstates_fred <- function(varcode, frequency = NULL, units = NULL, recessions = FALSE) {
-  # ecodata_fred_openapi()
+  ecodata_fred_hasapi()
   if(is_valid_url(varcode)) {
     varcode <- get_varcode_url(varcode)
   }
@@ -2218,6 +2219,7 @@ string_empty <- function(text) {
   return(!string_not_empty(text))
 }
 
+
 #' Test FRED API
 #'
 #' Check to see if the FRED API key already exists and is loaded. If it exists as an environmental variable, but is not loaded, it will attempt to load it. Halts execution if the API key is not found, or if downloading from FRED is not successful
@@ -2237,6 +2239,22 @@ ecodata_fred_openapi <- function() {
            error = function(e) {
              stop("Failed to connect to FRED. Check for internet connection or for valid FRED API key. Obtain a key at \"https://fredaccount.stlouisfed.org/apikeys\" and set the key with the function, `ecodata_set_fredkey()`")
            })
+}
+
+#' Test FRED API
+#'
+#' Check to see if the FRED API key already exists and is loaded. If it exists as an environmental variable, but is not loaded, it will attempt to load it. Halts execution if the API key is not found.
+#' @export
+ecodata_fred_hasapi <- function() {
+  key <- fredr::fredr_get_key()
+  if(string_empty(key)) {
+    key <- ecodata_get_fredkey() # A key exists, but it is not set
+    if(string_not_empty(key)) {
+      fredr::fredr_set_key(API_Key)
+    } else {
+      stop("Must set FRED API key to proceed. Obtain a key at \"https://fredaccount.stlouisfed.org/apikeys\" and set the key with the function, `ecodata_set_fredkey()`")
+    }
+  }
 }
 
 #' Full join multiple ecodata data frames
