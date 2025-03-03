@@ -1937,10 +1937,15 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", color = NULL,  y
   }
 
   # Identify the variables to plot
-  includevars <- get_ecodata_varnames(data)
-  if(!is.null(variables)) {
-    morevars_idx <- names(data) %in% variables
-    includevars <- names(data)[morevars_idx]
+  # includevars <- get_ecodata_varnames(data)
+  # if(!is.null(variables)) {
+  #   morevars_idx <- names(data) %in% variables
+  #   includevars <- names(data)[morevars_idx]
+  # }
+  if(is.null(variables)) {
+    includevars <- get_ecodata_varnames(data)
+  } else {
+    includevars <- variables
   }
 
   # Check appropriate color parameter
@@ -2092,11 +2097,16 @@ ggplot_ecodata_facet <- function(data, variables = NULL, title="", ylab = NULL, 
     title <- paste(alllines, collapse = "\n")
   }
 
-  # Identify the variables to plot
-  includevars <- get_ecodata_varnames(data)
-  if(!is.null(variables)) {
-    morevars_idx <- names(data) %in% variables
-    includevars <- names(data)[morevars_idx]
+  # Identify the variables to plot - This messes the order!!!
+  # includevars <- get_ecodata_varnames(data)
+  # if(!is.null(variables)) {
+  #   morevars_idx <- names(data) %in% variables
+  #   includevars <- names(data)[morevars_idx]
+  # }
+  if(is.null(variables)) {
+    includevars <- get_ecodata_varnames(data)
+  } else {
+    includevars <- variables
   }
 
   # filter out just the variables to include
@@ -2158,8 +2168,9 @@ ggplot_ecodata_facet <- function(data, variables = NULL, title="", ylab = NULL, 
   plt <- ggplot2::ggplot(plot.df, ggplot2::aes(x = Date, y = Value)) +
     ggplot2::geom_line(linewidth = linewidth, color = color) +
     ggplot2::scale_x_date(breaks = scales::pretty_breaks(n=8)) +
-    ggplot2::scale_y_continuous(labels = units_function, breaks = scales::pretty_breaks(n=5)) +
-    ggplot2::facet_wrap(ggplot2::vars(Variable), ncol = ncol, scales = scales) +
+    ggplot2::scale_y_continuous(labels = units_function, breaks = scales::pretty_breaks(n=4)) +
+    # ggplot2::facet_wrap(ggplot2::vars(Variable), ncol = ncol, scales = scales) +
+    ggplot2::facet_wrap(~Variable, ncol = ncol, scales = scales) +
     ggplot2::labs(y = ylab, x = "", color = "", title = title, caption = sources_str) +
     ecodata_theme() +
     ggplot2::theme(legend.position = "bottom", legend) +
