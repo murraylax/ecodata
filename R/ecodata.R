@@ -1969,11 +1969,7 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", color = NULL,  y
   plotvars <- includevars
 
   # Make sure all plot variables have the same units
-  all_units <- vector(length = length(plotvars))
-  for(v in 1:length(plotvars)) {
-    all_units[v] <- attr(data[[plotvars[v]]], "Units")
-  }
-  unique_units <- unique(all_units)
+  unique_units <- get_unique_units(data, plotvars)
   if(length(unique_units) > 1) {
     msg <- sprintf("Not all variables are in the same units. Units include, %s.", paste(unique_units, sep = ", ", collapse = ", "))
     warning(msg)
