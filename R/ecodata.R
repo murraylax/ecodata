@@ -2303,7 +2303,10 @@ ecodata_compute_pctchange <- function(data, variable, new_variable = NULL, units
   }
 
   # Convert to a tsibble for time-aware operations
-  ts_data <- tsibble::as_tsibble(data, index = Date)
+  ts_data <- data |>
+    dplyr::select(Date, all_of(dplyr::sym(variable))) |>
+    filter(!is.na(!!dplyr::sym(variable))) |>
+    tsibble::as_tsibble(index = Date)
 
   # Calculate the appropriate lag based on the time interval
   time_interval <- attr(data[[variable]], "Frequency")
@@ -2332,7 +2335,9 @@ ecodata_compute_pctchange <- function(data, variable, new_variable = NULL, units
     )
 
   # Convert back to a data frame
-  result_df <- as.data.frame(ts_data)
+  result_df <- as.data.frame(ts_data) |>
+    select(-!!dplyr::sym(variable))
+  result_df <- dplyr::full_join(data, result_df, by = "Date")
 
   # Copy attributes from the original variable to the new one
   original_attrs <- attributes(data[[variable]])
