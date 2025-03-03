@@ -2045,6 +2045,32 @@ ggplot_ecodata_ts <- function(data, variables = NULL, title="", color = NULL,  y
   return(plt)
 }
 
+#' Identify all unique units in an ecodata data frame
+#'
+#' @param df Data frame from `get_ecodata()` that includes the variables to check
+#' @param variables Optional, vector of strings that includes the economic variables to check. If not specified, the function will check all the variables given in `df`.
+#' @return A vector of unique units for the variables in the data frame
+#' @export
+get_unique_units <- function(df, variables = NULL) {
+  if(is.null(variables)) {
+    variables <- get_ecodata_varnames(df)
+  }
+  all_units <- vector()
+  for(v in 1:length(variables)) {
+    useunits <- attr(df[[variables[v]]], "Units")
+    if(useunits == "%" |
+       string_compare(useunits, "percent") |
+       string_compare(useunits, "percentage") |
+       string_detect(useunits, "rate of change") |
+       string_detect(useunits, "growth")) {
+      useunits <- "%"
+    }
+
+    all_units[v] <- useunits
+  }
+  return(unique(all_units))
+}
+
 #' Create faceted time series plot for ecodata variables
 #'
 #' Make a time series line plot of the variables in the given data frame, with each variable in its own facet.
@@ -2091,11 +2117,7 @@ ggplot_ecodata_facet <- function(data, variables = NULL, title="", ylab = NULL, 
   plotvars <- includevars
 
   # Make sure all plot variables have the same units
-  all_units <- vector()
-  for(v in 1:length(plotvars)) {
-    all_units[v] <- attr(data[[plotvars[v]]], "Units")
-  }
-  unique_units <- unique(all_units)
+  unique_units <- get_unique_units(data, plotvars)
   if(length(unique_units) > 1) {
     msg <- sprintf("Not all variables are in the same units. Units include, %s.", paste(unique_units, sep = ", ", collapse = ", "))
     warning(msg)
