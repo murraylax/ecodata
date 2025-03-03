@@ -1142,6 +1142,7 @@ get_ecodata_variable <- function(varcode, varname = NULL, frequency = NULL, unit
 #' @return Data frame time series that includes the date and the variable requested. The data frame will also include all relevant meta data describing the data and citing its source.
 #' @export
 get_ecodata <- function(varcodes, varnames = NULL, frequency = NULL, units = NULL, recessions = FALSE) {
+  ecodata_fred_openapi();
   if(!is.null(varnames) & (length(varcodes) != length(varnames)) ) {
     stop("Length of `varcodes` is not equal to the length of `varnames`. There needs to be the name number of variables as variable names.")
   }
